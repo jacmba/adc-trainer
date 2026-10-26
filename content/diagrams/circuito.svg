@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" font-family="DejaVu Sans, Arial, sans-serif">
+  <rect width="760" height="420" fill="#f8fafc"/>
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1e3a8a"/></marker>
+    <marker id="ag" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b45309"/></marker>
+  </defs>
+  <!-- runway -->
+  <rect x="230" y="285" width="300" height="26" rx="3" fill="#334155"/>
+  <line x1="245" y1="298" x2="515" y2="298" stroke="#fff" stroke-width="2" stroke-dasharray="14 10"/>
+  <text x="238" y="303" font-size="12" fill="#fff" font-weight="bold">09</text>
+  <text x="503" y="303" font-size="12" fill="#fff" font-weight="bold">27</text>
+  <!-- circuit (left-hand for rwy 27: aircraft land westbound; circuit to the south? draw generic) -->
+  <path d="M230,298 L120,298 Q80,298 80,258 L80,140 Q80,100 120,100 L640,100 Q680,100 680,140 L680,258 Q680,298 640,298 L530,298" fill="none" stroke="#1e3a8a" stroke-width="3" marker-end="url(#ar)"/>
+  <!-- leg labels -->
+  <text x="545" y="278" font-size="14" fill="#0f172a" font-weight="bold">FINAL</text>
+  <text x="110" y="88" font-size="14" fill="#0f172a" font-weight="bold">VIENTO EN COLA (downwind)</text>
+  <text x="690" y="205" font-size="14" fill="#0f172a" font-weight="bold">BASE</text>
+  <text x="8" y="205" font-size="13" fill="#0f172a" font-weight="bold">VIENTO</text>
+  <text x="8" y="222" font-size="13" fill="#0f172a" font-weight="bold">CRUZADO</text>
+  <text x="95" y="320" font-size="13" fill="#0f172a" font-weight="bold">ASCENSO / BARLOVENTO</text>
+  <!-- integration options -->
+  <path d="M470,20 L470,92" stroke="#b45309" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#ag)"/>
+  <text x="480" y="40" font-size="12" fill="#b45309">② Entrada a mitad del viento en cola</text>
+  <path d="M740,160 L688,190" stroke="#b45309" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#ag)"/>
+  <text x="560" y="150" font-size="12" fill="#b45309">③ Semidirecta a base</text>
+  <path d="M750,320 L540,300" stroke="#b45309" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#ag)"/>
+  <text x="545" y="345" font-size="12" fill="#b45309">④ Directa a final (&lt; 30° del eje)</text>
+  <path d="M380,400 L380,318 M380,280 L380,130" stroke="#b45309" stroke-width="2.5" stroke-dasharray="6 4"/>
+  <path d="M380,130 L380,112" stroke="#b45309" stroke-width="2.5" marker-end="url(#ag)"/>
+  <text x="390" y="395" font-size="12" fill="#b45309">① Cruce sobre el campo ≥ 500 ft por encima</text><text x="390" y="410" font-size="12" fill="#b45309">del circuito y entrada por barlovento</text>
+  <!-- wind -->
+  <g transform="translate(40,40)"><line x1="0" y1="0" x2="50" y2="0" stroke="#0f766e" stroke-width="3" marker-end="url(#ar)"/><text x="0" y="-8" font-size="12" fill="#0f766e">viento del oeste → aterrizar en 27</text></g>
+</svg>

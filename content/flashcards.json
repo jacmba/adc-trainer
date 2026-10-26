@@ -1,0 +1,767 @@
+[
+{
+"topic": "introduccion",
+"front": "¿Cuáles son los 4 servicios fundamentales de navegación aérea (SNA)?",
+"back": "ATS (tránsito aéreo), CNS (comunicaciones, navegación y vigilancia), MET (meteorología) y AIS (información aeronáutica)."
+},
+{
+"topic": "introduccion",
+"front": "¿Qué tres servicios componen los ATS?",
+"back": "Control (ATC), información de vuelo (FIS) y alerta (ALRS)."
+},
+{
+"topic": "introduccion",
+"front": "PSR vs SSR",
+"back": "PSR (primario): eco reflejado, solo posición, sin colaboración de la aeronave.\nSSR (secundario): interroga al transpondedor → código (A), altitud (C), datos (S)."
+},
+{
+"topic": "introduccion",
+"front": "AFIS vs ATIS",
+"back": "AFIS: servicio de información prestado por personas (AFISO), sin autorizaciones.\nATIS: emisión automática y continua, sin interacción."
+},
+{
+"topic": "introduccion",
+"front": "INCERFA se activa cuando…",
+"back": "No hay comunicación en los 30 min siguientes a lo previsto, o la aeronave no llega en los 30 min siguientes a su hora prevista."
+},
+{
+"topic": "introduccion",
+"front": "ALERFA: ¿cuánto tiempo tras la hora prevista de aterrizaje de una aeronave autorizada a aterrizar?",
+"back": "5 minutos (sin aterrizar y sin comunicación). También: interferencia ilícita, funcionamiento anormal sin probable aterrizaje forzoso."
+},
+{
+"topic": "introduccion",
+"front": "DETRESFA se activa cuando…",
+"back": "Tras ALERFA sigue sin noticias y se supone peligro; combustible agotado o insuficiente; aterrizaje forzoso probable, inminente o ya producido."
+},
+{
+"topic": "introduccion",
+"front": "¿De qué NUNCA es responsable TWR?",
+"back": "IFR entrantes antes de establecerse en final · IFR en ruta · salidas IFR por encima de 1000 ft AGL · VFR fuera del CTR o a más de 2 min de entrar."
+},
+{
+"topic": "introduccion",
+"front": "¿Cuándo NO se puede autorizar a alinear?",
+"back": "• IFR establecido en final a menos de 5–6 NM\n• Cualquier aeronave autorizada a aterrizar\n• Despegue autorizado a otra y la que se alinea cruzaría su trayectoria"
+},
+{
+"topic": "introduccion",
+"front": "¿Cuándo NO se puede autorizar a despegar? (5)",
+"back": "• Aeronave en la pista utilizable\n• Aeronave cruzando la pista\n• Otra despegando sin pasar el final de pista ni despejar el eje\n• Otra ya autorizada a aterrizar\n• Otra en punto de espera ya autorizada a despegar"
+},
+{
+"topic": "introduccion",
+"front": "¿Cuándo NO se puede autorizar a aterrizar? (5)",
+"back": "• Pista ocupada\n• Aeronave cruzando\n• Otra despegando sin pasar el final de pista/despejar el eje\n• Otra ya autorizada a aterrizar\n• Otra en punto de espera autorizada a despegar"
+},
+{
+"topic": "introduccion",
+"front": "¿A qué altura se transfiere la salida y a quién?",
+"back": "Hacia 1000 ft AGL y pasado el umbral, a DEP → si no, APP → si no, CTR. Sin ninguno: UNICOM 122.800 al pasar 1000 ft."
+},
+{
+"topic": "introduccion",
+"front": "Máximo de llegadas IFR en final en frecuencia de TWR",
+"back": "3 llegadas IFR."
+},
+{
+"topic": "introduccion",
+"front": "¿Cuándo contacta un VFR que viene de espacio no controlado?",
+"back": "Entre 1 y 2 minutos antes de entrar en la zona controlada (el ATC adyacente lo transfiere 2 min antes)."
+},
+{
+"topic": "introduccion",
+"front": "VFR que sale hacia espacio no controlado",
+"back": "Código 7000 y cambio a UNICOM 122.800."
+},
+{
+"topic": "introduccion",
+"front": "4 formas de integrar un VFR al circuito",
+"back": "1. Por barlovento cruzando ≥ 500 ft sobre la altitud del circuito\n2. Viento en cola (principio/mitad)\n3. Semidirecta en base\n4. Directa a final (si < 30° con la pista)"
+},
+{
+"topic": "introduccion",
+"front": "¿Cuándo debe TWR ordenar motor y al aire?",
+"back": "Si la aeronave está a ~2 NM del umbral y la pista no está libre (si el piloto no lo ha hecho ya)."
+},
+{
+"topic": "introduccion",
+"front": "Transpondedor en IVAO (TWR)",
+"back": "TX al entrar en pista activa; STANDBY al desalojarla. Se tolera TX en el punto de espera y STANDBY justo tras aterrizar."
+},
+{
+"topic": "introduccion",
+"front": "Comando para llamar a un supervisor",
+"back": ".WALLOP <motivo en inglés>"
+},
+{
+"topic": "introduccion",
+"front": "FORCE ACT a llegadas IFR",
+"back": "No se usa con aproximaciones IFR fuera del eje de final; sí con pilotos a menos de 12 NM en UNICOM."
+},
+{
+"topic": "plan-de-vuelo",
+"front": "Reglas de vuelo Y y Z",
+"back": "Y (Yankee): empieza IFR, pasa a VFR.\nZ (Zulu): empieza VFR, pasa a IFR."
+},
+{
+"topic": "plan-de-vuelo",
+"front": "Cancelación de IFR en un plan Yankee",
+"back": "La pide el piloto y el ATC la confirma indicando la hora UTC: \"plan de vuelo IFR cancelado a las 15:50\"."
+},
+{
+"topic": "plan-de-vuelo",
+"front": "Paso a IFR en un plan Zulu",
+"back": "Sin cancelación explícita del VFR: previa coordinación, se transfiere a aproximación."
+},
+{
+"topic": "plan-de-vuelo",
+"front": "Categorías de estela por MTOW",
+"back": "L ≤ 7 000 kg · M > 7 000 y < 136 000 kg · H ≥ 136 000 kg · Super: A380."
+},
+{
+"topic": "plan-de-vuelo",
+"front": "B757 y la estela",
+"back": "Se trata como PESADO cuando va delante (genera estela de pesado)."
+},
+{
+"topic": "plan-de-vuelo",
+"front": "Tipo de vuelo (casilla 8b)",
+"back": "S regular · N no regular · G aviación general · M militar · X otros."
+},
+{
+"topic": "plan-de-vuelo",
+"front": "Aeronave sin designador OACI",
+"back": "ZZZZ en casilla 9 y TYP/(tipo) en casilla 18."
+},
+{
+"topic": "plan-de-vuelo",
+"front": "N0450, M081, F080, A060",
+"back": "450 kt TAS · Mach 0,81 · FL80 · 6 000 ft de altitud."
+},
+{
+"topic": "plan-de-vuelo",
+"front": "EOBT",
+"back": "Hora prevista de fuera calzos (UTC, HHMM), casilla 13. No confundir con CTOT (despegue calculado/slot)."
+},
+{
+"topic": "plan-de-vuelo",
+"front": "DOF/211005",
+"back": "Fecha del vuelo: 5 de octubre de 2021 (AAMMDD)."
+},
+{
+"topic": "plan-de-vuelo",
+"front": "STS/HOSP o STS/MEDEVAC",
+"back": "Vuelo sanitario: sus mensajes son de categoría urgencia."
+},
+{
+"topic": "meteorologia",
+"front": "Octas: FEW, SCT, BKN, OVC",
+"back": "FEW 1–2 · SCT 3–4 · BKN 5–7 · OVC 8"
+},
+{
+"topic": "meteorologia",
+"front": "Techo de nubes",
+"back": "Base de la capa más baja BKN u OVC (FEW y SCT no cuentan)."
+},
+{
+"topic": "meteorologia",
+"front": "Condiciones de CAVOK",
+"back": "Vis ≥ 10 km · sin nubes < 5 000 ft (o MSA, la mayor) · sin CB ni TCU · sin tiempo significativo."
+},
+{
+"topic": "meteorologia",
+"front": "TEMPO vs BECMG vs NOSIG",
+"back": "TEMPO: fluctuaciones < 1 h cada una y < mitad del periodo.\nBECMG: cambio que se establece en una franja.\nNOSIG: sin cambios en 2 h."
+},
+{
+"topic": "meteorologia",
+"front": "VMC en el aeródromo (ATZ/CTR)",
+"back": "Visibilidad ≥ 5 000 m Y techo ≥ 1 500 ft."
+},
+{
+"topic": "meteorologia",
+"front": "VMC en vuelo en/por encima de FL100",
+"back": "8 km de visibilidad; 1 500 m horizontal y 1 000 ft vertical de nubes."
+},
+{
+"topic": "meteorologia",
+"front": "VMC en vuelo por debajo de FL100",
+"back": "5 km; 1 500 m / 1 000 ft de nubes. En F y G a baja altura (≤ 3 000 ft AMSL o 1 000 ft AGL): 5 km, libre de nubes y superficie a la vista."
+},
+{
+"topic": "meteorologia",
+"front": "Condiciones SVFR (piloto)",
+"back": "Solo de día · libre de nubes y terreno a la vista · vis ≥ 1 500 m (800 m helis) · ≤ 140 kt IAS."
+},
+{
+"topic": "meteorologia",
+"front": "Condiciones SVFR (ATC)",
+"back": "Vis en superficie ≥ 1 500 m (800 m helis) y techo ≥ 600 ft."
+},
+{
+"topic": "meteorologia",
+"front": "¿Quién autoriza un SVFR? ¿Se puede sugerir?",
+"back": "APP (responsable del CTR); TWR lo pide y lo transmite (o lo deniega). El ATC NUNCA lo sugiere: informa y pregunta intenciones. Con SVFR el ATC es responsable de la separación."
+},
+{
+"topic": "meteorologia",
+"front": "Activación de LVP (esquema genérico)",
+"back": "Cualquiera: RVR ≤ 800 m · techo ≤ 250 ft (75 m) · vis ≤ 500 m."
+},
+{
+"topic": "meteorologia",
+"front": "Cancelación de LVP",
+"back": "RVR ≥ 1 500 m en todos los transmisómetros · techo ≥ 500 ft · tendencia firme de mejora."
+},
+{
+"topic": "meteorologia",
+"front": "Autorización de aterrizaje en CAT II/III",
+"back": "No más tarde de 2 NM de la TDZ y con las LSA libres. Solo una aeronave establecida. Sin autorización a 2 NM → frustrada."
+},
+{
+"topic": "meteorologia",
+"front": "Criterio de movimiento en tierra en LVP",
+"back": "Una sola aeronave en movimiento en el área de maniobras (salvo autorización). Vis/RVR < 500 m: un solo rodaje a la vez."
+},
+{
+"topic": "meteorologia",
+"front": "R32L/0800V1200U",
+"back": "RVR pista 32L variable entre 800 y 1 200 m, tendencia a mejorar (U). D = empeora, N = sin cambios, P = por encima del máximo medible."
+},
+{
+"topic": "meteorologia",
+"front": "¿Qué mide el transmisómetro? ¿Y el ceilómetro?",
+"back": "Transmisómetro: RVR. Ceilómetro: altura de la base de las nubes."
+},
+{
+"topic": "comunicaciones",
+"front": "Estructura de la primera llamada",
+"back": "1. Estación llamada · 2. Estación que llama · 3. Mensaje."
+},
+{
+"topic": "comunicaciones",
+"front": "Elementos que siempre se colacionan",
+"back": "Autorizaciones de ruta · instrucciones de pista (entrar, aterrizar, despegar, mantener fuera, cruzar, backtrack) · pista en uso · QNH · transpondedor · frecuencias · nivel/rumbo/velocidad · nivel de transición."
+},
+{
+"topic": "comunicaciones",
+"front": "Corrección de una colación errónea",
+"back": "\"NEGATIVO, REPITO (mensaje correcto)\" | \"NEGATIVE, I SAY AGAIN…\""
+},
+{
+"topic": "comunicaciones",
+"front": "Categorías de mensajes por prioridad",
+"back": "1 Socorro · 2 Urgencia · 3 Seguridad de los vuelos · 4 Meteorológicos · 5 Regularidad."
+},
+{
+"topic": "comunicaciones",
+"front": "¿Quién puede iniciar la abreviación del indicativo?",
+"back": "Solo el controlador, y si no hay riesgo de confusión. En la siguiente frecuencia, indicativo completo."
+},
+{
+"topic": "comunicaciones",
+"front": "¿Cómo se dice FL100? ¿Y FL80?",
+"back": "\"Nivel de vuelo cien\" · \"Nivel de vuelo ocho cero\" (sin cero delante)."
+},
+{
+"topic": "comunicaciones",
+"front": "¿Cómo se dice 11 500 ft?",
+"back": "\"Uno uno mil quinientos pies\"."
+},
+{
+"topic": "comunicaciones",
+"front": "¿Cómo se dice QNH 1000? ¿Y squawk 2000?",
+"back": "\"QNH mil\" · \"Dos mil\"."
+},
+{
+"topic": "comunicaciones",
+"front": "Pista 36L",
+"back": "\"Tres seis izquierda\" (no \"lima\")."
+},
+{
+"topic": "comunicaciones",
+"front": "Escala de inteligibilidad",
+"back": "5 perfectamente inteligible · 4 inteligible · 3 con dificultad · 2 a ratos · 1 ininteligible. No existe el 0."
+},
+{
+"topic": "comunicaciones",
+"front": "Socorro vs urgencia",
+"back": "MAYDAY ×3: amenaza grave/inminente, ayuda inmediata.\nPAN PAN ×3: afecta a la seguridad sin necesitar ayuda inmediata."
+},
+{
+"topic": "comunicaciones",
+"front": "MONITOR vs CONTACT",
+"back": "MONITOR (mantenga escucha): escuchar sin llamar. CONTACT (llame): establecer comunicación."
+},
+{
+"topic": "comunicaciones",
+"front": "¿Cuándo se usa \"AUTORIZADO\" en aeródromo?",
+"back": "Solo en autorizaciones de pista (despegar, aterrizar, toma y despegue, pasada baja…). Retroceso → \"aprobado\"; rodaje → \"ruede\"; IFR → \"A (destino) vía…\"."
+},
+{
+"topic": "comunicaciones",
+"front": "Cancelar un despegue",
+"back": "Sin iniciar carrera: \"MANTENGA POSICIÓN, CANCELE DESPEGUE, REPITO, CANCELE DESPEGUE\".\nEn carrera: \"(indicativo) ABORTE DESPEGUE\" ×2 | STOP IMMEDIATELY."
+},
+{
+"topic": "comunicaciones",
+"front": "Estructura de una autorización condicional",
+"back": "Condición + instrucción + reiteración: \"detrás de la C172 en final, entre y mantenga pista 24, detrás\"."
+},
+{
+"topic": "comunicaciones",
+"front": "¿Qué dato acompaña siempre a una autorización de despegue o aterrizaje?",
+"back": "El viento en superficie."
+},
+{
+"topic": "comunicaciones",
+"front": "Palabras no estándar y su forma correcta",
+"back": "ascienda → SUBA · afirmativo → AFIRMO · copiado → RECIBIDO · tráfico → TRÁNSITO · baje → DESCIENDA."
+},
+{
+"topic": "comunicaciones",
+"front": "\"Hold short of mike\"",
+"back": "Rodar hasta cerca de mike y detenerse sin entrar ni obstaculizar la intersección."
+},
+{
+"topic": "comunicaciones",
+"front": "Velocidad máxima recomendada al transmitir",
+"back": "100 palabras por minuto."
+},
+{
+"topic": "comunicaciones",
+"front": "¿Qué priorizar en frecuencia?",
+"back": "El tráfico en el aire (y en fases críticas) sobre el de tierra, especialmente si este está parado."
+},
+{
+"topic": "espacios-aereos",
+"front": "Clase A",
+"back": "Solo IFR. Todos separados, radio continua, autorización ATC."
+},
+{
+"topic": "espacios-aereos",
+"front": "Clase B",
+"back": "IFR y VFR. Todos separados de todos."
+},
+{
+"topic": "espacios-aereos",
+"front": "Clase C",
+"back": "IFR separados de IFR y VFR; VFR separados de IFR e información VFR/VFR. 250 kt bajo FL100 solo VFR."
+},
+{
+"topic": "espacios-aereos",
+"front": "Clase D",
+"back": "Solo IFR↔IFR separados. IFR reciben info de VFR; VFR de todos. 250 kt todos. La más común en ATZ/CTR."
+},
+{
+"topic": "espacios-aereos",
+"front": "Clase E",
+"back": "Solo IFR controlados y separados entre sí. Radio y autorización solo IFR. No se usa para CTR."
+},
+{
+"topic": "espacios-aereos",
+"front": "Clases F y G",
+"back": "F: asesoramiento a IFR, FIS a petición. G: solo FIS a petición. Ninguna requiere autorización ATC."
+},
+{
+"topic": "espacios-aereos",
+"front": "FIR españolas y límite UIR",
+"back": "LECM (Madrid), LECB (Barcelona), GCCC (Canarias). UIR desde FL195."
+},
+{
+"topic": "espacios-aereos",
+"front": "Límite inferior de CTA/TMA",
+"back": "Al menos 700 ft sobre el terreno (deja capa VFR debajo)."
+},
+{
+"topic": "espacios-aereos",
+"front": "CTR",
+"back": "Zona de control: desde la superficie, protege salidas y aproximaciones IFR. Radio ≥ 5 km. Controlado."
+},
+{
+"topic": "espacios-aereos",
+"front": "ATZ: límite superior",
+"back": "El publicado o el techo de nubes, el menor. Desde la superficie."
+},
+{
+"topic": "espacios-aereos",
+"front": "FIZ",
+"back": "Zona de información de vuelo de un aeródromo no controlado (AFIS). Sin autorizaciones salvo rodaje. IVAO: _FIS_TWR."
+},
+{
+"topic": "espacios-aereos",
+"front": "TSA vs TRA",
+"back": "TSA: solo entran los participantes.\nTRA: participantes y otros con autorización ATC."
+},
+{
+"topic": "espacios-aereos",
+"front": "Zonas P y F",
+"back": "P (prohibida) y F (fauna): vuelo prohibido, permanentes, desde la superficie."
+},
+{
+"topic": "espacios-aereos",
+"front": "RMZ: ¿a quién se aplica?",
+"back": "VFR en E, F o G e IFR en F o G. Escucha obligatoria y llamada inicial antes de entrar."
+},
+{
+"topic": "espacios-aereos",
+"front": "TMZ",
+"back": "Transpondedor con altitud (modo C o S) obligatorio; pensado para VFR. Sin transpondedor, con autorización ATC."
+},
+{
+"topic": "altimetria",
+"front": "Valores ISA a nivel del mar",
+"back": "1013,25 hPa · 15 °C · 1 hPa ≈ 27 ft · −1,98 °C/1 000 ft."
+},
+{
+"topic": "altimetria",
+"front": "Altitud, altura, elevación, nivel de vuelo",
+"back": "Altitud: sobre MSL · Altura: sobre una referencia · Elevación: MSL→terreno · FL: sobre 1013,25 hPa."
+},
+{
+"topic": "altimetria",
+"front": "QFE, QNH, QNE",
+"back": "QFE → altura (0 en tierra; no se usa en España). QNH → altitud (elevación en tierra). QNE/1013 → nivel de vuelo."
+},
+{
+"topic": "altimetria",
+"front": "TA en España",
+"back": "6 000 ft. Excepto: TMA Madrid y Málaga 13 000 · Granada 7 000 · La Seu d'Urgell 8 000."
+},
+{
+"topic": "altimetria",
+"front": "TL con TA 6 000 ft",
+"back": "942–959 FL90 · 960–977 FL85 · 978–995 FL80 · 996–1013 FL75 · 1014–1031 FL70 · 1032–1050 FL65."
+},
+{
+"topic": "altimetria",
+"front": "TL con TA 13 000 ft (TMA Madrid, LEMG, LEGR)",
+"back": "942–959 FL160 · 960–977 FL155 · 978–995 FL150 · 996–1013 FL145 · 1014–1031 FL140 · 1032–1050 FL135."
+},
+{
+"topic": "altimetria",
+"front": "TL con TA 8 000 ft (La Seu)",
+"back": "942–959 FL110 · 960–977 FL105 · 978–995 FL100 · 996–1013 FL95 · 1014–1031 FL90 · 1032–1050 FL85."
+},
+{
+"topic": "altimetria",
+"front": "Espesor mínimo de la capa de transición",
+"back": "1 000 ft (se ajusta moviendo el TL; la TA es fija)."
+},
+{
+"topic": "altimetria",
+"front": "¿Cuándo se cambia el reglaje del altímetro?",
+"back": "Subiendo: a 1013 al cruzar la TA. Bajando: a QNH al cruzar el TL. En la capa: subiendo en FL, bajando en altitud."
+},
+{
+"topic": "altimetria",
+"front": "Flexibilidad europea en el reglaje",
+"back": "1013 antes de la TA si > 3 000 ft AAL y autorizado a un FL. QNH antes del TL si autorizado a una altitud."
+},
+{
+"topic": "separaciones",
+"front": "Responsable de la separación en clase D",
+"back": "IFR↔IFR: controlador. IFR↔VFR y VFR↔VFR: pilotos, con información de tránsito y secuencias del ATC."
+},
+{
+"topic": "separaciones",
+"front": "Despegue en la misma pista: condiciones",
+"back": "Aterrizaje previo fuera de pista, o salida previa que ha cruzado el final de pista o ha iniciado viraje. (+ estela)"
+},
+{
+"topic": "separaciones",
+"front": "Salidas paralelas independientes",
+"back": "Ambas IFR, ejes ≥ 760 m, derrotas divergentes ≥ 15° tras el despegue."
+},
+{
+"topic": "separaciones",
+"front": "Pistas segregadas",
+"back": "Ejes ≥ 760 m (±30 m por cada 150 m de decalaje), salida divergente ≥ 30° de la frustrada, llegadas solo ILS o visual."
+},
+{
+"topic": "separaciones",
+"front": "¿Qué separaciones aplica TWR en salida?",
+"back": "Estela turbulenta: entre TODAS (también VFR).\nSucesivas: solo entre dos IFR."
+},
+{
+"topic": "separaciones",
+"front": "Estela en salida: Ligera o Media tras Pesada",
+"back": "2 min (3 min desde intersección)."
+},
+{
+"topic": "separaciones",
+"front": "Estela en salida tras un Super",
+"back": "Ligera o Media: 3 min (4 desde intersección). Pesada: 2 min (3 desde intersección)."
+},
+{
+"topic": "separaciones",
+"front": "Estela en salida: Pesada tras Pesada",
+"back": "No aplica desde pista completa. Si la segunda sale de una intersección más adelantada, la wiki indica que la regla de +1 min también le afecta."
+},
+{
+"topic": "separaciones",
+"front": "Toma y despegue a efectos de estela",
+"back": "Se trata como despegue desde intersección (normalmente 3 min)."
+},
+{
+"topic": "separaciones",
+"front": "¿Desde cuándo cuenta el tiempo de estela en salida?",
+"back": "Desde que la primera deja el suelo hasta que la segunda deja el suelo."
+},
+{
+"topic": "separaciones",
+"front": "Categorías de velocidad para salidas sucesivas",
+"back": "Lenta: pistón y helicópteros · Media: turbohélices · Rápida: reactores · Muy rápida: cazas."
+},
+{
+"topic": "separaciones",
+"front": "Sucesivas: Rápida tras Rápida",
+"back": "2 min / 4 NM."
+},
+{
+"topic": "separaciones",
+"front": "Sucesivas: Media tras Rápida / Lenta tras Rápida",
+"back": "1,5 min / 3 NM · 1,5 min / 2 NM."
+},
+{
+"topic": "separaciones",
+"front": "Sucesivas: Media tras Media / Lenta tras Media",
+"back": "2 min / 3 NM · 1,5 min / 2 NM."
+},
+{
+"topic": "separaciones",
+"front": "Sucesivas: ¿cuándo queda SUJETA?",
+"back": "Rápida tras Media · cualquiera tras Lenta · Muy rápida tras cualquiera."
+},
+{
+"topic": "separaciones",
+"front": "Sucesivas: cualquiera tras Muy rápida",
+"back": "2 min / 4 NM."
+},
+{
+"topic": "separaciones",
+"front": "Sucesivas: ¿desde dónde se mide?",
+"back": "Tiempo: desde que la primera inicia la carrera. Distancia: desde el umbral opuesto de la pista en uso."
+},
+{
+"topic": "separaciones",
+"front": "Sujeta vs suelta",
+"back": "Sujeta: IFR lista que necesita aprobación de APP. Suelta: ya aprobada por APP."
+},
+{
+"topic": "separaciones",
+"front": "Tras una aproximación frustrada…",
+"back": "La siguiente salida IFR queda sujeta automáticamente."
+},
+{
+"topic": "separaciones",
+"front": "Salida sujeta sin APP conectado",
+"back": "Se considera suelta a los 5 minutos."
+},
+{
+"topic": "separaciones",
+"front": "¿Qué separación aplicar?",
+"back": "Siempre la más restrictiva (la mayor) de todas las aplicables."
+},
+{
+"topic": "separaciones",
+"front": "¿Quién separa las llegadas IFR sucesivas?",
+"back": "APP, hasta el ATZ. TWR mantiene la separación hasta el umbral (velocidad, frustrada)."
+},
+{
+"topic": "separaciones",
+"front": "Estela en llegada: Ligera tras Media / Pesada / Super",
+"back": "3 min/5 NM · 3 min/6 NM · 4 min/8 NM."
+},
+{
+"topic": "separaciones",
+"front": "Estela en llegada: Media tras Pesada / Super",
+"back": "2 min/5 NM · 3 min/7 NM."
+},
+{
+"topic": "separaciones",
+"front": "Estela en llegada: Pesada tras Pesada / Super",
+"back": "Tiempo: no aplica. Distancia: 4 NM / 6 NM."
+},
+{
+"topic": "separaciones",
+"front": "Llegadas: ¿tiempo o distancia?",
+"back": "Distancia si APP tiene vigilancia radar; tiempo si es control convencional."
+},
+{
+"topic": "separaciones",
+"front": "¿A quién NO se aplica estela en llegada?",
+"back": "A VFR que aterrizan tras una media o pesada, y a IFR en visual que siguen al precedente con separación propia. Se dice \"precaución estela turbulenta\"."
+},
+{
+"topic": "separaciones",
+"front": "Paralelas a menos de 760 m",
+"back": "A efectos de estela se consideran una sola pista."
+},
+{
+"topic": "emergencias",
+"front": "ASSIST",
+"back": "Acknowledge (acusar recibo) · Separate · Silence · Inform · Support · Time."
+},
+{
+"topic": "emergencias",
+"front": "Frase para imponer silencio",
+"back": "\"A TODAS LAS ESTACIONES, CESEN DE TRANSMITIR, MAYDAY\" | ALL STATIONS, STOP TRANSMITTING, MAYDAY."
+},
+{
+"topic": "emergencias",
+"front": "MAYDAY FUEL vs MINIMUM FUEL",
+"back": "MAYDAY FUEL: emergencia, prioridad.\nMINIMUM FUEL: no es emergencia ni da prioridad; solo informar de la demora prevista."
+},
+{
+"topic": "emergencias",
+"front": "Fuego en motor: ¿cuándo despejar la pista?",
+"back": "Cuando la aeronave esté a 20 NM de final. Preguntar mercancías peligrosas y personas a bordo."
+},
+{
+"topic": "emergencias",
+"front": "Problema de tren de aterrizaje",
+"back": "Prepararse para una pasada baja (inspección visual), despejar la pista, preguntar si siguen con el tren fuera."
+},
+{
+"topic": "emergencias",
+"front": "Despegue abortado: acción inmediata",
+"back": "Retener despegues y aterrizajes en esa pista; luego instrucciones para librar y preguntar intenciones."
+},
+{
+"topic": "emergencias",
+"front": "Impacto con ave: primera pregunta",
+"back": "¿Es capaz de controlar la aeronave? Luego intenciones; permitir final larga."
+},
+{
+"topic": "emergencias",
+"front": "Problema de frenos",
+"back": "Pista más larga y ancha, liberar pista y puntos de espera, no secuenciar a nadie corto detrás, ofrecer esperar o desviarse."
+},
+{
+"topic": "emergencias",
+"front": "Orden de prioridad para aterrizar",
+"back": "Emergencias/urgencias > sanitarios > SAR > otras operacionales > resto."
+},
+{
+"topic": "emergencias",
+"front": "Código de fallo de comunicaciones",
+"back": "7600. Comprobar con squawk ident o una maniobra (\"si me recibe, haga un 360 por su derecha\")."
+},
+{
+"topic": "emergencias",
+"front": "Condiciones para una aproximación visual IFR",
+"back": "Vis ≥ 5 km y techo ≥ nivel de la aproximación inicial, o que la tripulación asegure que la completará. La autoriza APP."
+},
+{
+"topic": "emergencias",
+"front": "4 claves ante una situación inusual",
+"back": "Conciencia situacional · Anticipar · Informar · Coordinar."
+},
+{
+"topic": "gestion-transito",
+"front": "Área de maniobras vs área de movimiento",
+"back": "Maniobras: pistas + rodaduras. Movimiento: maniobras + plataformas."
+},
+{
+"topic": "gestion-transito",
+"front": "¿Quién necesita aprobación de puesta en marcha?",
+"back": "Aeronaves que afectan al área de movimiento (GPU/APU) y TODOS los helicópteros. Exentos: VFR ligeros de pistón."
+},
+{
+"topic": "gestion-transito",
+"front": "¿Cuándo ha librado pista una aeronave?",
+"back": "Cuando toda su estructura ha rebasado el punto de espera / barra de parada."
+},
+{
+"topic": "gestion-transito",
+"front": "Turn pad",
+"back": "Zona de viraje al final del backtrack: es parte de la pista, no sirve para esperar."
+},
+{
+"topic": "gestion-transito",
+"front": "Despegue desde intersección",
+"back": "Lo pide el piloto o lo propone el ATC con su consentimiento. Nunca se impone (salvo seguridad) y hay que conocer la TORA."
+},
+{
+"topic": "gestion-transito",
+"front": "Número máximo recomendado de calles en una instrucción de rodaje",
+"back": "3."
+},
+{
+"topic": "gestion-transito",
+"front": "Transferencias GND ↔ TWR",
+"back": "Salidas a TWR al acercarse al punto de espera. Llegadas a GND al abandonar la pista."
+},
+{
+"topic": "gestion-transito",
+"front": "Cruce de una pista activa",
+"back": "Recomendado: el tránsito en frecuencia de TWR y TWR autoriza el cruce. Pista cerrada: lo puede gestionar GND."
+},
+{
+"topic": "gestion-transito",
+"front": "¿Cuántas aeronaves llenan el circuito?",
+"back": "4. Las que ya están en el circuito tienen prioridad sobre las que entran."
+},
+{
+"topic": "gestion-transito",
+"front": "VFR en tránsito sobre el campo con tráfico en circuito",
+"back": "Imponer altitud por encima del circuito (500–1 000 ft más) e información de tránsito a ambos."
+},
+{
+"topic": "gestion-transito",
+"front": "El ruido no decide la pista si el viento…",
+"back": "…cruzado supera 15 kt o de cola supera 5 kt (con rachas). Tampoco con pista contaminada, IMC, windshear o tormentas."
+},
+{
+"topic": "gestion-transito",
+"front": "Despegue inmediato",
+"back": "Desde el punto de espera: entrar y despegar sin detenerse. Alineado: despegar sin demora. Si no puede, declinarlo."
+},
+{
+"topic": "gestion-transito",
+"front": "¿Se puede pedir a un pesado que aterrice largo?",
+"back": "No: nunca más allá de la zona de toma de contacto."
+},
+{
+"topic": "gestion-transito",
+"front": "Separación reducida en pista: categorías y distancias",
+"back": "Cat 1 (monomotor hélice ≤ 2 t): 600 m · Cat 2 (hélice < 7 t): 1 500 m · Cat 3 (resto): 2 400 m. Nunca entre salida y llegada."
+},
+{
+"topic": "gestion-transito",
+"front": "Separación reducida en pista: condiciones",
+"back": "Publicada localmente · estela · vis ≥ 5 km · techo ≥ 1 000 ft · cola ≤ 5 kt · radar · info de tránsito · frenado no afectado."
+},
+{
+"topic": "gestion-transito",
+"front": "Al suspender el VFR por falta de VMC",
+"back": "Retener salidas VFR · recoger a los VFR locales o aprobar SVFR · avisar a APP/ACC · informar del motivo."
+},
+{
+"topic": "gestion-transito",
+"front": "Técnicas cuando el circuito se satura",
+"back": "Alargar viento en cola · 360° en viento en cola · órbita sobre punto VFR · retener tomas y despegues · vuelo local o desvío."
+},
+{
+"topic": "examen",
+"front": "Requisitos para el examen ADC",
+"back": "AS3 con 2 meses · 50 h totales · 15 h en la dependencia en los 3 meses previos (conexiones < 30 min no cuentan)."
+},
+{
+"topic": "examen",
+"front": "Tránsito mínimo del examen práctico",
+"back": "2 VFR simultáneos (o 1 VFR + 1 VFR/2 IFR) · 4 salidas IFR (1 no estándar) · 4 llegadas IFR · 1 emergencia · 1 frustrada del piloto · 1 tránsito solo texto."
+},
+{
+"topic": "examen",
+"front": "Remarks obligatorio del ATIS en examen",
+"back": "\"Exam in progress – no unauthorised Emergencies.\""
+},
+{
+"topic": "examen",
+"front": "Horas extra para repetir en la misma dependencia",
+"back": "Nota ≥ 51: 10 h más · nota ≤ 50: 15 h más (desde el último examen, en los 3 meses previos)."
+}
+]

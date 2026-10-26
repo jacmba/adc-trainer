@@ -1,0 +1,3501 @@
+[
+{
+"t": "introduccion",
+"q": "¿Cuál de estos NO es uno de los cuatro servicios fundamentales de navegación aérea?",
+"o": [
+"ATS",
+"CNS",
+"SAR",
+"AIS"
+],
+"a": [
+2
+],
+"e": "Los cuatro fundamentales son ATS, CNS, MET y AIS. SAR es un servicio relacionado."
+},
+{
+"t": "introduccion",
+"q": "¿Qué organismo presta el servicio MET en España?",
+"o": [
+"ENAIRE",
+"AEMET",
+"AESA",
+"Ejército del Aire"
+],
+"a": [
+1
+],
+"e": "AEMET presta el servicio meteorológico aeronáutico."
+},
+{
+"t": "introduccion",
+"q": "¿Qué organismo presta el servicio AIS en España?",
+"o": [
+"AEMET",
+"AESA",
+"ENAIRE",
+"Aena"
+],
+"a": [
+2
+],
+"e": "ENAIRE publica el AIP, NOTAM, etc."
+},
+{
+"t": "introduccion",
+"q": "Un radar primario (PSR)…",
+"o": [
+"Necesita el transpondedor de la aeronave",
+"Obtiene la posición sin colaboración de la aeronave",
+"Proporciona el nivel de vuelo",
+"Proporciona el código SSR"
+],
+"a": [
+1
+],
+"e": "El PSR funciona por eco reflejado: solo posición, sin colaboración."
+},
+{
+"t": "introduccion",
+"q": "¿Qué modo de transpondedor aporta la altitud/nivel?",
+"o": [
+"Modo A",
+"Modo C",
+"Ninguno",
+"Modo PSR"
+],
+"a": [
+1
+],
+"e": "Modo A: código; modo C: altitud; modo S: datos adicionales."
+},
+{
+"t": "introduccion",
+"q": "¿Qué servicios forman los ATS? (marca todas)",
+"o": [
+"Control (ATC)",
+"Información de vuelo (FIS)",
+"Alerta (ALRS)",
+"Búsqueda y salvamento (SAR)"
+],
+"a": [
+0,
+1,
+2
+],
+"m": true,
+"e": "ATS = ATC + FIS + alerta. SAR es otro servicio, apoyado por la alerta."
+},
+{
+"t": "introduccion",
+"q": "Una dependencia que presta solo servicio de información de vuelo…",
+"o": [
+"No presta servicio de alerta",
+"Presta también servicio de alerta",
+"Puede dar autorizaciones de aterrizaje",
+"Separa a las aeronaves IFR"
+],
+"a": [
+1
+],
+"e": "Toda dependencia ATS presta servicio de alerta."
+},
+{
+"t": "introduccion",
+"q": "¿Cuál es la diferencia principal entre AFIS y ATIS?",
+"o": [
+"El AFIS es automático y el ATIS lo prestan personas",
+"El AFIS lo prestan personas y el ATIS es una emisión automática",
+"Ambos dan autorizaciones",
+"El ATIS solo existe en aeródromos no controlados"
+],
+"a": [
+1
+],
+"e": "AFIS: operadores humanos que informan. ATIS: radiodifusión automática."
+},
+{
+"t": "introduccion",
+"q": "Una aeronave autorizada a aterrizar no aterriza en los 5 minutos siguientes a la hora prevista y no responde. Fase:",
+"o": [
+"INCERFA",
+"ALERFA",
+"DETRESFA",
+"Ninguna"
+],
+"a": [
+1
+],
+"e": "Ese es un supuesto típico de ALERFA."
+},
+{
+"t": "introduccion",
+"q": "Se sospecha interferencia ilícita a bordo. Fase de alerta:",
+"o": [
+"INCERFA",
+"ALERFA",
+"DETRESFA",
+"Ninguna"
+],
+"a": [
+1
+],
+"e": "La interferencia ilícita (conocida o sospechada) activa ALERFA."
+},
+{
+"t": "introduccion",
+"q": "Se considera que se ha agotado el combustible de una aeronave. Fase:",
+"o": [
+"INCERFA",
+"ALERFA",
+"DETRESFA",
+"Ninguna"
+],
+"a": [
+2
+],
+"e": "Combustible agotado o insuficiente → DETRESFA."
+},
+{
+"t": "introduccion",
+"q": "INCERFA se activa tras…",
+"o": [
+"5 minutos sin comunicación",
+"15 minutos sin comunicación",
+"30 minutos sin comunicación",
+"60 minutos sin comunicación"
+],
+"a": [
+2
+],
+"e": "30 minutos sin noticias tras lo previsto o sin llegar tras la hora prevista."
+},
+{
+"t": "introduccion",
+"q": "En IVAO, las fases de alerta (INCERFA, ALERFA, DETRESFA)…",
+"o": [
+"Se simulan con el supervisor",
+"No se simulan",
+"Las gestiona APP",
+"Solo se simulan en eventos"
+],
+"a": [
+1
+],
+"e": "No se simulan; solo se atienden las urgencias y emergencias simuladas."
+},
+{
+"t": "introduccion",
+"q": "¿De qué tráfico NO es nunca responsable TWR? (marca todas)",
+"o": [
+"IFR entrantes antes de establecerse en final",
+"Salidas IFR por encima de 1000 ft AGL",
+"VFR en el circuito de aeródromo",
+"VFR a más de 2 minutos de entrar en el CTR"
+],
+"a": [
+0,
+1,
+3
+],
+"m": true,
+"e": "El circuito de aeródromo sí es de TWR."
+},
+{
+"t": "introduccion",
+"q": "Hay un IFR establecido en final a 4 NM. ¿Puedes alinear a una salida?",
+"o": [
+"Sí, siempre",
+"No",
+"Sí, si es VFR",
+"Sí, si el IFR va lento"
+],
+"a": [
+1
+],
+"e": "No se alinea con un IFR en final a menos de 5–6 NM."
+},
+{
+"t": "introduccion",
+"q": "Has autorizado a aterrizar a una aeronave que está a 9 NM. ¿Puedes alinear a otra?",
+"o": [
+"Sí, está lejos",
+"No",
+"Solo con autorización condicional",
+"Sí, si sale desde intersección"
+],
+"a": [
+1
+],
+"e": "Con cualquier autorización de aterrizaje emitida no se alinea, independientemente de la distancia. (Usar una condicional \"detrás\" en su lugar.)"
+},
+{
+"t": "introduccion",
+"q": "¿En qué casos NO se puede emitir una autorización de despegue? (marca todas)",
+"o": [
+"Otra aeronave está cruzando la pista",
+"Otra aeronave ya está autorizada a aterrizar",
+"La aeronave anterior ha cruzado el final de pista",
+"Otra aeronave en un punto de espera ya está autorizada a despegar"
+],
+"a": [
+0,
+1,
+3
+],
+"m": true,
+"e": "Si la anterior ya cruzó el final de pista, sí se puede (además de estela)."
+},
+{
+"t": "introduccion",
+"q": "¿Cuándo se debe dar la autorización de aterrizaje?",
+"o": [
+"En cuanto la aeronave esté a 4 NM",
+"En cuanto la pista haya quedado libre",
+"Siempre a 2 NM",
+"Solo cuando el piloto la pida"
+],
+"a": [
+1
+],
+"e": "Se emite en cuanto se ha desalojado la pista."
+},
+{
+"t": "introduccion",
+"q": "¿A quién se transfiere una salida si no hay DEP?",
+"o": [
+"A GND",
+"A APP, y si no hay, a CTR",
+"A UNICOM directamente",
+"Se mantiene en TWR hasta su destino"
+],
+"a": [
+1
+],
+"e": "Orden: DEP → APP → CTR; sin ninguno, UNICOM al pasar 1000 ft."
+},
+{
+"t": "introduccion",
+"q": "¿Cuántas llegadas IFR en final, como máximo, debe llevar TWR en su frecuencia?",
+"o": [
+"1",
+"2",
+"3",
+"5"
+],
+"a": [
+2
+],
+"e": "No más de 3."
+},
+{
+"t": "introduccion",
+"q": "Un VFR procede de espacio no controlado. ¿Cuándo debe contactar con TWR?",
+"o": [
+"5 minutos antes de entrar",
+"Entre 1 y 2 minutos antes de entrar",
+"Al entrar",
+"Solo si quiere aterrizar"
+],
+"a": [
+1
+],
+"e": "1–2 minutos antes de entrar en la zona controlada."
+},
+{
+"t": "introduccion",
+"q": "Un VFR abandona el CTR hacia espacio no controlado. ¿Qué haces?",
+"o": [
+"Le transfieres a APP",
+"Código 7000 y UNICOM 122.800",
+"Le mantienes en frecuencia",
+"Código 2000 y GND"
+],
+"a": [
+1
+],
+"e": "Código no controlado (7000) e invitación a UNICOM 122.800."
+},
+{
+"t": "introduccion",
+"q": "Para integrar a un VFR por barlovento cruzando sobre el aeródromo, debe hacerlo al menos…",
+"o": [
+"A la altitud del circuito",
+"500 ft por encima del circuito",
+"1500 ft por encima del circuito",
+"200 ft por debajo"
+],
+"a": [
+1
+],
+"e": "Al menos 500 ft por encima de la altitud del circuito."
+},
+{
+"t": "introduccion",
+"q": "¿Cuándo se puede integrar a un VFR directamente a final?",
+"o": [
+"Siempre que lo pida",
+"Si su rumbo difiere menos de 30° del de la pista",
+"Si viene a más de 2000 ft",
+"Nunca"
+],
+"a": [
+1
+],
+"e": "Directa a final (final larga) si el rumbo de aproximación difiere < 30°."
+},
+{
+"t": "introduccion",
+"q": "¿Quién decide un motor y al aire anunciado por el piloto?",
+"o": [
+"El controlador TWR",
+"El controlador APP",
+"Solo el piloto al mando",
+"El supervisor"
+],
+"a": [
+2
+],
+"e": "La decisión es exclusiva del comandante."
+},
+{
+"t": "introduccion",
+"q": "Una aeronave está a 2 NM y la pista sigue ocupada. ¿Qué hace TWR?",
+"o": [
+"Esperar a que el piloto decida",
+"Ordenar motor y al aire",
+"Autorizar a aterrizar condicionalmente",
+"Pedirle que reduzca"
+],
+"a": [
+1
+],
+"e": "TWR debe ordenar motor y al aire si el piloto no lo ha hecho."
+},
+{
+"t": "introduccion",
+"q": "En IVAO, ¿cuándo debe ponerse el transpondedor en TX?",
+"o": [
+"Al pedir puesta en marcha",
+"Al entrar en la pista activa (tolerado en el punto de espera)",
+"Al despegar",
+"Al pasar 1000 ft"
+],
+"a": [
+1
+],
+"e": "TX al entrar en pista; STANDBY al desalojarla."
+},
+{
+"t": "introduccion",
+"q": "Un piloto despega sin contactar contigo. ¿Qué haces primero?",
+"o": [
+"Llamar a un supervisor",
+"Enviarle un FORCE ACT",
+"Ignorarlo",
+"Desconectarlo"
+],
+"a": [
+1
+],
+"e": "FORCE ACT; si no responde, otro con chat privado, y luego .WALLOP."
+},
+{
+"t": "introduccion",
+"q": "¿Qué comando se usa para llamar a un supervisor en IVAO?",
+"o": [
+".super",
+"!help",
+".WALLOP",
+".atis"
+],
+"a": [
+2
+],
+"e": ".WALLOP <motivo en inglés>."
+},
+{
+"t": "introduccion",
+"q": "En el control de área de IVAO, las posiciones se identifican con el sufijo…",
+"o": [
+"_APP",
+"_CTR",
+"_FIS",
+"_TWR"
+],
+"a": [
+1
+],
+"e": "_CTR = control de área (no confundir con la zona de control CTR)."
+},
+{
+"t": "introduccion",
+"q": "¿Qué gestiona la ATFCM?",
+"o": [
+"El diseño de procedimientos",
+"El flujo y la capacidad (slots)",
+"La meteorología",
+"La búsqueda y salvamento"
+],
+"a": [
+1
+],
+"e": "ATFCM = gestión de flujo y capacidad; en IVAO solo en grandes eventos."
+},
+{
+"t": "plan-de-vuelo",
+"q": "Un plan de vuelo que empieza IFR y termina VFR es…",
+"o": [
+"V",
+"I",
+"Y",
+"Z"
+],
+"a": [
+2
+],
+"e": "Y (Yankee) = IFR → VFR."
+},
+{
+"t": "plan-de-vuelo",
+"q": "Un plan de vuelo que empieza VFR y termina IFR es…",
+"o": [
+"V",
+"I",
+"Y",
+"Z"
+],
+"a": [
+3
+],
+"e": "Z (Zulu) = VFR → IFR."
+},
+{
+"t": "plan-de-vuelo",
+"q": "En un plan Yankee, al cancelar el IFR el ATC debe indicar…",
+"o": [
+"El nuevo código",
+"La hora UTC de la cancelación",
+"El QNH",
+"La frecuencia de UNICOM"
+],
+"a": [
+1
+],
+"e": "\"Plan de vuelo IFR cancelado a las (hora)\"."
+},
+{
+"t": "plan-de-vuelo",
+"q": "En un plan Zulu, el paso a IFR…",
+"o": [
+"Requiere cancelación explícita del VFR",
+"Se coordina y se transfiere a aproximación, sin cancelación explícita",
+"Lo autoriza TWR sin coordinar",
+"No es posible en IVAO"
+],
+"a": [
+1
+],
+"e": "No hace falta cancelar el VFR explícitamente."
+},
+{
+"t": "plan-de-vuelo",
+"q": "Un avión con MTOW de 79 000 kg (A320) es de estela…",
+"o": [
+"Ligera",
+"Media",
+"Pesada",
+"Super"
+],
+"a": [
+1
+],
+"e": "Media: más de 7 000 y menos de 136 000 kg."
+},
+{
+"t": "plan-de-vuelo",
+"q": "Límite de MTOW de la categoría ligera:",
+"o": [
+"5 700 kg",
+"7 000 kg",
+"15 000 kg",
+"136 000 kg"
+],
+"a": [
+1
+],
+"e": "Ligera: hasta 7 000 kg."
+},
+{
+"t": "plan-de-vuelo",
+"q": "Un B757 que despega primero, a efectos de estela, se considera…",
+"o": [
+"Ligero",
+"Medio",
+"Pesado",
+"Super"
+],
+"a": [
+2
+],
+"e": "Caso especial: pesado cuando va delante."
+},
+{
+"t": "plan-de-vuelo",
+"q": "¿Qué indica \"M081\" en la casilla 15?",
+"o": [
+"Altitud 8 100 m",
+"Mach 0,81",
+"81 nudos",
+"FL081"
+],
+"a": [
+1
+],
+"e": "M + 3 cifras = Mach sin coma."
+},
+{
+"t": "plan-de-vuelo",
+"q": "¿Qué indica \"A060\" como nivel en la casilla 15?",
+"o": [
+"FL60",
+"6 000 ft de altitud",
+"600 ft",
+"60 m"
+],
+"a": [
+1
+],
+"e": "A + 3 cifras = altitud en cientos de pies."
+},
+{
+"t": "plan-de-vuelo",
+"q": "El tipo de vuelo \"G\" significa…",
+"o": [
+"Gobierno",
+"Aviación general",
+"Regular",
+"Militar"
+],
+"a": [
+1
+],
+"e": "G = aviación general."
+},
+{
+"t": "plan-de-vuelo",
+"q": "Si un aeródromo de salida no tiene código OACI, se escribe…",
+"o": [
+"XXXX y RMK/",
+"ZZZZ y DEP/ en casilla 18",
+"El nombre en casilla 13",
+"NONE"
+],
+"a": [
+1
+],
+"e": "ZZZZ + DEP/ en la casilla 18."
+},
+{
+"t": "plan-de-vuelo",
+"q": "¿Qué es la EOBT?",
+"o": [
+"Hora estimada de llegada",
+"Hora prevista de fuera calzos",
+"Hora calculada de despegue",
+"Duración del vuelo"
+],
+"a": [
+1
+],
+"e": "Expected Off-Block Time."
+},
+{
+"t": "plan-de-vuelo",
+"q": "En IVAO, un piloto que despega sin plan de vuelo…",
+"o": [
+"Puede volar sin problema si es VFR",
+"Es desconectado automáticamente a los pocos minutos",
+"Recibe un plan automático",
+"Debe llamar a un supervisor"
+],
+"a": [
+1
+],
+"e": "El plan es obligatorio para todos los vuelos en la red."
+},
+{
+"t": "plan-de-vuelo",
+"q": "¿Qué protegen las salidas de contingencia?",
+"o": [
+"La trayectoria hasta la altitud mínima de vigilancia radar",
+"La aproximación frustrada",
+"El circuito VFR",
+"La espera"
+],
+"a": [
+0
+],
+"e": "Rumbo inicial protegido hasta la altitud mínima de vigilancia (carta ATCSMAC)."
+},
+{
+"t": "meteorologia",
+"q": "En el METAR, ¿respecto a qué norte se da la dirección del viento?",
+"o": [
+"Magnético",
+"Geográfico",
+"De cuadrícula",
+"Del ILS"
+],
+"a": [
+1
+],
+"e": "Norte geográfico (el ATIS/ATC suele darlo magnético, pero el METAR va en geográfico)."
+},
+{
+"t": "meteorologia",
+"q": "\"9999\" en un METAR significa…",
+"o": [
+"Visibilidad desconocida",
+"Visibilidad de 10 km o más",
+"Visibilidad de 9 999 ft",
+"CAVOK"
+],
+"a": [
+1
+],
+"e": "10 km o más."
+},
+{
+"t": "meteorologia",
+"q": "¿Cuántas octas indica BKN?",
+"o": [
+"1–2",
+"3–4",
+"5–7",
+"8"
+],
+"a": [
+2
+],
+"e": "BKN = 5–7 octas."
+},
+{
+"t": "meteorologia",
+"q": "METAR: FEW008 SCT012 BKN025 OVC040. ¿Techo de nubes?",
+"o": [
+"800 ft",
+"1 200 ft",
+"2 500 ft",
+"4 000 ft"
+],
+"a": [
+2
+],
+"e": "El techo es la primera capa BKN u OVC: 2 500 ft."
+},
+{
+"t": "meteorologia",
+"q": "¿Cuáles son condiciones necesarias para CAVOK? (marca todas)",
+"o": [
+"Visibilidad ≥ 10 km",
+"Ninguna nube por debajo de 5 000 ft (o MSA)",
+"Ningún CB ni TCU",
+"Viento en calma"
+],
+"a": [
+0,
+1,
+2
+],
+"m": true,
+"e": "El viento no influye en CAVOK."
+},
+{
+"t": "meteorologia",
+"q": "TEMPO indica fluctuaciones de…",
+"o": [
+"Más de 1 hora cada una",
+"Menos de 1 hora cada una y menos de la mitad del periodo",
+"Exactamente 2 horas",
+"Cambio permanente"
+],
+"a": [
+1
+],
+"e": "Menos de 1 h cada vez y, en total, menos de la mitad del periodo."
+},
+{
+"t": "meteorologia",
+"q": "El TREND de un METAR cubre…",
+"o": [
+"30 minutos",
+"1 hora",
+"2 horas",
+"24 horas"
+],
+"a": [
+2
+],
+"e": "Las 2 horas siguientes."
+},
+{
+"t": "meteorologia",
+"q": "En un TAF, \"TX16/0414Z\" significa…",
+"o": [
+"Temperatura máxima 16 °C el día 4 a las 14Z",
+"Temperatura mínima 16 °C",
+"Viento de 160°",
+"Techo 1 600 ft"
+],
+"a": [
+0
+],
+"e": "TX = máxima; TN = mínima."
+},
+{
+"t": "meteorologia",
+"q": "Mínimas VMC para operar VFR en un CTR:",
+"o": [
+"Vis 1 500 m y techo 600 ft",
+"Vis 5 000 m y techo 1 500 ft",
+"Vis 8 km y techo 1 000 ft",
+"Vis 10 km y sin nubes"
+],
+"a": [
+1
+],
+"e": "5 000 m y 1 500 ft, ambas."
+},
+{
+"t": "meteorologia",
+"q": "METAR: 6000 BKN014. ¿Es VMC en el aeródromo?",
+"o": [
+"Sí",
+"No, por el techo",
+"No, por la visibilidad",
+"No, por ambas"
+],
+"a": [
+1
+],
+"e": "Visibilidad OK (≥ 5 000) pero techo 1 400 < 1 500 ft."
+},
+{
+"t": "meteorologia",
+"q": "Visibilidad mínima en vuelo VFR en o por encima de FL100:",
+"o": [
+"5 km",
+"8 km",
+"10 km",
+"1 500 m"
+],
+"a": [
+1
+],
+"e": "8 km."
+},
+{
+"t": "meteorologia",
+"q": "En clase G, a 2 000 ft AMSL, las mínimas VMC de distancia a nubes son…",
+"o": [
+"1 500 m y 1 000 ft",
+"Libre de nubes y con la superficie a la vista",
+"300 m y 500 ft",
+"No hay mínimas"
+],
+"a": [
+1
+],
+"e": "En F y G a baja altura: libre de nubes y superficie a la vista (vis 5 km)."
+},
+{
+"t": "meteorologia",
+"q": "El VFR especial solo se permite…",
+"o": [
+"De noche",
+"De día",
+"En clase G",
+"Con helicópteros"
+],
+"a": [
+1
+],
+"e": "Únicamente durante el día."
+},
+{
+"t": "meteorologia",
+"q": "¿Qué techo mínimo requiere el ATC para autorizar un SVFR?",
+"o": [
+"300 ft",
+"600 ft",
+"1 000 ft",
+"1 500 ft"
+],
+"a": [
+1
+],
+"e": "600 ft (y 1 500 m de visibilidad en superficie)."
+},
+{
+"t": "meteorologia",
+"q": "Velocidad máxima de un vuelo SVFR:",
+"o": [
+"100 kt",
+"140 kt IAS",
+"180 kt",
+"250 kt"
+],
+"a": [
+1
+],
+"e": "140 kt IAS o inferior."
+},
+{
+"t": "meteorologia",
+"q": "Las condiciones están por debajo de VMC y un VFR quiere salir. ¿Qué haces?",
+"o": [
+"Le sugieres que pida SVFR",
+"Le informas de las condiciones y preguntas intenciones",
+"Le autorizas en VFR",
+"Le cambias a IFR"
+],
+"a": [
+1
+],
+"e": "El ATC nunca sugiere el SVFR."
+},
+{
+"t": "meteorologia",
+"q": "¿Qué dependencia autoriza un SVFR en un CTR?",
+"o": [
+"TWR por sí sola",
+"APP responsable del CTR",
+"GND",
+"ACC"
+],
+"a": [
+1
+],
+"e": "APP autoriza; TWR solicita y transmite (y puede denegar)."
+},
+{
+"t": "meteorologia",
+"q": "Con un SVFR en clase D, la separación con otras aeronaves…",
+"o": [
+"Es responsabilidad del piloto",
+"Pasa a ser responsabilidad del controlador",
+"No se aplica",
+"Solo la da APP"
+],
+"a": [
+1
+],
+"e": "Con SVFR la separación recae en el controlador."
+},
+{
+"t": "meteorologia",
+"q": "¿Qué condición activa las LVP (esquema genérico)?",
+"o": [
+"RVR de 1 200 m",
+"Techo de 250 ft",
+"Visibilidad de 800 m",
+"Techo de 500 ft"
+],
+"a": [
+1
+],
+"e": "Techo ≤ 250 ft (o RVR ≤ 800 m, o vis ≤ 500 m)."
+},
+{
+"t": "meteorologia",
+"q": "Para cancelar las LVP se necesita RVR en todos los transmisómetros de al menos…",
+"o": [
+"800 m",
+"1 000 m",
+"1 500 m",
+"5 000 m"
+],
+"a": [
+2
+],
+"e": "≥ 1 500 m, techo ≥ 500 ft y tendencia de mejora."
+},
+{
+"t": "meteorologia",
+"q": "En una aproximación CAT III, la autorización de aterrizaje no se da más tarde de…",
+"o": [
+"4 NM",
+"2 NM de la TDZ",
+"El umbral",
+"1 NM"
+],
+"a": [
+1
+],
+"e": "2 NM de la TDZ, con las LSA libres."
+},
+{
+"t": "meteorologia",
+"q": "En LVP, el criterio de movimiento en tierra es…",
+"o": [
+"Libre",
+"Una sola aeronave en movimiento en el área de maniobras",
+"Dos aeronaves como máximo",
+"Solo vehículos"
+],
+"a": [
+1
+],
+"e": "Una sola aeronave en movimiento salvo autorización."
+},
+{
+"t": "meteorologia",
+"q": "\"R27/0600D\" significa…",
+"o": [
+"RVR 600 m mejorando",
+"RVR 600 m empeorando",
+"Visibilidad 6 km",
+"Viento 270/06"
+],
+"a": [
+1
+],
+"e": "D = tendencia descendente (empeora)."
+},
+{
+"t": "meteorologia",
+"q": "Si temperatura y punto de rocío están muy próximos…",
+"o": [
+"Es improbable la niebla",
+"Es probable la formación de neblina/niebla",
+"Hay riesgo de tormenta seguro",
+"Aumenta la presión"
+],
+"a": [
+1
+],
+"e": "Aire casi saturado → riesgo de reducción de visibilidad."
+},
+{
+"t": "meteorologia",
+"q": "¿Qué instrumento mide la altura de la base de las nubes?",
+"o": [
+"Transmisómetro",
+"Ceilómetro",
+"Anemómetro",
+"Barómetro"
+],
+"a": [
+1
+],
+"e": "Ceilómetro."
+},
+{
+"t": "meteorologia",
+"q": "En IVAO, el piloto obtiene el ATIS de LEMD_APP tecleando…",
+"o": [
+".metar LEMD",
+".atis LEMD_APP",
+".info LEMD",
+"!atis"
+],
+"a": [
+1
+],
+"e": ".atis + nombre de la posición."
+},
+{
+"t": "meteorologia",
+"q": "En el primer contacto, el piloto confirma el ATIS indicando…",
+"o": [
+"La hora del METAR",
+"La letra de la información",
+"El QNH",
+"La pista"
+],
+"a": [
+1
+],
+"e": "\"Con información Sierra…\"."
+},
+{
+"t": "comunicaciones",
+"q": "En una primera llamada, el orden correcto es…",
+"o": [
+"Mensaje – quién llama – a quién",
+"A quién se llama – quién llama – mensaje",
+"Quién llama – a quién – mensaje",
+"Indiferente"
+],
+"a": [
+1
+],
+"e": "Estación llamada, estación que llama, mensaje."
+},
+{
+"t": "comunicaciones",
+"q": "El término \"ADELANTE / GO AHEAD\"…",
+"o": [
+"Es obligatorio en primera llamada",
+"Ya no se utiliza",
+"Solo lo usa el piloto",
+"Significa \"autorizado\""
+],
+"a": [
+1
+],
+"e": "Se ha dejado de usar."
+},
+{
+"t": "comunicaciones",
+"q": "¿Qué elementos deben colacionarse siempre? (marca todas)",
+"o": [
+"QNH",
+"Código de transpondedor",
+"Información de tránsito",
+"Autorización de cruce de pista"
+],
+"a": [
+0,
+1,
+3
+],
+"m": true,
+"e": "La información de tránsito no es de colación obligatoria (se responde \"a la vista\"/\"buscando\")."
+},
+{
+"t": "comunicaciones",
+"q": "Una colación no realizada equivale a…",
+"o": [
+"Una instrucción aceptada",
+"Una instrucción no dada",
+"Un acuse de recibo",
+"Una cancelación"
+],
+"a": [
+1
+],
+"e": "Hay que insistir en que se colacione."
+},
+{
+"t": "comunicaciones",
+"q": "El piloto colaciona QNH 1004 cuando dijiste 1014. Respondes:",
+"o": [
+"\"Corrección, 1014\"",
+"\"Negativo, repito QNH 1014\"",
+"\"Recibido\"",
+"\"Anule\""
+],
+"a": [
+1
+],
+"e": "NEGATIVO, REPITO + mensaje correcto."
+},
+{
+"t": "comunicaciones",
+"q": "Ordena de mayor a menor prioridad: ¿cuál va primero tras socorro?",
+"o": [
+"Seguridad de los vuelos",
+"Urgencia",
+"Meteorológicos",
+"Regularidad"
+],
+"a": [
+1
+],
+"e": "Socorro > urgencia > seguridad > meteorológicos > regularidad."
+},
+{
+"t": "comunicaciones",
+"q": "¿Quién puede iniciar la abreviación de un indicativo?",
+"o": [
+"El piloto",
+"El controlador",
+"Cualquiera de los dos",
+"Nadie"
+],
+"a": [
+1
+],
+"e": "Solo a iniciativa del controlador y sin riesgo de confusión."
+},
+{
+"t": "comunicaciones",
+"q": "¿Cuál de estos indicativos NO puede abreviarse?",
+"o": [
+"ECXYZ",
+"Cessna ECXYZ",
+"Certified 14LT",
+"American BCDE"
+],
+"a": [
+2
+],
+"e": "Designador de operador + identificación de vuelo: no se abrevia."
+},
+{
+"t": "comunicaciones",
+"q": "Hay ECAZT y ECYZT en frecuencia. ¿Puedes abreviar a EZT?",
+"o": [
+"Sí, ambos",
+"Solo uno de ellos",
+"No, ninguno",
+"Solo si están en distinta frecuencia"
+],
+"a": [
+2
+],
+"e": "Generaría confusión."
+},
+{
+"t": "comunicaciones",
+"q": "La pista 06R se transmite…",
+"o": [
+"Cero seis romeo",
+"Seis derecha",
+"Cero seis derecha",
+"Sesenta derecha"
+],
+"a": [
+2
+],
+"e": "Dos cifras con cero y \"derecha\"."
+},
+{
+"t": "comunicaciones",
+"q": "El nivel de vuelo FL80 se transmite…",
+"o": [
+"Nivel de vuelo cero ocho cero",
+"Nivel de vuelo ocho cero",
+"Nivel de vuelo ochenta",
+"Ocho mil pies"
+],
+"a": [
+1
+],
+"e": "Sin cero delante."
+},
+{
+"t": "comunicaciones",
+"q": "FL200 se transmite…",
+"o": [
+"Nivel de vuelo dos cero cero",
+"Nivel de vuelo doscientos",
+"Veinte mil",
+"Nivel dos cientos cero"
+],
+"a": [
+1
+],
+"e": "Centenas enteras: \"doscientos\"."
+},
+{
+"t": "comunicaciones",
+"q": "10 000 ft de altitud se transmiten…",
+"o": [
+"Diez mil pies",
+"Uno cero mil pies",
+"Uno cero cero cero cero pies",
+"Nivel cien"
+],
+"a": [
+1
+],
+"e": "\"Uno cero mil pies\"."
+},
+{
+"t": "comunicaciones",
+"q": "El rumbo 035 se transmite…",
+"o": [
+"Treinta y cinco",
+"Tres cinco",
+"Cero tres cinco",
+"Rumbo noreste"
+],
+"a": [
+2
+],
+"e": "Tres cifras con cero delante."
+},
+{
+"t": "comunicaciones",
+"q": "QNH 1000 se transmite…",
+"o": [
+"Uno cero cero cero",
+"Mil",
+"Diez cero cero",
+"Cien cero"
+],
+"a": [
+1
+],
+"e": "\"QNH mil\"."
+},
+{
+"t": "comunicaciones",
+"q": "El transpondedor 2000 se transmite…",
+"o": [
+"Dos cero cero cero",
+"Dos mil",
+"Veinte cero cero",
+"Dos cientos"
+],
+"a": [
+1
+],
+"e": "Millares enteros: \"dos mil\"."
+},
+{
+"t": "comunicaciones",
+"q": "En inglés, la coma de una frecuencia se dice…",
+"o": [
+"Point",
+"Comma",
+"Decimal",
+"Dot"
+],
+"a": [
+2
+],
+"e": "DECIMAL."
+},
+{
+"t": "comunicaciones",
+"q": "La escala de inteligibilidad va de…",
+"o": [
+"0 a 5",
+"1 a 5",
+"1 a 10",
+"0 a 10"
+],
+"a": [
+1
+],
+"e": "No existe el 0."
+},
+{
+"t": "comunicaciones",
+"q": "Una transmisión con volumen bajo pero perfectamente comprensible es…",
+"o": [
+"2",
+"3",
+"5",
+"1"
+],
+"a": [
+2
+],
+"e": "La escala mide inteligibilidad, no volumen."
+},
+{
+"t": "comunicaciones",
+"q": "Un pasajero indispuesto, sin peligro inmediato para el vuelo. La llamada adecuada es…",
+"o": [
+"MAYDAY",
+"PAN PAN",
+"SECURITÉ",
+"Ninguna"
+],
+"a": [
+1
+],
+"e": "Urgencia (PAN PAN)."
+},
+{
+"t": "comunicaciones",
+"q": "\"MANTENGA ESCUCHA / MONITOR\" significa…",
+"o": [
+"Llame en la nueva frecuencia",
+"Escuche en la nueva frecuencia sin llamar",
+"Mantenga posición",
+"Repita"
+],
+"a": [
+1
+],
+"e": "Solo escuchar."
+},
+{
+"t": "comunicaciones",
+"q": "¿Cuál es la frase correcta para autorizar el rodaje?",
+"o": [
+"Autorizado a rodar a punto de espera",
+"Ruede a punto de espera pista 27",
+"Rodaje aprobado",
+"Proceda a rodar"
+],
+"a": [
+1
+],
+"e": "Se usa el imperativo RUEDE."
+},
+{
+"t": "comunicaciones",
+"q": "¿Cuál es la frase correcta para el retroceso?",
+"o": [
+"Autorizado retroceso",
+"Retroceso aprobado",
+"Retroceda",
+"Retroceso autorizado"
+],
+"a": [
+1
+],
+"e": "El retroceso se APRUEBA."
+},
+{
+"t": "comunicaciones",
+"q": "En una autorización IFR en aeródromo se recomienda decir…",
+"o": [
+"Autorizado a Sevilla vía…",
+"A Sevilla vía…",
+"Proceda a Sevilla…",
+"Cleared Sevilla…"
+],
+"a": [
+1
+],
+"e": "Reservar \"autorizado\" para la pista; en IFR usar la preposición."
+},
+{
+"t": "comunicaciones",
+"q": "¿Qué debe incluir siempre una autorización de despegue? (marca todas)",
+"o": [
+"Designador de pista",
+"Viento en superficie",
+"QNH",
+"Código de transpondedor"
+],
+"a": [
+0,
+1
+],
+"m": true,
+"e": "Pista y viento."
+},
+{
+"t": "comunicaciones",
+"q": "Una aeronave ya ha iniciado la carrera y debes pararla. Dices:",
+"o": [
+"Mantenga posición, cancele despegue",
+"(Indicativo) aborte despegue, (indicativo) aborte despegue",
+"Motor y al aire",
+"Anule"
+],
+"a": [
+1
+],
+"e": "En carrera: ABORTE DESPEGUE / STOP IMMEDIATELY ×2."
+},
+{
+"t": "comunicaciones",
+"q": "La autorización condicional correcta es:",
+"o": [
+"Entre y mantenga pista 24 detrás de la C172",
+"Detrás de la C172 en final, entre y mantenga pista 24, detrás",
+"Entre en pista 24 cuando aterrice la C172",
+"Alinee pista 24, C172 en final"
+],
+"a": [
+1
+],
+"e": "Condición + instrucción + reiteración."
+},
+{
+"t": "comunicaciones",
+"q": "¿Cuál de estas palabras es estándar?",
+"o": [
+"Ascienda",
+"Afirmativo",
+"Recibido",
+"Copiado"
+],
+"a": [
+2
+],
+"e": "Lo estándar es SUBA, AFIRMO, RECIBIDO."
+},
+{
+"t": "comunicaciones",
+"q": "\"MANTENGA CORTO DE mike\" significa…",
+"o": [
+"Ruede por mike",
+"Pare antes de la intersección con mike sin entrar en ella",
+"Cruce mike",
+"Mantenga posición donde está"
+],
+"a": [
+1
+],
+"e": "Hold short of."
+},
+{
+"t": "comunicaciones",
+"q": "Tienes un tránsito en final esperando la autorización de aterrizaje y llama otro para rodar. ¿Prioridad?",
+"o": [
+"El rodaje, porque llamó",
+"El tráfico en final",
+"Ambos con break break",
+"El que esté más lejos"
+],
+"a": [
+1
+],
+"e": "El tráfico en el aire va antes que el de tierra."
+},
+{
+"t": "comunicaciones",
+"q": "Velocidad máxima recomendada de transmisión:",
+"o": [
+"60 palabras/min",
+"100 palabras/min",
+"150 palabras/min",
+"No hay límite"
+],
+"a": [
+1
+],
+"e": "100 palabras por minuto."
+},
+{
+"t": "comunicaciones",
+"q": "Para imponer silencio en una emergencia se dice…",
+"o": [
+"Silencio en frecuencia",
+"A todas las estaciones, cesen de transmitir, MAYDAY",
+"Break break",
+"Stop transmitting all"
+],
+"a": [
+1
+],
+"e": "ALL STATIONS, STOP TRANSMITTING, MAYDAY."
+},
+{
+"t": "comunicaciones",
+"q": "En inglés se recomienda evitar \"TO\" antes de un nivel porque…",
+"o": [
+"Es incorrecto gramaticalmente",
+"Puede confundirse con TWO",
+"No existe",
+"Lo usan los pilotos"
+],
+"a": [
+1
+],
+"e": "O añadir siempre \"flight level\"/\"altitude\"."
+},
+{
+"t": "comunicaciones",
+"q": "Las letras de pistas paralelas…",
+"o": [
+"Se dicen en alfabeto fonético",
+"Se dicen izquierda/centro/derecha",
+"No se dicen",
+"Se dicen solo en inglés"
+],
+"a": [
+1
+],
+"e": "Left/center/right."
+},
+{
+"t": "espacios-aereos",
+"q": "¿En qué clase solo se permiten vuelos IFR?",
+"o": [
+"A",
+"B",
+"C",
+"D"
+],
+"a": [
+0
+],
+"e": "Clase A."
+},
+{
+"t": "espacios-aereos",
+"q": "En clase D, ¿entre quién da separación el ATC?",
+"o": [
+"Todos con todos",
+"IFR con IFR y VFR",
+"Solo IFR con IFR",
+"Ninguno"
+],
+"a": [
+2
+],
+"e": "En D solo se separan los IFR entre sí."
+},
+{
+"t": "espacios-aereos",
+"q": "En clase C, ¿quién separa a un IFR de un VFR?",
+"o": [
+"Los pilotos",
+"El ATC",
+"Nadie",
+"APP solo de noche"
+],
+"a": [
+1
+],
+"e": "En C el ATC separa IFR de VFR."
+},
+{
+"t": "espacios-aereos",
+"q": "En clase C, dos VFR…",
+"o": [
+"Son separados por el ATC",
+"Reciben información de tránsito entre sí",
+"No reciben servicio",
+"Están prohibidos"
+],
+"a": [
+1
+],
+"e": "VFR↔VFR: información de tránsito."
+},
+{
+"t": "espacios-aereos",
+"q": "¿Qué clase no puede usarse para una zona de control (CTR)?",
+"o": [
+"C",
+"D",
+"E",
+"A"
+],
+"a": [
+2
+],
+"e": "La clase E no se usa para CTR."
+},
+{
+"t": "espacios-aereos",
+"q": "¿En qué clase requieren autorización ATC solo los IFR?",
+"o": [
+"C",
+"D",
+"E",
+"G"
+],
+"a": [
+2
+],
+"e": "En E los VFR no necesitan autorización."
+},
+{
+"t": "espacios-aereos",
+"q": "En clase C, el límite de 250 kt por debajo de FL100 se aplica a…",
+"o": [
+"Todos",
+"Solo IFR",
+"Solo VFR",
+"Nadie"
+],
+"a": [
+2
+],
+"e": "En C solo a los VFR."
+},
+{
+"t": "espacios-aereos",
+"q": "¿Qué clases son espacio aéreo controlado? (marca todas)",
+"o": [
+"B",
+"D",
+"E",
+"G"
+],
+"a": [
+0,
+1,
+2
+],
+"m": true,
+"e": "A–E controlados; F y G no."
+},
+{
+"t": "espacios-aereos",
+"q": "La clase más extendida en los ATZ y CTR españoles es…",
+"o": [
+"A",
+"C",
+"D",
+"G"
+],
+"a": [
+2
+],
+"e": "Clase D."
+},
+{
+"t": "espacios-aereos",
+"q": "En España, la UIR comienza en…",
+"o": [
+"FL145",
+"FL195",
+"FL245",
+"FL100"
+],
+"a": [
+1
+],
+"e": "FL195."
+},
+{
+"t": "espacios-aereos",
+"q": "¿Cuál NO es una FIR española?",
+"o": [
+"LECM",
+"LECB",
+"GCCC",
+"LECS"
+],
+"a": [
+3
+],
+"e": "LECS es Sevilla ACC, dentro de la FIR de Madrid."
+},
+{
+"t": "espacios-aereos",
+"q": "El límite inferior de una CTA está al menos a…",
+"o": [
+"Superficie",
+"700 ft sobre el terreno",
+"1 500 ft",
+"FL55"
+],
+"a": [
+1
+],
+"e": "700 ft, dejando capa VFR debajo."
+},
+{
+"t": "espacios-aereos",
+"q": "Un CTR siempre empieza…",
+"o": [
+"En la superficie",
+"A 700 ft",
+"A 1 000 ft",
+"En FL55"
+],
+"a": [
+0
+],
+"e": "Desde la superficie."
+},
+{
+"t": "espacios-aereos",
+"q": "El límite superior de un ATZ es…",
+"o": [
+"Siempre 3 000 ft",
+"El publicado o el techo de nubes, el menor",
+"El techo de nubes, el mayor",
+"FL100"
+],
+"a": [
+1
+],
+"e": "El menor de ambos."
+},
+{
+"t": "espacios-aereos",
+"q": "Una FIZ es…",
+"o": [
+"Espacio controlado alrededor de un aeropuerto IFR",
+"Espacio no controlado alrededor de un aeródromo AFIS",
+"Una zona prohibida",
+"Una capa VFR"
+],
+"a": [
+1
+],
+"e": "Flight Information Zone."
+},
+{
+"t": "espacios-aereos",
+"q": "¿En qué zona especial solo pueden entrar las aeronaves participantes?",
+"o": [
+"TRA",
+"TSA",
+"D",
+"RMZ"
+],
+"a": [
+1
+],
+"e": "TSA = segregada."
+},
+{
+"t": "espacios-aereos",
+"q": "¿Qué zonas son permanentes y de vuelo prohibido? (marca todas)",
+"o": [
+"P",
+"F",
+"D",
+"TRA"
+],
+"a": [
+0,
+1
+],
+"m": true,
+"e": "Prohibidas y de fauna."
+},
+{
+"t": "espacios-aereos",
+"q": "En una RMZ es obligatorio…",
+"o": [
+"Transpondedor modo S",
+"Mantener escucha y hacer llamada inicial antes de entrar",
+"Plan de vuelo",
+"Autorización ATC"
+],
+"a": [
+1
+],
+"e": "Radio Mandatory Zone."
+},
+{
+"t": "espacios-aereos",
+"q": "La RMZ se aplica a los IFR en…",
+"o": [
+"Clases E, F y G",
+"Clases F y G",
+"Todas",
+"Ninguna"
+],
+"a": [
+1
+],
+"e": "VFR en E/F/G; IFR en F/G."
+},
+{
+"t": "espacios-aereos",
+"q": "En una TMZ se exige…",
+"o": [
+"Radio",
+"Transpondedor con altitud (modo C o S)",
+"Plan de vuelo",
+"Solo IFR"
+],
+"a": [
+1
+],
+"e": "Transponder Mandatory Zone."
+},
+{
+"t": "espacios-aereos",
+"q": "En IVAO, una posición AFIS se identifica como…",
+"o": [
+"_TWR",
+"_FIS_TWR",
+"_AFIS",
+"_INFO"
+],
+"a": [
+1
+],
+"e": "Ej.: LEBG_FIS_TWR."
+},
+{
+"t": "espacios-aereos",
+"q": "El orden de los objetivos del ATC es…",
+"o": [
+"Acelerar, ordenar, separar",
+"Separar, ordenar, acelerar",
+"Ordenar, separar, acelerar",
+"Informar, separar, alertar"
+],
+"a": [
+1
+],
+"e": "Separar, ordenar y acelerar."
+},
+{
+"t": "espacios-aereos",
+"q": "El servicio AFIS…",
+"o": [
+"Puede autorizar despegues",
+"No puede dar autorizaciones ni instrucciones a aeronaves en el aire",
+"Separa IFR",
+"Es automático"
+],
+"a": [
+1
+],
+"e": "Solo información y alerta."
+},
+{
+"t": "altimetria",
+"q": "Presión estándar ISA a nivel del mar:",
+"o": [
+"1000 hPa",
+"1013,25 hPa",
+"1015 hPa",
+"29,29 inHg"
+],
+"a": [
+1
+],
+"e": "1013,25 hPa = 29,92 inHg."
+},
+{
+"t": "altimetria",
+"q": "Cerca del suelo, 1 hPa equivale aproximadamente a…",
+"o": [
+"10 ft",
+"27 ft",
+"100 ft",
+"3 ft"
+],
+"a": [
+1
+],
+"e": "≈ 27 ft."
+},
+{
+"t": "altimetria",
+"q": "La distancia vertical desde el nivel medio del mar a una aeronave es la…",
+"o": [
+"Altura",
+"Altitud",
+"Elevación",
+"Nivel de vuelo"
+],
+"a": [
+1
+],
+"e": "Altitud."
+},
+{
+"t": "altimetria",
+"q": "La distancia vertical desde el MSL hasta un punto del terreno es la…",
+"o": [
+"Altura",
+"Altitud",
+"Elevación",
+"QFE"
+],
+"a": [
+2
+],
+"e": "Elevación."
+},
+{
+"t": "altimetria",
+"q": "Con QNH calado, en tierra el altímetro marca…",
+"o": [
+"0 ft",
+"La elevación del aeródromo",
+"El nivel de transición",
+"1013"
+],
+"a": [
+1
+],
+"e": "QNH → altitud; en tierra, la elevación."
+},
+{
+"t": "altimetria",
+"q": "Con QFE calado, en tierra el altímetro marca…",
+"o": [
+"0 ft",
+"La elevación",
+"FL00",
+"La TA"
+],
+"a": [
+0
+],
+"e": "QFE → altura sobre el aeródromo."
+},
+{
+"t": "altimetria",
+"q": "¿Se usa el QFE en España?",
+"o": [
+"Sí, para circuitos",
+"No",
+"Solo militares",
+"Solo de noche"
+],
+"a": [
+1
+],
+"e": "No se utiliza en España."
+},
+{
+"t": "altimetria",
+"q": "La altitud de transición general en España es…",
+"o": [
+"3 000 ft",
+"5 000 ft",
+"6 000 ft",
+"13 000 ft"
+],
+"a": [
+2
+],
+"e": "6 000 ft."
+},
+{
+"t": "altimetria",
+"q": "La TA del TMA de Madrid es…",
+"o": [
+"6 000 ft",
+"7 000 ft",
+"8 000 ft",
+"13 000 ft"
+],
+"a": [
+3
+],
+"e": "13 000 ft (también Málaga)."
+},
+{
+"t": "altimetria",
+"q": "La TA de Granada es…",
+"o": [
+"6 000 ft",
+"7 000 ft",
+"8 000 ft",
+"13 000 ft"
+],
+"a": [
+1
+],
+"e": "7 000 ft."
+},
+{
+"t": "altimetria",
+"q": "El nivel de transición…",
+"o": [
+"Es fijo",
+"Varía con el QNH",
+"Lo publica el AIP",
+"Es siempre FL70"
+],
+"a": [
+1
+],
+"e": "Variable; lo fija el controlador."
+},
+{
+"t": "altimetria",
+"q": "El espesor mínimo de la capa de transición es…",
+"o": [
+"500 ft",
+"1 000 ft",
+"2 000 ft",
+"3 000 ft"
+],
+"a": [
+1
+],
+"e": "1 000 ft."
+},
+{
+"t": "altimetria",
+"q": "Con un QNH bajo, el nivel de transición…",
+"o": [
+"Baja",
+"Sube",
+"No cambia",
+"Desaparece"
+],
+"a": [
+1
+],
+"e": "Con QNH bajo los FL quedan más bajos en altitud real: hay que subir el TL."
+},
+{
+"t": "altimetria",
+"q": "Subiendo, el piloto cambia de QNH a 1013 al cruzar…",
+"o": [
+"El TL",
+"La TA",
+"FL100",
+"1 000 ft"
+],
+"a": [
+1
+],
+"e": "En ascenso, en la altitud de transición."
+},
+{
+"t": "altimetria",
+"q": "Bajando, el piloto cambia de 1013 a QNH al cruzar…",
+"o": [
+"El TL",
+"La TA",
+"FL100",
+"La capa"
+],
+"a": [
+0
+],
+"e": "En descenso, en el nivel de transición."
+},
+{
+"t": "altimetria",
+"q": "Una aeronave descendiendo dentro de la capa de transición expresa su posición en…",
+"o": [
+"Nivel de vuelo",
+"Altitud",
+"Altura",
+"QFE"
+],
+"a": [
+1
+],
+"e": "Descenso → altitud; ascenso → nivel de vuelo."
+},
+{
+"t": "altimetria",
+"q": "Aeródromo a 540 ft con QFE 990 hPa. QNH aproximado:",
+"o": [
+"970",
+"990",
+"1010",
+"1013"
+],
+"a": [
+2
+],
+"e": "540/27 = 20 hPa → 990 + 20 = 1010."
+},
+{
+"t": "altimetria",
+"q": "En Europa, un piloto puede pasar a 1013 antes de la TA si… (marca todas)",
+"o": [
+"Está por encima de 3 000 ft AAL",
+"Ha sido autorizado a subir a un nivel de vuelo",
+"Lo decide sin autorización",
+"Está en la capa de transición"
+],
+"a": [
+0,
+1
+],
+"m": true,
+"e": "Ambas condiciones."
+},
+{
+"t": "separaciones",
+"q": "En clase D, la separación entre un IFR y un VFR es responsabilidad de…",
+"o": [
+"El controlador",
+"Los pilotos, con información de tránsito",
+"APP",
+"Nadie"
+],
+"a": [
+1
+],
+"e": "El ATC solo separa IFR de IFR."
+},
+{
+"t": "separaciones",
+"q": "Se puede autorizar el despegue en la misma pista cuando la salida anterior… (marca todas)",
+"o": [
+"Ha cruzado el extremo de la pista",
+"Ha iniciado un viraje",
+"Ha rotado",
+"Ha subido a 50 ft"
+],
+"a": [
+0,
+1
+],
+"m": true,
+"e": "Y además, aplicar estela."
+},
+{
+"t": "separaciones",
+"q": "Para salidas paralelas independientes IFR se requiere… (marca todas)",
+"o": [
+"Ejes separados al menos 760 m",
+"Derrotas divergentes al menos 15°",
+"Radar en TWR",
+"Aproximaciones ILS"
+],
+"a": [
+0,
+1
+],
+"m": true,
+"e": "760 m y 15°."
+},
+{
+"t": "separaciones",
+"q": "En pistas segregadas, las aproximaciones a la pista de llegada deben ser…",
+"o": [
+"Cualquiera",
+"Solo ILS o visual",
+"Solo RNAV",
+"Solo VOR"
+],
+"a": [
+1
+],
+"e": "Si no, la operación deja de ser segregada."
+},
+{
+"t": "separaciones",
+"q": "¿Entre qué salidas aplica TWR separación por estela turbulenta?",
+"o": [
+"Solo IFR",
+"Solo VFR",
+"Todas, IFR y VFR",
+"Solo entre pesados"
+],
+"a": [
+2
+],
+"e": "La estela es física: se aplica a todas."
+},
+{
+"t": "separaciones",
+"q": "¿Entre qué salidas aplica TWR la separación de salidas sucesivas?",
+"o": [
+"Todas",
+"Solo entre dos IFR",
+"Solo entre VFR",
+"Entre IFR y VFR"
+],
+"a": [
+1
+],
+"e": "Solo IFR consecutivas."
+},
+{
+"t": "separaciones",
+"q": "Un C172 despega desde pista completa detrás de un A320. Estela:",
+"o": [
+"No aplica",
+"2 min",
+"3 min",
+"4 min"
+],
+"a": [
+1
+],
+"e": "Ligera tras media: 2 min."
+},
+{
+"t": "separaciones",
+"q": "Un A320 despega desde intersección más adelantada detrás de un B744. Estela:",
+"o": [
+"2 min",
+"3 min",
+"4 min",
+"No aplica"
+],
+"a": [
+1
+],
+"e": "Media tras pesada 2 + 1 por intersección = 3 min."
+},
+{
+"t": "separaciones",
+"q": "Un A320 despega desde pista completa detrás de un A380. Estela:",
+"o": [
+"2 min",
+"3 min",
+"4 min",
+"No aplica"
+],
+"a": [
+1
+],
+"e": "Media tras Super: 3 min."
+},
+{
+"t": "separaciones",
+"q": "Un B77W despega detrás de un A380, ambos desde pista completa. Estela:",
+"o": [
+"No aplica",
+"2 min",
+"3 min",
+"4 min"
+],
+"a": [
+1
+],
+"e": "Pesada tras Super: 2 min."
+},
+{
+"t": "separaciones",
+"q": "Un B744 despega desde pista completa detrás de un B77W. Estela:",
+"o": [
+"No aplica",
+"2 min",
+"3 min",
+"1 min"
+],
+"a": [
+0
+],
+"e": "Misma categoría desde pista completa: no aplica."
+},
+{
+"t": "separaciones",
+"q": "Un A320 despega detrás de un C172. Estela:",
+"o": [
+"No aplica",
+"1 min",
+"2 min",
+"3 min"
+],
+"a": [
+0
+],
+"e": "La segunda es de mayor categoría."
+},
+{
+"t": "separaciones",
+"q": "Una toma y despegue, a efectos de estela, se trata como…",
+"o": [
+"Un aterrizaje",
+"Un despegue desde pista completa",
+"Un despegue desde intersección",
+"No se separa"
+],
+"a": [
+2
+],
+"e": "Normalmente 3 min."
+},
+{
+"t": "separaciones",
+"q": "El tiempo de estela en salida se mide…",
+"o": [
+"Desde la autorización de despegue",
+"Desde que la primera deja el suelo hasta que la segunda deja el suelo",
+"Desde que la primera entra en pista",
+"Desde que la segunda inicia la carrera"
+],
+"a": [
+1
+],
+"e": "Entre los momentos de despegue de cada una."
+},
+{
+"t": "separaciones",
+"q": "Dos pistas paralelas separadas 500 m, a efectos de estela…",
+"o": [
+"Son independientes",
+"Se consideran una sola pista",
+"Requieren 4 min",
+"No aplica"
+],
+"a": [
+1
+],
+"e": "Menos de 760 m = pista única."
+},
+{
+"t": "separaciones",
+"q": "Un ATR 72 se clasifica, para salidas sucesivas, como…",
+"o": [
+"Lenta",
+"Media",
+"Rápida",
+"Muy rápida"
+],
+"a": [
+1
+],
+"e": "Turbohélice = media."
+},
+{
+"t": "separaciones",
+"q": "Un helicóptero se clasifica, para salidas sucesivas, como…",
+"o": [
+"Lenta",
+"Media",
+"Rápida",
+"Muy rápida"
+],
+"a": [
+0
+],
+"e": "Pistón y helicópteros = lenta."
+},
+{
+"t": "separaciones",
+"q": "A320 IFR detrás de B738 IFR (tabla genérica):",
+"o": [
+"1,5 min / 3 NM",
+"2 min / 4 NM",
+"SUJETA",
+"2 min / 3 NM"
+],
+"a": [
+1
+],
+"e": "Rápida tras rápida: 2 min / 4 NM."
+},
+{
+"t": "separaciones",
+"q": "AT72 IFR detrás de A320 IFR (tabla genérica):",
+"o": [
+"2 min / 4 NM",
+"1,5 min / 3 NM",
+"1,5 min / 2 NM",
+"SUJETA"
+],
+"a": [
+1
+],
+"e": "Media tras rápida."
+},
+{
+"t": "separaciones",
+"q": "A320 IFR detrás de AT72 IFR (tabla genérica):",
+"o": [
+"2 min / 4 NM",
+"2 min / 3 NM",
+"1,5 min / 2 NM",
+"SUJETA"
+],
+"a": [
+3
+],
+"e": "Rápida tras media: sujeta (la segunda alcanzaría a la primera)."
+},
+{
+"t": "separaciones",
+"q": "C172 IFR detrás de A320 IFR (tabla genérica):",
+"o": [
+"1,5 min / 2 NM",
+"2 min / 4 NM",
+"SUJETA",
+"1,5 min / 3 NM"
+],
+"a": [
+0
+],
+"e": "Lenta tras rápida."
+},
+{
+"t": "separaciones",
+"q": "Cualquier IFR detrás de un PA28 IFR (tabla genérica):",
+"o": [
+"1,5 min",
+"2 min",
+"SUJETA",
+"No aplica"
+],
+"a": [
+2
+],
+"e": "Tras lenta: sujeta."
+},
+{
+"t": "separaciones",
+"q": "B777 IFR seguido de AT72 IFR. ¿Separación final?",
+"o": [
+"1,5 min / 3 NM",
+"2 min (lo mayor entre estela 2 min y sucesivas 1,5 min/3 NM)",
+"3 min",
+"SUJETA"
+],
+"a": [
+1
+],
+"e": "Se aplica la más restrictiva."
+},
+{
+"t": "separaciones",
+"q": "La separación entre salidas IFR sucesivas en tiempo se cuenta desde…",
+"o": [
+"Que la primera inicia la carrera de despegue",
+"Que la primera pasa el umbral opuesto",
+"La autorización de despegue",
+"Que la primera rota"
+],
+"a": [
+0
+],
+"e": "En distancia, desde el umbral opuesto."
+},
+{
+"t": "separaciones",
+"q": "Si el aeródromo tiene procedimiento local de separación entre salidas…",
+"o": [
+"Se aplica la tabla genérica",
+"Se aplica el procedimiento local",
+"Se aplica la mayor de las dos",
+"Se coordina siempre"
+],
+"a": [
+1
+],
+"e": "El local prevalece."
+},
+{
+"t": "separaciones",
+"q": "Se intercala una llegada entre dos salidas IFR. La separación de salidas sucesivas…",
+"o": [
+"Deja de aplicarse",
+"Se sigue aplicando",
+"Se reduce a la mitad",
+"La aplica APP"
+],
+"a": [
+1
+],
+"e": "Debe aplicarse igualmente."
+},
+{
+"t": "separaciones",
+"q": "Una aeronave sujeta es…",
+"o": [
+"Una IFR lista que necesita la aprobación de APP para despegar",
+"Una VFR retenida",
+"Una llegada en espera",
+"Una aeronave con fallo técnico"
+],
+"a": [
+0
+],
+"e": "Suelta = ya aprobada por APP."
+},
+{
+"t": "separaciones",
+"q": "Tras una aproximación frustrada, la siguiente salida IFR…",
+"o": [
+"Puede despegar normalmente",
+"Queda sujeta automáticamente",
+"Debe esperar 10 min",
+"Pasa a VFR"
+],
+"a": [
+1
+],
+"e": "APP debe dar la suelta."
+},
+{
+"t": "separaciones",
+"q": "Sin APP conectado, una salida sujeta según la tabla se considera suelta tras…",
+"o": [
+"2 min",
+"3 min",
+"5 min",
+"10 min"
+],
+"a": [
+2
+],
+"e": "5 minutos."
+},
+{
+"t": "separaciones",
+"q": "APP da una suelta con ascenso inicial distinto. ¿Qué hace TWR?",
+"o": [
+"Autoriza el despegue sin más",
+"Reautoriza al tránsito antes de autorizar el despegue",
+"Lo transfiere a APP en tierra",
+"Lo ignora"
+],
+"a": [
+1
+],
+"e": "Suelta condicional: enmendar la autorización y obtener colación."
+},
+{
+"t": "separaciones",
+"q": "¿Quién es responsable de separar las llegadas IFR sucesivas?",
+"o": [
+"TWR",
+"APP",
+"GND",
+"El piloto"
+],
+"a": [
+1
+],
+"e": "APP, hasta el ATZ; TWR la mantiene hasta el umbral."
+},
+{
+"t": "separaciones",
+"q": "Estela en llegada, B737 detrás de B744, APP radar:",
+"o": [
+"4 NM",
+"5 NM",
+"6 NM",
+"No aplica"
+],
+"a": [
+1
+],
+"e": "Media tras pesada: 5 NM / 2 min."
+},
+{
+"t": "separaciones",
+"q": "Estela en llegada, C172 IFR detrás de B752, APP convencional:",
+"o": [
+"2 min",
+"3 min",
+"4 min",
+"No aplica"
+],
+"a": [
+1
+],
+"e": "Ligera tras pesada: 3 min."
+},
+{
+"t": "separaciones",
+"q": "Estela en llegada, B77W detrás de B744, APP radar:",
+"o": [
+"No aplica",
+"4 NM",
+"5 NM",
+"6 NM"
+],
+"a": [
+1
+],
+"e": "Pesada tras pesada en distancia: 4 NM."
+},
+{
+"t": "separaciones",
+"q": "Estela en llegada, C172 detrás de A388, APP radar:",
+"o": [
+"6 NM",
+"7 NM",
+"8 NM",
+"4 NM"
+],
+"a": [
+2
+],
+"e": "Ligera tras Super: 8 NM / 4 min."
+},
+{
+"t": "separaciones",
+"q": "Estela en llegada, A320 detrás de A388, APP convencional:",
+"o": [
+"2 min",
+"3 min",
+"4 min",
+"No aplica"
+],
+"a": [
+1
+],
+"e": "Media tras Super: 3 min / 7 NM."
+},
+{
+"t": "separaciones",
+"q": "Un VFR va a aterrizar detrás de un A320 IFR en la misma pista. ¿Estela?",
+"o": [
+"3 min",
+"5 NM",
+"No se aplica: se dice \"precaución estela turbulenta\"",
+"2 min"
+],
+"a": [
+2
+],
+"e": "El piloto VFR es responsable de evitarla."
+},
+{
+"t": "separaciones",
+"q": "La separación de llegadas en tiempo se usa cuando…",
+"o": [
+"APP tiene radar",
+"APP es convencional (sin vigilancia)",
+"Hay LVP",
+"Siempre"
+],
+"a": [
+1
+],
+"e": "Radar → NM; convencional → minutos."
+},
+{
+"t": "separaciones",
+"q": "Si TWR ve que no se cumplirá la separación entre llegadas puede… (marca todas)",
+"o": [
+"Reducir a la segunda a velocidad mínima de aproximación",
+"Mandar a la segunda motor y al aire",
+"Mandar a la primera al aire si va demasiado lenta",
+"Autorizar a ambas a aterrizar"
+],
+"a": [
+0,
+1,
+2
+],
+"m": true,
+"e": "Nunca dos autorizaciones de aterrizaje simultáneas."
+},
+{
+"t": "separaciones",
+"q": "En los exámenes ADC de IVAO-ES, la estela con umbral desplazado…",
+"o": [
+"Se evalúa siempre",
+"No se evalúa",
+"Solo en llegadas",
+"Solo en salidas"
+],
+"a": [
+1
+],
+"e": "No se considera por la dificultad de observarla en IVAO."
+},
+{
+"t": "separaciones",
+"q": "Cuando concurren varias separaciones aplicables, se aplica…",
+"o": [
+"La menor",
+"La media",
+"La más restrictiva",
+"La de APP"
+],
+"a": [
+2
+],
+"e": "¡Siempre la mayor!"
+},
+{
+"t": "emergencias",
+"q": "¿Qué significa la primera S de ASSIST?",
+"o": [
+"Silence",
+"Separate",
+"Support",
+"Squawk"
+],
+"a": [
+1
+],
+"e": "Acknowledge, Separate, Silence, Inform, Support, Time."
+},
+{
+"t": "emergencias",
+"q": "La T de ASSIST significa…",
+"o": [
+"Transfer",
+"Time: dar tiempo a la tripulación",
+"Traffic",
+"Turn"
+],
+"a": [
+1
+],
+"e": "No acosar con preguntas."
+},
+{
+"t": "emergencias",
+"q": "Una tripulación declara \"MINIMUM FUEL\". ¿Qué haces?",
+"o": [
+"Darle prioridad absoluta",
+"Tratarlo como emergencia",
+"Informarle de la demora prevista; no tiene prioridad",
+"Desviarla"
+],
+"a": [
+2
+],
+"e": "Combustible mínimo no es emergencia."
+},
+{
+"t": "emergencias",
+"q": "\"MAYDAY FUEL\" es…",
+"o": [
+"Una urgencia",
+"Una emergencia",
+"Un aviso informativo",
+"Una frase no estándar"
+],
+"a": [
+1
+],
+"e": "Se trata como emergencia."
+},
+{
+"t": "emergencias",
+"q": "Fuego en motor de una llegada. ¿Cuándo despejas la pista?",
+"o": [
+"Al umbral",
+"Cuando esté a 20 NM de final",
+"Cuando aterrice",
+"No hace falta"
+],
+"a": [
+1
+],
+"e": "Despejar la pista a 20 NM."
+},
+{
+"t": "emergencias",
+"q": "En una emergencia con fuego, ¿qué datos se preguntan? (marca todas)",
+"o": [
+"Mercancías peligrosas a bordo",
+"Número de personas a bordo",
+"Aeródromo de destino del plan",
+"Nombre del comandante"
+],
+"a": [
+0,
+1
+],
+"m": true,
+"e": "POB y mercancías peligrosas."
+},
+{
+"t": "emergencias",
+"q": "Problema de tren de aterrizaje. ¿Qué es probable que pida el piloto?",
+"o": [
+"Una pasada baja para inspección visual",
+"Un cambio de código",
+"Rodaje rápido",
+"SVFR"
+],
+"a": [
+0
+],
+"e": "Prepararse para la pasada baja."
+},
+{
+"t": "emergencias",
+"q": "Tras un impacto con ave, la primera pregunta clave es…",
+"o": [
+"¿Qué ave era?",
+"¿Es capaz de controlar la aeronave?",
+"¿Cuál es su combustible?",
+"¿Quiere otro código?"
+],
+"a": [
+1
+],
+"e": "Luego intenciones."
+},
+{
+"t": "emergencias",
+"q": "Una aeronave aborta el despegue. Tu acción inmediata:",
+"o": [
+"Autorizar el siguiente despegue",
+"Retener despegues y aterrizajes en esa pista",
+"Transferirla a GND",
+"Pedirle que despegue de nuevo"
+],
+"a": [
+1
+],
+"e": "Después, instrucciones para librar y preguntar intenciones."
+},
+{
+"t": "emergencias",
+"q": "Problema de frenos en una llegada. ¿Qué NO harías?",
+"o": [
+"Ofrecer la pista más larga",
+"Secuenciar a otra llegada muy corta detrás",
+"Liberar la pista",
+"Ofrecer esperar para quemar combustible"
+],
+"a": [
+1
+],
+"e": "Prever pista bloqueada: nada corto detrás."
+},
+{
+"t": "emergencias",
+"q": "Código de transpondedor de fallo de comunicaciones:",
+"o": [
+"7500",
+"7600",
+"7700",
+"7000"
+],
+"a": [
+1
+],
+"e": "7500 interferencia ilícita, 7600 radio, 7700 emergencia."
+},
+{
+"t": "emergencias",
+"q": "Para comprobar si un VFR con fallo de radio te recibe, puedes… (marca todas)",
+"o": [
+"Pedirle squawk ident",
+"Pedirle una maniobra (\"si me recibe, haga un 360 por su derecha\")",
+"En IVAO, probar por texto",
+"Enviarle un .WALLOP"
+],
+"a": [
+0,
+1,
+2
+],
+"m": true,
+"e": "El .WALLOP es para supervisores."
+},
+{
+"t": "emergencias",
+"q": "Condiciones cercanas a IMC. ¿Qué NO debe hacer el controlador?",
+"o": [
+"Informar a los VFR",
+"Vigilar el METAR",
+"Sugerir el VFR especial",
+"Avisar a APP"
+],
+"a": [
+2
+],
+"e": "Nunca se sugiere el SVFR."
+},
+{
+"t": "emergencias",
+"q": "Un IFR pide aproximación visual. ¿Qué visibilidad mínima debes comprobar?",
+"o": [
+"1 500 m",
+"3 km",
+"5 km",
+"8 km"
+],
+"a": [
+2
+],
+"e": "Al menos 5 km (y techo suficiente o confirmación de la tripulación)."
+},
+{
+"t": "emergencias",
+"q": "¿Quién autoriza una aproximación visual IFR?",
+"o": [
+"TWR sin coordinar",
+"APP",
+"GND",
+"El piloto"
+],
+"a": [
+1
+],
+"e": "TWR traslada la petición a APP."
+},
+{
+"t": "emergencias",
+"q": "Prioridad para aterrizar: ¿cuál va primero?",
+"o": [
+"Vuelo SAR",
+"Aeronave con fallo de motor",
+"Ambulancia aérea",
+"Vuelo regular con retraso"
+],
+"a": [
+1
+],
+"e": "Emergencias > sanitarios > SAR > operacionales > resto."
+},
+{
+"t": "emergencias",
+"q": "Ante una emergencia, en cuanto a cambios de frecuencia el controlador…",
+"o": [
+"Transfiere enseguida a APP",
+"Los evita si puede seguir gestionándola",
+"Pide que cambie a UNICOM",
+"Abre otra frecuencia en IVAO"
+],
+"a": [
+1
+],
+"e": "Minimizar cambios de frecuencia."
+},
+{
+"t": "emergencias",
+"q": "Una tripulación declara PAN PAN por un pasajero enfermo. Es…",
+"o": [
+"Emergencia",
+"Urgencia",
+"Situación normal",
+"Interferencia ilícita"
+],
+"a": [
+1
+],
+"e": "Urgencia: requiere medidas pero no ayuda inmediata."
+},
+{
+"t": "emergencias",
+"q": "Cizalladura notificada en final. ¿A quién informas? (marca todas)",
+"o": [
+"A las siguientes aeronaves en final, con el tipo que lo notificó",
+"A APP",
+"A GND",
+"A los pilotos en plataforma con motores apagados"
+],
+"a": [
+0,
+1
+],
+"m": true,
+"e": "Informar a las afectadas y a APP; actualizar con nuevos informes."
+},
+{
+"t": "gestion-transito",
+"q": "El área de movimiento incluye… (marca todas)",
+"o": [
+"Pistas",
+"Calles de rodaje",
+"Plataformas",
+"Aparcamiento de vehículos"
+],
+"a": [
+0,
+1,
+2
+],
+"m": true,
+"e": "Área de maniobras + plataformas."
+},
+{
+"t": "gestion-transito",
+"q": "¿Qué aeronaves requieren siempre aprobación de puesta en marcha?",
+"o": [
+"Los VFR ligeros de pistón",
+"Los helicópteros",
+"Los planeadores",
+"Ninguna"
+],
+"a": [
+1
+],
+"e": "Todos los helicópteros, por la estela del rotor."
+},
+{
+"t": "gestion-transito",
+"q": "Cruzar una pista que no está en uso…",
+"o": [
+"No requiere autorización",
+"Requiere siempre autorización",
+"Solo requiere avisar",
+"Depende del piloto"
+],
+"a": [
+1
+],
+"e": "Siempre con autorización."
+},
+{
+"t": "gestion-transito",
+"q": "Una aeronave que aterriza ha librado la pista cuando…",
+"o": [
+"Sale del eje",
+"Toda la aeronave ha rebasado el punto de espera",
+"Llega a plataforma",
+"Reduce a velocidad de rodaje"
+],
+"a": [
+1
+],
+"e": "Toda su estructura más allá de la barra de parada."
+},
+{
+"t": "gestion-transito",
+"q": "Un turn pad…",
+"o": [
+"Sirve para esperar mientras otro aterriza",
+"Es parte de la pista",
+"Es una calle de rodaje",
+"Es un apartadero"
+],
+"a": [
+1
+],
+"e": "No sirve para esperar."
+},
+{
+"t": "gestion-transito",
+"q": "¿Puede el controlador imponer un despegue desde intersección?",
+"o": [
+"Sí, siempre",
+"No, salvo por razones de seguridad",
+"Sí, si es VFR",
+"Sí, si conoce la TORA"
+],
+"a": [
+1
+],
+"e": "Puede proponerlo; el piloto acepta o rechaza."
+},
+{
+"t": "gestion-transito",
+"q": "Antes de proponer un despegue desde intersección el controlador debe conocer…",
+"o": [
+"La TORA desde esa intersección",
+"El peso de la aeronave",
+"La V1",
+"El combustible"
+],
+"a": [
+0
+],
+"e": "Nunca sin conocer la TORA."
+},
+{
+"t": "gestion-transito",
+"q": "Número máximo recomendado de calles en una instrucción de rodaje:",
+"o": [
+"2",
+"3",
+"5",
+"Ilimitado"
+],
+"a": [
+1
+],
+"e": "3."
+},
+{
+"t": "gestion-transito",
+"q": "La información de tránsito en rodadura es…",
+"o": [
+"Opcional",
+"Obligatoria para evitar colisiones",
+"Solo de noche",
+"Solo en LVP"
+],
+"a": [
+1
+],
+"e": "Es obligatoria."
+},
+{
+"t": "gestion-transito",
+"q": "Una salida se transfiere de GND a TWR…",
+"o": [
+"Al iniciar el rodaje",
+"Al acercarse al punto de espera",
+"Al alinearse",
+"Al despegar"
+],
+"a": [
+1
+],
+"e": "Al aproximarse al punto de espera."
+},
+{
+"t": "gestion-transito",
+"q": "Una llegada se transfiere de TWR a GND…",
+"o": [
+"Al tocar tierra",
+"Cuando ha abandonado la pista",
+"En plataforma",
+"A 2 NM"
+],
+"a": [
+1
+],
+"e": "O cuando se prevé que lo hará sin bloquearla."
+},
+{
+"t": "gestion-transito",
+"q": "Lo recomendado para cruzar una pista activa es…",
+"o": [
+"Que lo autorice GND",
+"Que el tránsito esté en frecuencia de TWR y TWR lo autorice",
+"Que el piloto lo decida",
+"Que cruce sin autorización si no hay tráfico"
+],
+"a": [
+1
+],
+"e": "Evita incursiones en pista."
+},
+{
+"t": "gestion-transito",
+"q": "El circuito de aeródromo se considera lleno con…",
+"o": [
+"2 aeronaves",
+"3 aeronaves",
+"4 aeronaves",
+"6 aeronaves"
+],
+"a": [
+2
+],
+"e": "4 aeronaves."
+},
+{
+"t": "gestion-transito",
+"q": "¿Quién tiene prioridad: un VFR ya en circuito o uno que entra?",
+"o": [
+"El que entra",
+"El que ya está en el circuito",
+"El más rápido",
+"El que llamó antes"
+],
+"a": [
+1
+],
+"e": "Los que ya están en el circuito."
+},
+{
+"t": "gestion-transito",
+"q": "Integración por defecto de una llegada VFR:",
+"o": [
+"Directa a final",
+"Base",
+"Principio o mitad del viento en cola",
+"Barlovento"
+],
+"a": [
+2
+],
+"e": "Viento en cola."
+},
+{
+"t": "gestion-transito",
+"q": "Un VFR en tránsito cruza sobre el campo con tráfico en el circuito. Se recomienda…",
+"o": [
+"Que cruce a la altitud del circuito",
+"Imponerle una altitud por encima del circuito (500–1 000 ft más)",
+"Prohibir el tránsito",
+"Que cruce por debajo"
+],
+"a": [
+1
+],
+"e": "Y dar información de tránsito a ambos."
+},
+{
+"t": "gestion-transito",
+"q": "Un VFR quiere cruzar el eje de la pista con un IFR en final. Debes prever…",
+"o": [
+"Una posible frustrada del IFR",
+"Un despegue abortado",
+"Una emergencia",
+"Nada"
+],
+"a": [
+0
+],
+"e": "Acelerar el cruce o hacer que cruce detrás del IFR."
+},
+{
+"t": "gestion-transito",
+"q": "El ruido NO debe determinar la pista en uso cuando el viento de cola (con rachas) supera…",
+"o": [
+"3 kt",
+"5 kt",
+"10 kt",
+"15 kt"
+],
+"a": [
+1
+],
+"e": "Cola > 5 kt o cruzado > 15 kt."
+},
+{
+"t": "gestion-transito",
+"q": "Una tripulación pide otra pista por seguridad, frente a la preferente por ruido…",
+"o": [
+"Prevalece el ruido",
+"Prevalece la seguridad",
+"Decide APP",
+"Se deniega"
+],
+"a": [
+1
+],
+"e": "La seguridad siempre prevalece."
+},
+{
+"t": "gestion-transito",
+"q": "Al cambiar la pista en uso, TWR debe… (marca todas)",
+"o": [
+"Avisar a los controladores adyacentes",
+"Actualizar el ATIS",
+"Cerrar la posición",
+"Avisar a un supervisor"
+],
+"a": [
+0,
+1
+],
+"m": true,
+"e": "Coordinar y ATIS."
+},
+{
+"t": "gestion-transito",
+"q": "\"Autorizado a despegar inmediato\" desde el punto de espera implica…",
+"o": [
+"Alinear y esperar",
+"Entrar y despegar sin detenerse",
+"Despegar en 2 minutos",
+"Esperar al viento"
+],
+"a": [
+1
+],
+"e": "Si no es posible, declinarlo."
+},
+{
+"t": "gestion-transito",
+"q": "¿A qué aeronave nunca se le pide que aterrice más allá de la zona de toma de contacto?",
+"o": [
+"Una ligera",
+"Una pesada",
+"Un helicóptero",
+"Un VFR"
+],
+"a": [
+1
+],
+"e": "Nunca a una pesada."
+},
+{
+"t": "gestion-transito",
+"q": "La separación reducida en pista NO se aplica…",
+"o": [
+"Entre dos llegadas",
+"Entre dos salidas",
+"Entre una salida y una llegada",
+"Entre ligeros"
+],
+"a": [
+2
+],
+"e": "Nunca entre salida y llegada."
+},
+{
+"t": "gestion-transito",
+"q": "Separación reducida: un cat. 1 aterriza tras un cat. 2. Distancia mínima recorrida por el precedente:",
+"o": [
+"300 m",
+"600 m",
+"1 500 m",
+"2 400 m"
+],
+"a": [
+1
+],
+"e": "Precedente cat. 1 o 2 y siguiente cat. 1: 600 m."
+},
+{
+"t": "gestion-transito",
+"q": "Separación reducida: precedente de cat. 3:",
+"o": [
+"600 m",
+"1 500 m",
+"2 400 m",
+"3 000 m"
+],
+"a": [
+2
+],
+"e": "2 400 m."
+},
+{
+"t": "gestion-transito",
+"q": "Condiciones de la separación reducida en pista (marca todas)",
+"o": [
+"Visibilidad ≥ 5 000 m",
+"Techo ≥ 1 000 ft",
+"Viento de cola ≤ 5 kt",
+"De noche"
+],
+"a": [
+0,
+1,
+2
+],
+"m": true,
+"e": "Además: publicada localmente, radar, estela, info de tránsito, frenado normal."
+},
+{
+"t": "gestion-transito",
+"q": "Si se suspenden las operaciones VFR por falta de VMC, TWR debe… (marca todas)",
+"o": [
+"Retener las salidas VFR",
+"Hacer volver a los VFR locales o aprobar SVFR",
+"Notificar a APP/ACC",
+"Cerrar el aeropuerto"
+],
+"a": [
+0,
+1,
+2
+],
+"m": true,
+"e": "Y explicar el motivo."
+},
+{
+"t": "gestion-transito",
+"q": "Con más de 4 aeronaves en circuito, una técnica útil es…",
+"o": [
+"Autorizar más tomas y despegues",
+"Retener tomas y despegues y priorizar tomas finales",
+"Cerrar el ATZ",
+"Pasar a todos a IFR"
+],
+"a": [
+1
+],
+"e": "Primero los aterrizajes con parada completa."
+},
+{
+"t": "gestion-transito",
+"q": "Una pista activa puede usarse como calle de rodaje si…",
+"o": [
+"Lo autoriza TWR",
+"Lo decide GND",
+"Lo pide el piloto",
+"Nunca"
+],
+"a": [
+0
+],
+"e": "Las operaciones en pista activa son de TWR."
+},
+{
+"t": "gestion-transito",
+"q": "Ante el jet blast, ¿qué hay que evitar?",
+"o": [
+"Aprobar la puesta en marcha de un reactor con un ligero a punto de pasar por detrás",
+"Autorizar rodajes de ligeros",
+"Retrocesos en LVP",
+"Despegues desde intersección"
+],
+"a": [
+0
+],
+"e": "El chorro es peligroso para ligeros y helicópteros."
+},
+{
+"t": "gestion-transito",
+"q": "El tráfico esencial es…",
+"o": [
+"Todo el tráfico en frecuencia",
+"Aeronaves o vehículos que suponen riesgo de colisión en/cerca de la pista o en zonas de despegue/aproximación",
+"Solo los IFR",
+"Solo las emergencias"
+],
+"a": [
+1
+],
+"e": "Se transmite sin demora."
+},
+{
+"t": "gestion-transito",
+"q": "En clase E, el servicio de control a un VFR en tránsito…",
+"o": [
+"Es obligatorio",
+"Solo se presta si lo solicita",
+"Está prohibido",
+"Lo presta APP"
+],
+"a": [
+1
+],
+"e": "En C y D siempre; en E a petición."
+},
+{
+"t": "examen",
+"q": "Rango necesario para presentarse al ADC:",
+"o": [
+"AS1",
+"AS2",
+"AS3 con 2 meses de antigüedad",
+"APC"
+],
+"a": [
+2
+],
+"e": "AS3 con antigüedad mínima de 2 meses."
+},
+{
+"t": "examen",
+"q": "Horas mínimas como controlador en IVAO para el ADC:",
+"o": [
+"25",
+"40",
+"50",
+"100"
+],
+"a": [
+2
+],
+"e": "50 h."
+},
+{
+"t": "examen",
+"q": "Experiencia en la dependencia del examen práctico:",
+"o": [
+"10 h en 1 mes",
+"15 h en los 3 meses previos",
+"20 h en 6 meses",
+"No hay requisito"
+],
+"a": [
+1
+],
+"e": "Las conexiones < 30 min no cuentan."
+},
+{
+"t": "examen",
+"q": "Tráfico mínimo del examen práctico (marca todas)",
+"o": [
+"4 salidas IFR, una no estándar",
+"4 llegadas IFR",
+"1 frustrada iniciada por el piloto",
+"2 emergencias"
+],
+"a": [
+0,
+1,
+2
+],
+"m": true,
+"e": "Una emergencia, no dos (y 2 VFR, 1 tránsito solo texto)."
+},
+{
+"t": "examen",
+"q": "Durante el examen puede haber un controlador de GND…",
+"o": [
+"Sí, es obligatorio",
+"No; si se conecta, ignorarlo y avisar al examinador",
+"Solo si el candidato lo pide",
+"Solo en grandes aeropuertos"
+],
+"a": [
+1
+],
+"e": "No puede haber GND."
+},
+{
+"t": "examen",
+"q": "¿Cuál es motivo de suspenso automático? (marca todas)",
+"o": [
+"No tener las cartas a mano",
+"Autorizar a aterrizar con otro tránsito en pista",
+"Sobre-coordinar un procedimiento estándar",
+"Pérdida de separación de la que TWR es responsable"
+],
+"a": [
+0,
+1,
+3
+],
+"m": true,
+"e": "La sobre-coordinación penaliza, pero no es suspenso automático."
+},
+{
+"t": "examen",
+"q": "¿Cuántos VFR haciendo tomas y despegues puedes limitar en el circuito sin penalización?",
+"o": [
+"1",
+"2",
+"3",
+"4"
+],
+"a": [
+1
+],
+"e": "Dos simultáneos; un tercero que entra/sale del aeródromo sí debes aceptarlo."
+}
+]

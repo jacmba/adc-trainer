@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 380" font-family="DejaVu Sans, Arial, sans-serif">
+  <rect width="760" height="380" fill="#f8fafc"/>
+  <text x="20" y="28" font-size="15" font-weight="bold" fill="#0f172a">Corte vertical típico alrededor de un aeropuerto (España)</text>
+  <!-- FIR G layer -->
+  <rect x="20" y="40" width="720" height="290" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="30" y="60" font-size="12" fill="#475569">FIR (por encima de ~FL145 suele ser clase C)</text>
+  <!-- TMA -->
+  <path d="M60,110 L700,110 L700,250 L560,250 L560,190 L200,190 L200,250 L60,250 z" fill="#dbeafe" stroke="#1e3a8a" stroke-width="2"/>
+  <text x="80" y="135" font-size="14" font-weight="bold" fill="#1e3a8a">TMA / CTA (controlado, p. ej. clase D/C)</text>
+  <text x="80" y="153" font-size="12" fill="#1e3a8a">Base ≥ 700 ft sobre el terreno → capa VFR libre debajo</text>
+  <!-- CTR -->
+  <rect x="200" y="190" width="360" height="135" fill="#fde68a" stroke="#b45309" stroke-width="2"/>
+  <text x="215" y="212" font-size="14" font-weight="bold" fill="#92400e">CTR — desde la SUPERFICIE (clase D)</text>
+  <text x="215" y="230" font-size="12" fill="#92400e">Protege salidas y aproximaciones IFR · radio ≥ 5 km</text>
+  <!-- ATZ -->
+  <rect x="290" y="240" width="180" height="85" fill="#fca5a5" stroke="#b91c1c" stroke-width="2"/>
+  <text x="302" y="260" font-size="13" font-weight="bold" fill="#7f1d1d">ATZ</text>
+  <text x="302" y="277" font-size="11" fill="#7f1d1d">desde la superficie;</text>
+  <text x="302" y="293" font-size="11" fill="#7f1d1d">techo: el menor entre</text>
+  <text x="302" y="309" font-size="11" fill="#7f1d1d">publicado y nubes</text>
+  <!-- class G below TMA -->
+  <text x="65" y="290" font-size="12" fill="#475569">Clase G</text>
+  <text x="65" y="306" font-size="12" fill="#475569">(VFR libre)</text>
+  <text x="590" y="290" font-size="12" fill="#475569">Clase G</text>
+  <text x="590" y="306" font-size="12" fill="#475569">(VFR libre)</text>
+  <!-- ground -->
+  <rect x="20" y="325" width="720" height="8" fill="#a8a29e"/>
+  <rect x="350" y="318" width="60" height="7" fill="#334155"/>
+  <text x="20" y="355" font-size="12" fill="#334155">FIZ = equivalente a la ATZ en un aeródromo no controlado (AFIS, clase G).</text><text x="20" y="372" font-size="12" fill="#334155">No confundir la zona CTR (espacio aéreo) con la posición _CTR de IVAO (control de área).</text>
+</svg>

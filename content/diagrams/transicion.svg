@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" font-family="DejaVu Sans, Arial, sans-serif">
+  <rect width="760" height="400" fill="#f8fafc"/>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0f172a"/></marker></defs>
+  <!-- FL zone -->
+  <rect x="40" y="30" width="420" height="110" fill="#dbeafe"/>
+  <text x="56" y="62" font-size="15" font-weight="bold" fill="#1e3a8a">Sobre el TL: 1013 → NIVEL DE VUELO</text>
+  <line x1="40" y1="140" x2="460" y2="140" stroke="#1e3a8a" stroke-width="3"/>
+  <text x="470" y="138" font-size="14" font-weight="bold" fill="#1e3a8a">Nivel de transición (TL)</text><text x="470" y="156" font-size="12" fill="#1e3a8a">variable con el QNH (tabla SOP)</text>
+  <!-- layer -->
+  <rect x="40" y="140" width="420" height="80" fill="#fef3c7"/>
+  <text x="56" y="172" font-size="14" font-weight="bold" fill="#92400e">CAPA DE TRANSICIÓN (≥ 1 000 ft)</text>
+  <text x="56" y="195" font-size="12" fill="#92400e">Subiendo se notifica en FL · bajando en altitud</text>
+  <line x1="40" y1="220" x2="460" y2="220" stroke="#047857" stroke-width="3"/>
+  <text x="470" y="225" font-size="14" font-weight="bold" fill="#047857">Altitud de transición (TA) — fija</text>
+  <text x="470" y="243" font-size="12" fill="#047857">España 6 000 ft (Madrid/Málaga 13 000,</text>
+  <text x="470" y="259" font-size="12" fill="#047857">Granada 7 000, La Seu 8 000)</text>
+  <!-- QNH zone -->
+  <rect x="40" y="220" width="420" height="120" fill="#dcfce7"/>
+  <text x="56" y="262" font-size="15" font-weight="bold" fill="#065f46">En/bajo la TA: QNH → ALTITUD</text>
+  <!-- ground -->
+  <path d="M40,340 L140,330 L220,338 L320,322 L420,336 L460,328 L460,360 L40,360 z" fill="#a8a29e"/>
+  <text x="56" y="382" font-size="12" fill="#44403c">En tierra: QNH (el altímetro marca la elevación)</text>
+  <!-- climb/descent arrows -->
+  <path d="M370,330 C390,250 400,170 420,60" fill="none" stroke="#0f172a" stroke-width="2" marker-end="url(#a)"/>
+  <text x="300" y="300" font-size="11" fill="#0f172a">ascenso: cambia a</text>
+  <text x="300" y="314" font-size="11" fill="#0f172a">1013 al cruzar la TA</text>
+  <path d="M250,60 C230,150 220,240 200,330" fill="none" stroke="#0f172a" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#a)"/>
+  <text x="60" y="110" font-size="11" fill="#0f172a">descenso: cambia a</text>
+  <text x="60" y="124" font-size="11" fill="#0f172a">QNH al cruzar el TL</text>
+</svg>

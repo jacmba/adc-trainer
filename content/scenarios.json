@@ -1,0 +1,1753 @@
+[
+ {
+  "id": "s01",
+  "title": "Hora punta en Gran Canaria",
+  "cat": "Separaciones",
+  "diff": 1,
+  "setup": {
+   "apt": "GCLP_TWR",
+   "rwy": "03L",
+   "metar": "GCLP 121200Z 03015KT 9999 FEW025 23/14 Q1018",
+   "notes": "APP radar conectado. Separación genérica en tiempo. Todas las salidas sueltas salvo aviso."
+  },
+  "steps": [
+   {
+    "scene": [
+     {
+      "cs": "IBE3712",
+      "ac": "A320",
+      "pos": "rwy:0.9",
+      "st": "air"
+     },
+     {
+      "cs": "BTI8851",
+      "ac": "AT72",
+      "pos": "hp"
+     },
+     {
+      "cs": "RYR4QL",
+      "ac": "B738",
+      "pos": "hp2"
+     }
+    ],
+    "sit": "IBE3712 (A320) acaba de despegar y está cruzando el final de pista. En el punto de espera esperan BTI8851 (ATR72) y RYR4QL (B738), ambos IFR por la misma SID.",
+    "q": "¿Qué orden de salida minimiza la demora sin quedar sujeto?",
+    "o": [
+     "RYR4QL primero y luego BTI8851",
+     "BTI8851 primero y luego RYR4QL",
+     "Da igual el orden"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Tras el A320 (rápida): B738 rápida → 2 min; luego ATR (media) tras B738 → 1,5 min. Si sale primero el ATR (1,5 min), el B738 detrás de un turbohélice quedaría SUJETO.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "RYR4QL",
+      "ac": "B738",
+      "pos": "rwy:0.05"
+     },
+     {
+      "cs": "BTI8851",
+      "ac": "AT72",
+      "pos": "hp"
+     }
+    ],
+    "sit": "Han pasado 2 minutos desde que IBE3712 inició la carrera. RYR4QL está alineado.",
+    "q": "¿Qué le transmites?",
+    "o": [
+     "RYR4QL, viento 030 grados 15 nudos, pista 03L autorizado a despegar",
+     "RYR4QL, autorizado a despegar",
+     "RYR4QL, despegue a discreción",
+     "RYR4QL, pista 03L despegue aprobado"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Autorización de despegue con designador de pista y viento en superficie.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "RYR4QL",
+      "ac": "B738",
+      "pos": "rwy:1.1",
+      "st": "air"
+     },
+     {
+      "cs": "BTI8851",
+      "ac": "AT72",
+      "pos": "rwy:0.05"
+     },
+     {
+      "cs": "VLG2208",
+      "ac": "A320",
+      "pos": "final:6",
+      "st": "air"
+     }
+    ],
+    "sit": "RYR4QL despegó hace 1 minuto. BTI8851 está alineado. APP te transfiere VLG2208 (A320) establecido en final a 6 NM.",
+    "q": "¿Cuándo puedes autorizar el despegue de BTI8851 y qué pasa con la llegada?",
+    "o": [
+     "A los 1,5 min de la carrera del B738; la llegada recibirá la autorización de aterrizaje en cuanto el ATR despegue",
+     "Inmediatamente, porque la llegada está a 6 NM",
+     "Hay que esperar a que aterrice VLG2208",
+     "No puede salir: queda sujeto"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Media tras rápida: 1,5 min / 3 NM (sin estela entre B738 y ATR). Con 6 NM hay margen; nunca dos autorizaciones de pista a la vez.",
+    "sev": "loss"
+   },
+   {
+    "scene": [
+     {
+      "cs": "BTI8851",
+      "ac": "AT72",
+      "pos": "rwy:0.5",
+      "st": "roll"
+     },
+     {
+      "cs": "VLG2208",
+      "ac": "A320",
+      "pos": "final:3",
+      "st": "air"
+     }
+    ],
+    "sit": "BTI8851 está en carrera de despegue. VLG2208 llama: \"Gran Canaria Torre, VLG2208, final pista 03L\".",
+    "q": "¿Qué le respondes?",
+    "o": [
+     "VLG2208, continúe aproximación, número uno, tránsito saliendo, prevea autorización tardía, viento 030 grados 15 nudos",
+     "VLG2208, pista 03L autorizado a aterrizar",
+     "VLG2208, motor y al aire",
+     "VLG2208, orbite a la derecha"
+    ],
+    "a": [
+     0
+    ],
+    "e": "La pista aún está ocupada por la salida: \"continúe aproximación\" y la autorización llega cuando el ATR cruce el final de pista o vire. Con autorización tardía, dar viento.",
+    "sev": "loss"
+   }
+  ]
+ },
+ {
+  "id": "s02",
+  "title": "Estela en Madrid",
+  "cat": "Separaciones",
+  "diff": 2,
+  "setup": {
+   "apt": "LEMD_TWR",
+   "rwy": "36L",
+   "metar": "LEMD 151600Z 36008KT CAVOK 21/05 Q1021",
+   "notes": "Salidas por 36L. Las intersecciones Z1 (cabecera) y Z3 (intersección más adelantada) están disponibles."
+  },
+  "steps": [
+   {
+    "scene": [
+     {
+      "cs": "UAE141",
+      "ac": "A388",
+      "pos": "rwy:0.95",
+      "st": "air"
+     },
+     {
+      "cs": "IBE6251",
+      "ac": "A359",
+      "pos": "hp"
+     },
+     {
+      "cs": "AEA1043",
+      "ac": "B738",
+      "pos": "hp2"
+     }
+    ],
+    "sit": "UAE141 (A380) acaba de despegar desde cabecera. IBE6251 (A350) espera en Z1 y AEA1043 (B738) en Z1 detrás.",
+    "q": "Separación por estela para IBE6251 desde cabecera:",
+    "o": [
+     "2 minutos",
+     "3 minutos",
+     "4 minutos",
+     "No aplica"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Pesada tras Super: 2 min desde pista completa (3 desde intersección).",
+    "sev": "loss"
+   },
+   {
+    "scene": [
+     {
+      "cs": "IBE6251",
+      "ac": "A359",
+      "pos": "rwy:0.95",
+      "st": "air"
+     },
+     {
+      "cs": "AEA1043",
+      "ac": "B738",
+      "pos": "hp3"
+     }
+    ],
+    "sit": "AEA1043 pide salir desde Z3 (intersección más adelantada) para ganar tiempo, justo detrás de IBE6251 (A350) que salió de cabecera.",
+    "q": "¿Qué separación por estela le aplicas?",
+    "o": [
+     "2 minutos",
+     "3 minutos",
+     "4 minutos",
+     "No aplica"
+    ],
+    "a": [
+     1
+    ],
+    "e": "Media tras pesada = 2 min, +1 min por intersección más adelantada = 3 min.",
+    "sev": "loss"
+   },
+   {
+    "scene": [
+     {
+      "cs": "AEA1043",
+      "ac": "B738",
+      "pos": "hp3"
+     }
+    ],
+    "sit": "Antes de autorizarle desde Z3, ¿qué necesitas sí o sí?",
+    "q": "Para autorizar un despegue desde intersección debes…",
+    "o": [
+     "Conocer la TORA desde Z3 (y el piloto la ha pedido o aceptado)",
+     "Pedir permiso a APP",
+     "Que el viento sea en calma",
+     "Nada especial"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Nunca se autoriza desde una intersección sin conocer su TORA; el piloto debe pedirla o aceptarla.",
+    "sev": "minor"
+   }
+  ]
+ },
+ {
+  "id": "s03",
+  "title": "Frustrada y suelta",
+  "cat": "Sujeta/suelta",
+  "diff": 2,
+  "setup": {
+   "apt": "LEBB_TWR",
+   "rwy": "30",
+   "metar": "LEBB 080900Z 31012KT 9999 BKN030 14/09 Q1009",
+   "notes": "BIO_APP conectado (radar). Coordinación inicial: salidas sueltas salvo aviso."
+  },
+  "steps": [
+   {
+    "scene": [
+     {
+      "cs": "VLG8711",
+      "ac": "A320",
+      "pos": "final:1",
+      "st": "air"
+     },
+     {
+      "cs": "IBE0441",
+      "ac": "A321",
+      "pos": "hp"
+     }
+    ],
+    "sit": "VLG8711, en corta final, anuncia: \"Motor y al aire, VLG8711\". IBE0441 está en el punto de espera listo para salir.",
+    "q": "¿Qué haces con IBE0441?",
+    "o": [
+     "Queda sujeto automáticamente: pido la suelta a APP antes de autorizarlo",
+     "Lo autorizo a despegar, estaba suelto",
+     "Lo alineo y despega a los 2 min",
+     "Le pido que vuelva a plataforma"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Tras una frustrada, la siguiente salida IFR queda sujeta aunque la coordinación inicial fuera de sueltas.",
+    "sev": "loss"
+   },
+   {
+    "scene": [
+     {
+      "cs": "VLG8711",
+      "ac": "A320",
+      "pos": "climb",
+      "st": "air"
+     },
+     {
+      "cs": "IBE0441",
+      "ac": "A321",
+      "pos": "hp"
+     }
+    ],
+    "sit": "Antes de nada, con VLG8711 en frustrada…",
+    "q": "¿Cuál es la primera acción correcta?",
+    "o": [
+     "Acusar recibo, dar instrucciones (procedimiento publicado o lo coordinado) e informar a APP",
+     "Preguntarle por qué ha frustrado",
+     "Transferirlo a GND",
+     "Pedirle que orbite sobre el campo"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Informar a APP, dar instrucciones de frustrada y, cuando proceda, averiguar el motivo.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "IBE0441",
+      "ac": "A321",
+      "pos": "hp"
+     }
+    ],
+    "sit": "APP responde: \"IBE0441 suelto, ascenso inicial 4000 pies en lugar del publicado\".",
+    "q": "¿Qué transmites a IBE0441 antes del despegue?",
+    "o": [
+     "IBE0441, enmiende autorización de salida, ascenso inicial altitud 4000 pies (y esperas la colación)",
+     "Nada, el despegue ya implica el cambio",
+     "IBE0441, autorizado a despegar, suba a 4000",
+     "Le transfieres a APP en tierra"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Suelta condicional: TWR reautoriza y obtiene colación antes de autorizar el despegue.",
+    "sev": "minor"
+   }
+  ]
+ },
+ {
+  "id": "s04",
+  "title": "Fuego en motor",
+  "cat": "Emergencias",
+  "diff": 2,
+  "setup": {
+   "apt": "LEVC_TWR",
+   "rwy": "30",
+   "metar": "LEVC 201400Z 30009KT 9999 FEW040 25/16 Q1016",
+   "notes": "Pista 30 en uso. APP radar conectado."
+  },
+  "steps": [
+   {
+    "scene": [
+     {
+      "cs": "RYR77AB",
+      "ac": "B738",
+      "pos": "climb",
+      "st": "air"
+     },
+     {
+      "cs": "ECKLM",
+      "ac": "C172",
+      "pos": "dw",
+      "st": "air"
+     },
+     {
+      "cs": "AEA4410",
+      "ac": "B738",
+      "pos": "final:8",
+      "st": "air"
+     }
+    ],
+    "sit": "RYR77AB, recién despegado: \"MAYDAY MAYDAY MAYDAY, Valencia Torre, RYR77AB, fuego en motor izquierdo, solicitamos regresar a pista 30\".",
+    "q": "Según ASSIST, ¿qué es lo primero?",
+    "o": [
+     "Acusar recibo y asegurarte de entender la emergencia",
+     "Preguntar el número de pasajeros",
+     "Transferirlo a APP",
+     "Imponer silencio a todas las estaciones"
+    ],
+    "a": [
+     0
+    ],
+    "e": "A de Acknowledge: acusar recibo y comprender la naturaleza del problema.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "RYR77AB",
+      "ac": "B738",
+      "pos": "dw",
+      "st": "air"
+     },
+     {
+      "cs": "ECKLM",
+      "ac": "C172",
+      "pos": "base",
+      "st": "air"
+     },
+     {
+      "cs": "AEA4410",
+      "ac": "B738",
+      "pos": "final:7",
+      "st": "air"
+     }
+    ],
+    "sit": "La emergencia regresa. Tienes a ECKLM en base y AEA4410 en final a 7 NM.",
+    "q": "¿Qué haces con el resto del tráfico? (elige la mejor)",
+    "o": [
+     "ECKLM: orbite / apártese del circuito; AEA4410: coordinar con APP motor y al aire o espera; mantener la pista libre",
+     "Que aterricen todos antes y luego la emergencia",
+     "Mantener la secuencia normal",
+     "Cerrar el aeropuerto a todos y enviar a todos a UNICOM"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Separate: darle espacio y prioridad; liberar la pista; coordinar con APP para las llegadas.",
+    "sev": "loss"
+   },
+   {
+    "scene": [
+     {
+      "cs": "RYR77AB",
+      "ac": "B738",
+      "pos": "base",
+      "st": "air"
+     }
+    ],
+    "sit": "Cuando la situación lo permite, pides datos.",
+    "q": "¿Qué preguntas son pertinentes ante un fuego? (marca todas)",
+    "o": [
+     "Personas a bordo",
+     "Mercancías peligrosas a bordo",
+     "Combustible remanente",
+     "Número de vuelo de vuelta"
+    ],
+    "a": [
+     0,
+     1,
+     2
+    ],
+    "m": true,
+    "e": "POB, mercancías peligrosas y autonomía ayudan a los servicios de emergencia. Sin acosar: T de Time.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "RYR77AB",
+      "ac": "B738",
+      "pos": "final:4",
+      "st": "air"
+     }
+    ],
+    "sit": "RYR77AB en final.",
+    "q": "¿Qué le transmites?",
+    "o": [
+     "RYR77AB, viento 300 grados 9 nudos, pista 30 autorizado a aterrizar",
+     "RYR77AB, número dos, continúe",
+     "RYR77AB, contacte con GND",
+     "RYR77AB, notifique final"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Con la pista libre, autorización de aterrizaje con viento y designador de pista.",
+    "sev": "minor"
+   }
+  ]
+ },
+ {
+  "id": "s05",
+  "title": "Combustible mínimo",
+  "cat": "Emergencias",
+  "diff": 1,
+  "setup": {
+   "apt": "LEAL_TWR",
+   "rwy": "10",
+   "metar": "LEAL 031900Z 09011KT 9999 SCT030 19/12 Q1012",
+   "notes": "Secuencia de llegadas cargada."
+  },
+  "steps": [
+   {
+    "scene": [
+     {
+      "cs": "EZY45KD",
+      "ac": "A320",
+      "pos": "final:9",
+      "st": "air"
+     },
+     {
+      "cs": "TOM2PL",
+      "ac": "B738",
+      "pos": "final:5",
+      "st": "air"
+     }
+    ],
+    "sit": "EZY45KD, número 2: \"Alicante Torre, EZY45KD, combustible mínimo\".",
+    "q": "¿Cómo actúas?",
+    "o": [
+     "Acuso recibo e informo de la demora prevista; no tiene prioridad",
+     "Le doy prioridad y adelanto al TOM2PL",
+     "Lo trato como emergencia",
+     "Le ordeno desviarse"
+    ],
+    "a": [
+     0
+    ],
+    "e": "MINIMUM FUEL no es emergencia: solo informar de la demora prevista.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "EZY45KD",
+      "ac": "A320",
+      "pos": "final:6",
+      "st": "air"
+     }
+    ],
+    "sit": "Un rato después: \"MAYDAY MAYDAY MAYDAY FUEL, EZY45KD\".",
+    "q": "Ahora…",
+    "o": [
+     "Es una emergencia: prioridad, pista libre y evitar cualquier motor y al aire",
+     "Sigue siendo combustible mínimo",
+     "Le pides que espere 10 minutos",
+     "Lo transfieres a APP para que lo gestione"
+    ],
+    "a": [
+     0
+    ],
+    "e": "MAYDAY FUEL = emergencia. Despejar la pista y no provocar una frustrada por falta de anticipación.",
+    "sev": "loss"
+   }
+  ]
+ },
+ {
+  "id": "s06",
+  "title": "Tren que no baja",
+  "cat": "Emergencias",
+  "diff": 2,
+  "setup": {
+   "apt": "LEZG_TWR",
+   "rwy": "30L",
+   "metar": "LEZG 111100Z 31018G28KT 9999 FEW040 17/02 Q1015",
+   "notes": "Cierzo. APP conectado."
+  },
+  "steps": [
+   {
+    "scene": [
+     {
+      "cs": "IBE8912",
+      "ac": "CRJ9",
+      "pos": "final:6",
+      "st": "air"
+     }
+    ],
+    "sit": "IBE8912: \"PAN PAN PAN PAN PAN PAN, Zaragoza Torre, IBE8912, indicación insegura del tren principal, solicitamos pasada baja para inspección visual\".",
+    "q": "¿Qué haces?",
+    "o": [
+     "Acusar recibo, preparar la pista libre y autorizar la pasada baja",
+     "Denegar la pasada baja: no está en el procedimiento",
+     "Pedirle que aterrice y luego compruebe",
+     "Transferirlo a GND"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Ante problemas de tren: prepararse para la pasada baja, despejar la pista y preguntar intenciones.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "IBE8912",
+      "ac": "CRJ9",
+      "pos": "rwy:0.5",
+      "st": "air"
+     }
+    ],
+    "sit": "Pasada baja sobre la pista.",
+    "q": "La fraseología correcta para autorizarla es…",
+    "o": [
+     "IBE8912, viento 310 grados 18 nudos rachas 28, pista 30L autorizado a pasada baja",
+     "IBE8912, pasada baja aprobada",
+     "IBE8912, haga una pasada sobre la torre a discreción",
+     "IBE8912, autorizado a aproximación frustrada"
+    ],
+    "a": [
+     0
+    ],
+    "e": "CLEARED LOW PASS: autorización de pista, con viento.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "IBE8912",
+      "ac": "CRJ9",
+      "pos": "climb",
+      "st": "air"
+     }
+    ],
+    "sit": "Desde la torre ves el tren principal izquierdo sin desplegar del todo.",
+    "q": "¿Qué haces a continuación?",
+    "o": [
+     "Informarle de lo observado, preguntar intenciones, avisar a servicios de emergencia y a APP",
+     "No decirle nada para no alarmarle",
+     "Autorizarle a aterrizar inmediatamente",
+     "Cerrar la frecuencia"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Inform y Support: lo que ves es información crítica para la tripulación.",
+    "sev": "minor"
+   }
+  ]
+ },
+ {
+  "id": "s07",
+  "title": "Circuito VFR completo",
+  "cat": "VFR",
+  "diff": 2,
+  "setup": {
+   "apt": "LELL_TWR (Sabadell)",
+   "rwy": "31",
+   "metar": "LELL 141000Z 30008KT 9999 SCT035 20/11 Q1017",
+   "notes": "Circuito por la izquierda de la 31 a 1000 ft. Puntos de entrada N, E, W."
+  },
+  "steps": [
+   {
+    "scene": [
+     {
+      "cs": "ECABC",
+      "ac": "C172",
+      "pos": "dw",
+      "st": "air"
+     },
+     {
+      "cs": "ECDEF",
+      "ac": "P28A",
+      "pos": "base",
+      "st": "air"
+     },
+     {
+      "cs": "ECGHI",
+      "ac": "C172",
+      "pos": "crosswind",
+      "st": "air"
+     },
+     {
+      "cs": "ECJKL",
+      "ac": "C172",
+      "pos": "final:1.5",
+      "st": "air"
+     },
+     {
+      "cs": "ECMNO",
+      "ac": "DA42",
+      "pos": "point:W",
+      "st": "air"
+     }
+    ],
+    "sit": "Tienes 4 aeronaves en el circuito. ECMNO llama a 3 minutos de W pidiendo instrucciones para aterrizar.",
+    "q": "¿Qué le indicas?",
+    "o": [
+     "Orbite en W (con altitud si hace falta) y le informo de que el circuito está completo",
+     "Entre directamente en base",
+     "Entre en viento en cola detrás de ECABC",
+     "Que aterrice directo"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Con 4 en el circuito se considera completo; los que ya están tienen prioridad. Órbita sobre punto VFR.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "ECJKL",
+      "ac": "C172",
+      "pos": "rwy:0.3"
+     },
+     {
+      "cs": "ECDEF",
+      "ac": "P28A",
+      "pos": "final:1",
+      "st": "air"
+     },
+     {
+      "cs": "ECABC",
+      "ac": "C172",
+      "pos": "base",
+      "st": "air"
+     }
+    ],
+    "sit": "ECJKL hace una toma y despegue. ECDEF está en corta final.",
+    "q": "¿Qué le dices a ECDEF mientras ECJKL sigue en pista?",
+    "o": [
+     "ECDEF, continúe aproximación, número dos, tránsito en toma y despegue",
+     "ECDEF, pista 31 autorizado a aterrizar",
+     "ECDEF, aterrice detrás, autorizado",
+     "ECDEF, orbite en final"
+    ],
+    "a": [
+     0
+    ],
+    "e": "No se autoriza a aterrizar con la pista ocupada. Si no se libera a tiempo (~2 NM con más rápidos), motor y al aire.",
+    "sev": "loss"
+   },
+   {
+    "scene": [
+     {
+      "cs": "ECGHI",
+      "ac": "C172",
+      "pos": "dw",
+      "st": "air"
+     },
+     {
+      "cs": "ECABC",
+      "ac": "C172",
+      "pos": "dw2",
+      "st": "air"
+     }
+    ],
+    "sit": "ECGHI entra en viento en cola y no ve a ECABC, que va delante en el mismo tramo.",
+    "q": "¿Cuál es la información de tránsito correcta?",
+    "o": [
+     "ECGHI, tránsito, Cessna 172 en viento en cola izquierda a sus 12, 1 milla, misma altitud, notifique a la vista",
+     "ECGHI, cuidado con el de delante",
+     "ECGHI, tráfico a la vista, siga",
+     "ECGHI, copie información de tráfico"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Información de tránsito con tipo, posición (horaria), distancia y altura relativa; pedir que notifique a la vista.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "ECGHI",
+      "ac": "C172",
+      "pos": "dw",
+      "st": "air"
+     }
+    ],
+    "sit": "El circuito sigue saturado y hay 3 aeronaves haciendo tomas y despegues.",
+    "q": "¿Qué técnica es más útil?",
+    "o": [
+     "Retener las tomas y despegues y priorizar los aterrizajes con parada completa",
+     "Autorizar más tomas y despegues",
+     "Mandar a todos a orbitar sobre el campo a la misma altitud",
+     "Cambiar la pista en uso"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Con más de 4 en circuito, primero las tomas finales y luego el entrenamiento.",
+    "sev": "minor"
+   }
+  ]
+ },
+ {
+  "id": "s08",
+  "title": "Tránsito VFR e IFR en final",
+  "cat": "VFR",
+  "diff": 2,
+  "setup": {
+   "apt": "LEST_TWR",
+   "rwy": "17",
+   "metar": "LEST 091300Z 18010KT 9999 FEW030 18/10 Q1022",
+   "notes": "CTR clase D. Puntos VFR N, S, E, W."
+  },
+  "steps": [
+   {
+    "scene": [
+     {
+      "cs": "ECVFR",
+      "ac": "C172",
+      "pos": "point:W",
+      "st": "air"
+     },
+     {
+      "cs": "VLG1182",
+      "ac": "A320",
+      "pos": "final:7",
+      "st": "air"
+     }
+    ],
+    "sit": "ECVFR (C172) a 2 minutos de W, 1500 ft, pide cruzar el CTR hacia E. VLG1182 está en final a 7 NM.",
+    "q": "¿Qué autorización le das?",
+    "o": [
+     "Cruce vía W, sobre el campo, y E, altitud 2000 pies o superior a la del circuito, notifique sobre el campo; tránsito A320 en final",
+     "Cruce a 500 pies por debajo del circuito",
+     "Cruce directo por el eje de la pista a 1000 pies",
+     "No se puede cruzar con IFR en final"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Altitud por encima del circuito, evitar cruzar el eje bajo, información de tránsito mutua.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "ECVFR",
+      "ac": "C172",
+      "pos": "cross",
+      "st": "air"
+     },
+     {
+      "cs": "VLG1182",
+      "ac": "A320",
+      "pos": "final:3",
+      "st": "air"
+     }
+    ],
+    "sit": "En clase D, ¿quién separa a ECVFR del A320?",
+    "q": "La separación entre ellos es responsabilidad de…",
+    "o": [
+     "Los pilotos, con la información de tránsito del ATC",
+     "El controlador",
+     "APP",
+     "Nadie"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Clase D: el ATC separa solo IFR de IFR. VFR/IFR: información de tránsito.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "ECVFR",
+      "ac": "C172",
+      "pos": "cross",
+      "st": "air"
+     },
+     {
+      "cs": "VLG1182",
+      "ac": "A320",
+      "pos": "final:2",
+      "st": "air"
+     }
+    ],
+    "sit": "ECVFR está a punto de cruzar la prolongación del eje.",
+    "q": "¿Qué debes prever?",
+    "o": [
+     "Una posible frustrada del A320: mantener al VFR apartado o hacerle cruzar detrás",
+     "Nada, el VFR va por encima",
+     "Un despegue abortado",
+     "Que el VFR aterrice"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Una frustrada subiría hacia el VFR: acelerar el cruce o que cruce tras el IFR teniéndolo a la vista.",
+    "sev": "minor"
+   }
+  ]
+ },
+ {
+  "id": "s09",
+  "title": "Tiempo empeorando",
+  "cat": "Meteorología",
+  "diff": 2,
+  "setup": {
+   "apt": "LEVX_TWR",
+   "rwy": "02",
+   "metar": "LEVX 100800Z 21008KT 4000 BR BKN012 12/11 Q1008",
+   "notes": "De día. CTR clase D. APP convencional conectado."
+  },
+  "steps": [
+   {
+    "scene": [
+     {
+      "cs": "ECTRN",
+      "ac": "P28A",
+      "pos": "apron"
+     }
+    ],
+    "sit": "ECTRN (VFR) pide rodaje para salir hacia el sur.",
+    "q": "¿Hay VMC en el aeródromo?",
+    "o": [
+     "No: visibilidad < 5000 m y techo < 1500 ft",
+     "Sí",
+     "Sí, porque hay BR y no FG",
+     "Solo hay VMC para helicópteros"
+    ],
+    "a": [
+     0
+    ],
+    "e": "VMC en aeródromo: 5 000 m y techo 1 500 ft. Aquí 4 000 m y techo 1 200 ft.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "ECTRN",
+      "ac": "P28A",
+      "pos": "apron"
+     }
+    ],
+    "sit": "¿Qué le dices?",
+    "q": "La actuación correcta es…",
+    "o": [
+     "Informarle de que no hay VMC (visibilidad y techo) y preguntar intenciones",
+     "Sugerirle que pida un VFR especial",
+     "Autorizarle VFR de todas formas",
+     "Decirle que es imposible volar"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Nunca se sugiere el SVFR. Se informa y se pregunta intenciones.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "ECTRN",
+      "ac": "P28A",
+      "pos": "apron"
+     }
+    ],
+    "sit": "El piloto solicita salida en VFR especial.",
+    "q": "¿Se puede autorizar y quién lo hace?",
+    "o": [
+     "Sí (día, vis ≥ 1500 m, techo ≥ 600 ft); TWR lo pide a APP y le transmite la autorización",
+     "No, nunca en IVAO",
+     "Sí, lo autoriza TWR sin coordinar",
+     "Solo si es helicóptero"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Lo autoriza APP; TWR solicita y transmite. Y a partir de ahí, el ATC separa al SVFR.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "ECTRN",
+      "ac": "P28A",
+      "pos": "climb",
+      "st": "air"
+     },
+     {
+      "cs": "IBE0571",
+      "ac": "A320",
+      "pos": "final:9",
+      "st": "air"
+     }
+    ],
+    "sit": "ECTRN despega en SVFR. IBE0571 (IFR) está en final a 9 NM.",
+    "q": "¿Quién es responsable de separar al SVFR del IFR?",
+    "o": [
+     "El controlador",
+     "Los pilotos",
+     "Nadie, es clase D",
+     "APP solamente"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Con SVFR, la separación con el resto de aeronaves pasa a ser responsabilidad del controlador.",
+    "sev": "loss"
+   }
+  ]
+ },
+ {
+  "id": "s10",
+  "title": "Niebla: LVP",
+  "cat": "Meteorología",
+  "diff": 3,
+  "setup": {
+   "apt": "LEMD_TWR",
+   "rwy": "32R",
+   "metar": "LEMD 060600Z VRB02KT 0300 R32R/0450N FG VV001 03/03 Q1027",
+   "notes": "ILS CAT III en 32R."
+  },
+  "steps": [
+   {
+    "scene": [
+     {
+      "cs": "AEA6001",
+      "ac": "B738",
+      "pos": "final:8",
+      "st": "air"
+     },
+     {
+      "cs": "IBE3001",
+      "ac": "A332",
+      "pos": "apron"
+     }
+    ],
+    "sit": "Con este METAR…",
+    "q": "¿Hay que aplicar LVP?",
+    "o": [
+     "Sí: RVR ≤ 800 m, visibilidad ≤ 500 m y techo ≤ 250 ft",
+     "No, solo si RVR < 200 m",
+     "Solo de noche",
+     "Lo decide el piloto"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Basta una condición; aquí se cumplen todas. ATIS: \"LVP in progress\".",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "AEA6001",
+      "ac": "B738",
+      "pos": "final:3",
+      "st": "air"
+     },
+     {
+      "cs": "IBE3001",
+      "ac": "A332",
+      "pos": "twy"
+     }
+    ],
+    "sit": "AEA6001 en ILS CAT III a 3 NM. IBE3001 rueda cerca del punto de espera CAT III.",
+    "q": "¿Cuándo, como tarde, debe recibir AEA6001 la autorización de aterrizaje?",
+    "o": [
+     "A 2 NM de la TDZ, con las áreas sensibles (LSA) libres",
+     "En el umbral",
+     "A 4 NM obligatoriamente",
+     "Cuando la pida"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Si a 2 NM no está autorizada, frustrada. Además, solo una aeronave establecida en la aproximación.",
+    "sev": "loss"
+   },
+   {
+    "scene": [
+     {
+      "cs": "AEA6001",
+      "ac": "B738",
+      "pos": "rwy:0.6"
+     },
+     {
+      "cs": "IBE3001",
+      "ac": "A332",
+      "pos": "hp"
+     }
+    ],
+    "sit": "AEA6001 ha aterrizado.",
+    "q": "¿Qué debe notificar el piloto al librar?",
+    "o": [
+     "Pista libre, LSA libre y la salida utilizada",
+     "Solo \"en tierra\"",
+     "Nada, se ve por radar",
+     "Su número de stand"
+    ],
+    "a": [
+     0
+    ],
+    "e": "En LVP: notificación obligatoria de pista libre, área sensible libre y calle usada (solo salidas con luces de eje encendidas).",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "IBE3001",
+      "ac": "A332",
+      "pos": "hp"
+     },
+     {
+      "cs": "VLG1234",
+      "ac": "A320",
+      "pos": "apron"
+     }
+    ],
+    "sit": "VLG1234 pide rodaje mientras IBE3001 rueda.",
+    "q": "Con RVR 450 m, normalmente…",
+    "o": [
+     "Solo una aeronave rodando a la vez en el área de movimiento: VLG1234 espera",
+     "Pueden rodar ambos con precaución",
+     "VLG1234 sigue al A332",
+     "Se cierra el aeropuerto"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Con RVR/visibilidad < 500 m, normalmente un único rodaje a la vez.",
+    "sev": "minor"
+   }
+  ]
+ },
+ {
+  "id": "s11",
+  "title": "Despegue abortado",
+  "cat": "Emergencias",
+  "diff": 1,
+  "setup": {
+   "apt": "GCRR_TWR",
+   "rwy": "03",
+   "metar": "GCRR 171500Z 02018KT 9999 FEW030 22/15 Q1019",
+   "notes": "Pista única con calle paralela parcial."
+  },
+  "steps": [
+   {
+    "scene": [
+     {
+      "cs": "BTI8061",
+      "ac": "AT72",
+      "pos": "rwy:0.4",
+      "st": "roll"
+     },
+     {
+      "cs": "IBE3853",
+      "ac": "A320",
+      "pos": "final:5",
+      "st": "air"
+     }
+    ],
+    "sit": "BTI8061: \"Abortando despegue, BTI8061\". IBE3853 en final a 5 NM.",
+    "q": "¿Qué haces primero?",
+    "o": [
+     "Retener la pista: IBE3853 continúa aproximación (o al aire si la pista no se libera a tiempo)",
+     "Autorizar a aterrizar a IBE3853",
+     "Pedir a BTI8061 que despegue igualmente",
+     "Transferir BTI8061 a GND"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Retener despegues y aterrizajes en esa pista hasta que esté libre.",
+    "sev": "loss"
+   },
+   {
+    "scene": [
+     {
+      "cs": "BTI8061",
+      "ac": "AT72",
+      "pos": "rwy:0.7"
+     }
+    ],
+    "sit": "BTI8061 se ha detenido en pista.",
+    "q": "¿Y después?",
+    "o": [
+     "Instrucciones para librar la pista y preguntar intenciones",
+     "Autorizar de nuevo el despegue",
+     "Pedir que no se mueva hasta nuevo aviso sin más",
+     "Cerrar el aeropuerto"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Puede querer volver al punto de espera, esperar fuera para comprobaciones o volver a plataforma.",
+    "sev": "minor"
+   }
+  ]
+ },
+ {
+  "id": "s12",
+  "title": "Fallo de comunicaciones",
+  "cat": "Emergencias",
+  "diff": 2,
+  "setup": {
+   "apt": "LEZL_TWR",
+   "rwy": "27",
+   "metar": "LEZL 221700Z 25010KT CAVOK 31/12 Q1012",
+   "notes": ""
+  },
+  "steps": [
+   {
+    "scene": [
+     {
+      "cs": "ECNRD",
+      "ac": "C172",
+      "pos": "point:N",
+      "st": "air"
+     }
+    ],
+    "sit": "Un VFR aparece en el punto de entrada N con código 7600 y no contesta.",
+    "q": "¿Qué indica el 7600?",
+    "o": [
+     "Fallo de comunicaciones",
+     "Emergencia",
+     "Interferencia ilícita",
+     "VFR sin ATC"
+    ],
+    "a": [
+     0
+    ],
+    "e": "7500 interferencia ilícita, 7600 fallo de radio, 7700 emergencia.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "ECNRD",
+      "ac": "C172",
+      "pos": "point:N",
+      "st": "air"
+     }
+    ],
+    "sit": "Quieres saber si al menos te recibe.",
+    "q": "¿Qué puedes hacer? (marca todas)",
+    "o": [
+     "\"Si me recibe, haga un 360 por su derecha\"",
+     "Pedir squawk ident",
+     "En IVAO, probar por texto",
+     "Enviar un .WALLOP de inmediato"
+    ],
+    "a": [
+     0,
+     1,
+     2
+    ],
+    "m": true,
+    "e": "Squawk ident, maniobra de confirmación y texto (en IVAO descarta un piloto ausente).",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "ECNRD",
+      "ac": "C172",
+      "pos": "dw",
+      "st": "air"
+     },
+     {
+      "cs": "ECAAA",
+      "ac": "P28A",
+      "pos": "base",
+      "st": "air"
+     }
+    ],
+    "sit": "ECNRD hace el 360 y se incorpora al circuito sin hablar.",
+    "q": "¿Qué haces con el resto?",
+    "o": [
+     "Informar a las aeronaves cercanas y apartar a las que puedan estar en su trayectoria",
+     "Nada",
+     "Obligar a ECNRD a irse",
+     "Cerrar el circuito a todos sin informar"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Avisar y apartar al tráfico que pueda interferir con su probable trayectoria.",
+    "sev": "minor"
+   }
+  ]
+ },
+ {
+  "id": "s13",
+  "title": "Pista contraria y ruido",
+  "cat": "Gestión",
+  "diff": 2,
+  "setup": {
+   "apt": "LEPA_S_TWR",
+   "rwy": "24L",
+   "metar": "LEPA 251100Z 23006KT 9999 FEW030 26/18 Q1014",
+   "notes": "Configuración preferente oeste."
+  },
+  "steps": [
+   {
+    "scene": [
+     {
+      "cs": "DLH1JK",
+      "ac": "A321",
+      "pos": "apron"
+     }
+    ],
+    "sit": "DLH1JK (IFR) pide salir por la 06R para ahorrar rodaje.",
+    "q": "¿Qué tienes que hacer antes de aprobarlo? (marca todas)",
+    "o": [
+     "Analizar la demora que causaría al resto",
+     "Coordinar con APP y pedir la suelta",
+     "Tener en cuenta las llegadas por la 24L",
+     "Nada, es su decisión"
+    ],
+    "a": [
+     0,
+     1,
+     2
+    ],
+    "m": true,
+    "e": "Pista contraria: análisis de impacto y, en IFR, coordinación y suelta de APP.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "AEA2301",
+      "ac": "B738",
+      "pos": "final:6",
+      "st": "air"
+     }
+    ],
+    "sit": "El viento rola a 060/07 con rachas 13 (componente de cola en 24L ~12 kt). La configuración preferente por ruido es oeste.",
+    "q": "¿Pesa el ruido en la elección?",
+    "o": [
+     "No: con cola > 5 kt (rachas incluidas) el ruido no puede decidir la pista",
+     "Sí, siempre manda el ruido",
+     "Solo de noche",
+     "Solo para salidas"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Cruzado > 15 kt o cola > 5 kt anulan el criterio de ruido.",
+    "sev": "minor"
+   },
+   {
+    "scene": [],
+    "sit": "Decides cambiar a configuración este.",
+    "q": "¿Qué haces?",
+    "o": [
+     "Avisar a los controladores adyacentes y actualizar el ATIS",
+     "Solo cambiar el ATIS",
+     "Esperar a que lo pidan los pilotos",
+     "Pedir permiso al supervisor"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Cambio de pista: coordinar con adyacentes y nuevo ATIS.",
+    "sev": "minor"
+   }
+  ]
+ },
+ {
+  "id": "s14",
+  "title": "Intercalar un VFR",
+  "cat": "Separaciones",
+  "diff": 3,
+  "setup": {
+   "apt": "LEST_TWR",
+   "rwy": "17",
+   "metar": "LEST 041200Z 17012KT 9999 SCT025 16/10 Q1006",
+   "notes": "APP radar. Secuencia local 6 NM, reducible coordinando."
+  },
+  "steps": [
+   {
+    "scene": [
+     {
+      "cs": "IBE0549",
+      "ac": "A332",
+      "pos": "final:5",
+      "st": "air"
+     },
+     {
+      "cs": "ECLOC",
+      "ac": "C172",
+      "pos": "dw",
+      "st": "air"
+     },
+     {
+      "cs": "VLG1416",
+      "ac": "A320",
+      "pos": "final:11",
+      "st": "air"
+     }
+    ],
+    "sit": "Quieres meter a ECLOC (C172, VFR) entre IBE0549 (A330, pesado) y VLG1416.",
+    "q": "¿Qué separación por estela aplicas a ECLOC detrás del A330?",
+    "o": [
+     "Ninguna mínima: le das \"precaución estela turbulenta\" y el piloto es responsable",
+     "6 NM",
+     "3 minutos",
+     "4 NM"
+    ],
+    "a": [
+     0
+    ],
+    "e": "No se aplica separación por estela a VFR que aterrizan tras una media o pesada.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "IBE0549",
+      "ac": "A332",
+      "pos": "final:2",
+      "st": "air"
+     },
+     {
+      "cs": "ECLOC",
+      "ac": "C172",
+      "pos": "base",
+      "st": "air"
+     }
+    ],
+    "sit": "ECLOC tiene el A330 a la vista.",
+    "q": "¿Qué le transmites?",
+    "o": [
+     "ECLOC, número dos, siga al A330 en final pista 17, precaución estela turbulenta pesada",
+     "ECLOC, autorizado a aterrizar detrás",
+     "ECLOC, orbite hasta nuevo aviso",
+     "ECLOC, número dos, mantenga 6 NM"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Número en la secuencia + a quién sigue + precaución estela.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "VLG1416",
+      "ac": "A320",
+      "pos": "final:7",
+      "st": "air"
+     }
+    ],
+    "sit": "En el examen, si a ese A320 le hubiera precedido directamente el A330 (radar)…",
+    "q": "¿Separación por estela A320 tras A330?",
+    "o": [
+     "5 NM",
+     "4 NM",
+     "6 NM",
+     "No aplica"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Media tras pesada en llegada: 5 NM / 2 min. Con la secuencia local de 6 NM, se aplica la mayor.",
+    "sev": "minor"
+   }
+  ]
+ },
+ {
+  "id": "s15",
+  "title": "Piloto que no responde",
+  "cat": "IVAO",
+  "diff": 1,
+  "setup": {
+   "apt": "GCXO_TWR",
+   "rwy": "30",
+   "metar": "GCXO 130900Z 32014KT 9999 FEW020 19/13 Q1020",
+   "notes": ""
+  },
+  "steps": [
+   {
+    "scene": [
+     {
+      "cs": "ECSIL",
+      "ac": "PC12",
+      "pos": "rwy:0.1"
+     }
+    ],
+    "sit": "ECSIL se conecta directamente en la pista activa y no contacta.",
+    "q": "¿Primera acción?",
+    "o": [
+     "Enviar un FORCE ACT invitándole a contactar",
+     "Llamar a un supervisor",
+     "Autorizarle a despegar",
+     "Ignorarle"
+    ],
+    "a": [
+     0
+    ],
+    "e": "FORCE ACT; si en 1 min no contacta o sigue moviéndose, otro FORCE ACT + chat privado.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "ECSIL",
+      "ac": "PC12",
+      "pos": "rwy:0.3",
+      "st": "roll"
+     }
+    ],
+    "sit": "Sigue sin responder y empieza a rodar por la pista.",
+    "q": "¿Qué haces?",
+    "o": [
+     "Nuevo FORCE ACT + chat privado, avisar a los otros controladores y, si no hay respuesta, .WALLOP",
+     "Nada más",
+     "Pedir a otro piloto que le hable",
+     "Cerrar tu posición"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Escalado: FORCE ACT → chat → coordinación → .WALLOP <motivo en inglés>.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "ECSIL",
+      "ac": "PC12",
+      "pos": "hp"
+     }
+    ],
+    "sit": "Por fin contacta en el punto de espera.",
+    "q": "¿Cuándo debe poner el transpondedor en TX?",
+    "o": [
+     "Al entrar en la pista activa (tolerado en el punto de espera)",
+     "En plataforma",
+     "Al pasar 1000 ft",
+     "Nunca en IVAO"
+    ],
+    "a": [
+     0
+    ],
+    "e": "TX al entrar en pista; STANDBY al desalojarla.",
+    "sev": "minor"
+   }
+  ]
+ },
+ {
+  "id": "s16",
+  "title": "Altimetría en el ATIS",
+  "cat": "Altimetría",
+  "diff": 1,
+  "setup": {
+   "apt": "LEMG_W_TWR",
+   "rwy": "13",
+   "metar": "LEMG 190700Z 14006KT 9999 FEW025 18/14 Q0995",
+   "notes": "Málaga: TA 13 000 ft."
+  },
+  "steps": [
+   {
+    "scene": [],
+    "sit": "Estás preparando el ATIS.",
+    "q": "¿Qué nivel de transición publicas con QNH 995?",
+    "o": [
+     "FL150",
+     "FL145",
+     "FL80",
+     "FL155"
+    ],
+    "a": [
+     0
+    ],
+    "e": "TA 13 000 y QNH 978–995 → FL150.",
+    "sev": "minor"
+   },
+   {
+    "scene": [],
+    "sit": "El QNH sube a 1014 una hora después.",
+    "q": "¿Nuevo TL?",
+    "o": [
+     "FL140",
+     "FL145",
+     "FL135",
+     "FL70"
+    ],
+    "a": [
+     0
+    ],
+    "e": "1014–1031 → FL140 con TA 13 000.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "RYR1MG",
+      "ac": "B738",
+      "pos": "apron"
+     }
+    ],
+    "sit": "RYR1MG colaciona \"QNH 1004\" cuando has dicho 1014.",
+    "q": "Respondes…",
+    "o": [
+     "RYR1MG, negativo, repito QNH 1014",
+     "RYR1MG, recibido",
+     "RYR1MG, corrección, uno cero cero cuatro",
+     "RYR1MG, mil catorce"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Corregir inmediatamente con NEGATIVO, REPITO. Las decenas del QNH son el error típico.",
+    "sev": "loss"
+   }
+  ]
+ },
+ {
+  "id": "s17",
+  "title": "Rodadura y cruce de pista",
+  "cat": "Gestión",
+  "diff": 2,
+  "setup": {
+   "apt": "Aeródromo de práctica (dos pistas que se cruzan)",
+   "rwy": "25R salidas / 02 cerrada",
+   "metar": "XXXX 031000Z 23009KT 9999 FEW030 19/11 Q1016",
+   "notes": "Estás en TWR+GND (sin GND conectado)."
+  },
+  "steps": [
+   {
+    "scene": [
+     {
+      "cs": "VLG1004",
+      "ac": "A320",
+      "pos": "twy"
+     },
+     {
+      "cs": "IBE2621",
+      "ac": "A321",
+      "pos": "twy2"
+     }
+    ],
+    "sit": "VLG1004 y IBE2621 van a coincidir en la misma intersección.",
+    "q": "¿Qué haces?",
+    "o": [
+     "A uno le ordenas mantener corto de la intersección o ceder el paso al otro, con información de tránsito",
+     "Nada, que se vean",
+     "Les das la misma ruta",
+     "Detienes a ambos hasta nuevo aviso sin explicar"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Hold short / give way + información de tránsito obligatoria en rodadura.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "VLG1004",
+      "ac": "A320",
+      "pos": "twy"
+     }
+    ],
+    "sit": "VLG1004 debe cruzar la pista 02, que está cerrada.",
+    "q": "¿Necesita autorización para cruzar?",
+    "o": [
+     "Sí: cruzar cualquier pista requiere siempre autorización",
+     "No, está cerrada",
+     "Solo de noche",
+     "Solo si es IFR"
+    ],
+    "a": [
+     0
+    ],
+    "e": "El cruce de una pista requiere autorización aunque no esté en uso (si está cerrada, puede gestionarlo GND).",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "VLG1004",
+      "ac": "A320",
+      "pos": "hp"
+     }
+    ],
+    "sit": "Le das la ruta de rodaje.",
+    "q": "¿Cuál es la instrucción más adecuada?",
+    "o": [
+     "VLG1004, ruede a punto de espera pista 25R vía K, cruce pista 02, G",
+     "VLG1004, autorizado a rodar a la 25R",
+     "VLG1004, ruede vía K, G, H, J, M, N, P a la 25R",
+     "VLG1004, rodaje aprobado"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Incluir la pista; no más de ~3 calles; imperativo RUEDE.",
+    "sev": "minor"
+   }
+  ]
+ },
+ {
+  "id": "s18",
+  "title": "Ave en el despegue",
+  "cat": "Emergencias",
+  "diff": 2,
+  "setup": {
+   "apt": "LEBZ_TWR",
+   "rwy": "31",
+   "metar": "LEBZ 280800Z 30007KT CAVOK 22/08 Q1018",
+   "notes": "Pista única."
+  },
+  "steps": [
+   {
+    "scene": [
+     {
+      "cs": "AEA5011",
+      "ac": "AT72",
+      "pos": "climb",
+      "st": "air"
+     },
+     {
+      "cs": "ECPRT",
+      "ac": "C172",
+      "pos": "hp"
+     }
+    ],
+    "sit": "AEA5011 tras despegar: \"PAN PAN x3, impacto con ave, vibración en motor derecho, solicitamos regresar\".",
+    "q": "¿Primera pregunta clave cuando la situación lo permita?",
+    "o": [
+     "¿Puede controlar la aeronave? / intenciones",
+     "¿Qué especie de ave?",
+     "¿Cuál es su hora de llegada a destino?",
+     "¿Ha leído el NOTAM?"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Establecer si controla la aeronave e intenciones; minimizar cambios de frecuencia.",
+    "sev": "minor"
+   },
+   {
+    "scene": [
+     {
+      "cs": "AEA5011",
+      "ac": "AT72",
+      "pos": "dw",
+      "st": "air"
+     },
+     {
+      "cs": "ECPRT",
+      "ac": "C172",
+      "pos": "hp"
+     }
+    ],
+    "sit": "ECPRT está listo para salir.",
+    "q": "¿Qué haces con ECPRT?",
+    "o": [
+     "Retenerlo: la pista queda libre de salidas y llegadas para la aeronave en urgencia",
+     "Que salga rápido antes",
+     "Que salga por intersección",
+     "Que despegue en sentido contrario"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Prioridad para aterrizar a la aeronave afectada y pista activa libre.",
+    "sev": "loss"
+   },
+   {
+    "scene": [
+     {
+      "cs": "AEA5011",
+      "ac": "AT72",
+      "pos": "final:5",
+      "st": "air"
+     }
+    ],
+    "sit": "El piloto pide una final larga.",
+    "q": "¿La permites?",
+    "o": [
+     "Sí, si la pide",
+     "No, debe hacer circuito estándar",
+     "Solo con permiso de APP",
+     "Solo si declara MAYDAY"
+    ],
+    "a": [
+     0
+    ],
+    "e": "Tras impacto con ave: permitir final larga si se solicita.",
+    "sev": "minor"
+   }
+  ]
+ }
+]

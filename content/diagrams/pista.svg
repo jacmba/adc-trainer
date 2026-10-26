@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 430" font-family="DejaVu Sans, Arial, sans-serif">
+  <rect width="760" height="430" fill="#f8fafc"/>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1e3a8a"/></marker></defs>
+  <text x="20" y="30" font-size="16" font-weight="bold" fill="#0f172a">¿Puedo autorizar a D a despegar? (misma pista)</text>
+  <rect x="120" y="120" width="460" height="30" rx="3" fill="#334155"/>
+  <line x1="135" y1="135" x2="565" y2="135" stroke="#fff" stroke-width="2" stroke-dasharray="14 10"/>
+  <!-- D at threshold -->
+  <g><circle cx="140" cy="135" r="11" fill="#dc2626"/><text x="135" y="140" font-size="12" fill="#fff" font-weight="bold">D</text></g>
+  <!-- A vacated -->
+  <path d="M430,150 L430,200" stroke="#64748b" stroke-width="10"/>
+  <circle cx="430" cy="215" r="11" fill="#16a34a"/><text x="425" y="220" font-size="12" fill="#fff" font-weight="bold">A</text>
+  <text x="448" y="220" font-size="12" fill="#0f172a">A: aterrizó y ha dejado la pista libre</text>
+  <!-- B passed end -->
+  <circle cx="625" cy="125" r="11" fill="#16a34a"/><text x="620" y="130" font-size="12" fill="#fff" font-weight="bold">B</text>
+  <path d="M580,135 L612,128" stroke="#1e3a8a" stroke-width="2" marker-end="url(#a)"/>
+  <text x="595" y="100" font-size="12" fill="#0f172a">B: despegó y cruzó</text>
+  <text x="595" y="114" font-size="12" fill="#0f172a">el final de pista</text>
+  <!-- C turning -->
+  <path d="M470,120 Q520,70 520,40" stroke="#1e3a8a" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <circle cx="520" cy="40" r="11" fill="#16a34a"/><text x="515" y="45" font-size="12" fill="#fff" font-weight="bold">C</text>
+  <text x="290" y="70" font-size="12" fill="#0f172a">C: despegó e inició un viraje</text>
+  <text x="20" y="275" font-size="14" fill="#0f172a">Basta con que se cumpla UNA de las condiciones A, B o C ( + separación por estela ).</text>
+  <text x="20" y="310" font-size="16" font-weight="bold" fill="#0f172a">¿Puede cruzar el umbral una llegada?</text>
+  <text x="20" y="335" font-size="14" fill="#0f172a">Solo cuando la salida anterior haya cruzado el final de pista o virado, o todas las llegadas</text>
+  <text x="20" y="355" font-size="14" fill="#0f172a">anteriores hayan dejado la pista. Autorización con "grado razonable de seguridad".</text>
+  <text x="20" y="390" font-size="14" font-weight="bold" fill="#b91c1c">Nunca dos autorizaciones de pista simultáneas: ni aterrizaje + despegue,</text>
+  <text x="20" y="410" font-size="14" font-weight="bold" fill="#b91c1c">ni alinear con alguien ya autorizado a aterrizar.</text>
+</svg>
