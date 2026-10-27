@@ -6,7 +6,7 @@
    (dirección de aterrizaje y despegue) y la final se extiende hacia x positivas. */
 (function (root) {
   'use strict';
-  const R = root.ADC_RULES, SC = root.ADC_SCEN;
+  const R = root.ADC_RULES, SC = root.ADC_SCEN, V = root.ADC_VOICE;
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const norm = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
   const pad = (n, w) => String(n).padStart(w, '0');
@@ -119,6 +119,7 @@
   function helpHtml() {
     return `<div class="tbl"><table><thead><tr><th>Orden</th><th>Alias</th><th>Para qué</th><th>Ejemplo</th></tr></thead><tbody>${COMMANDS.map(c => `<tr><td>${esc(c.words)}</td><td><code>${esc(c.alias)}</code></td><td>${esc(c.desc)}</td><td class="mono small">${esc(c.ex)}</td></tr>`).join('')}</tbody></table></div>
       <p class="small muted">El indicativo puede ir en cualquier parte del mensaje y vale con sus últimas cifras si no hay duda. Si no escribes indicativo, la orden va a la aeronave seleccionada (clic en su ficha o etiqueta). Tab completa indicativos; ↑/↓ recorren el historial.</p>
+      <p class="small muted"><b>Voz:</b> mantén pulsado <b>Ctrl derecho</b> (o el botón 🎙) mientras hablas y suelta para transmitir. Di los indicativos con el designador telefónico y cifra a cifra ("Iberia tres siete uno dos"), las matrículas con el alfabeto ("Eco Charlie Alfa Bravo Charlie") y la pista como "pista dos siete izquierda". Funciona en Chrome, Edge y Safari (en Chrome necesita conexión). Con "Enviar al soltar el PTT" desactivado (⚙), lo reconocido queda en la línea de comandos para revisarlo.</p>
       <div class="tbl"><table><thead><tr><th>Acierto</th><th>Puntos</th><th>Error</th><th>Puntos</th></tr></thead><tbody>
       ${[['Despegue bien separado', PTS.TAKEOFF, 'Pista ocupada', PTS.RWY_OCCUPIED], ['Autorización de aterrizaje correcta', PTS.LANDING_CLR, 'Dos autorizaciones de aterrizaje', PTS.TWO_LANDING], ['Fraseología completa (pista + viento)', PTS.PHRASE, 'Estela en salida', PTS.WAKE], ['Corregir una colación errónea', PTS.READBACK_FIX, 'Salidas sucesivas', PTS.SUCCESSIVE], ['Transferencia a APP', PTS.TRANSFER, 'Despegue sin suelta', PTS.NO_RELEASE], ['Frustrada justificada', PTS.GA_JUSTIFIED, 'Prioridad de la emergencia', PTS.EMERG_PRIORITY], ['Emergencia gestionada', PTS.EMERG_OK, 'Proximidad en el aire', PTS.AIRPROX], ['Secuencia VFR ("siga a")', PTS.SEQUENCE, 'Circuito lleno', PTS.CIRCUIT_FULL], ['Información de tránsito', PTS.TRAFFIC, 'Sin información de tránsito a un VFR', PTS.TI_MISSED], ['Alineación condicional', PTS.LINEUP_COND, 'Llegada sin autorización (frustrada)', PTS.NO_LANDING_CLR]].map(r => `<tr><td>${r[0]}</td><td class="tabular">+${r[1]}</td><td>${r[2]}</td><td class="tabular">${r[3]}</td></tr>`).join('')}
       </tbody></table></div>`;
@@ -146,8 +147,13 @@
           <span class="sim-clock tabular" id="sClock"></span>
           <button class="btn sim-chrono tabular" id="sChrono" title="Cronómetro (tiempo del simulador): clic para iniciar, parar y poner a cero">⏱ 0:00</button>
           <div class="seg" id="sSpeed">${[0, 1, 2, 4].map(v => `<button data-v="${v}" aria-pressed="${v === 1}">${v ? v + '×' : '❚❚'}</button>`).join('')}</div>
-          <label class="chip"><input type="checkbox" id="sHelp" checked> Ayudas</label>
-          <label class="chip"><input type="checkbox" id="sVoice"> Voz</label>
+          <button class="btn sim-ptt" id="sPtt" type="button" title="Mantén pulsado (o Ctrl derecho) para hablar">🎙 PTT</button>
+          <div class="sim-opts"><button class="btn" id="sOptsBtn" type="button" aria-expanded="false" title="Ajustes">⚙</button>
+            <div class="sim-menu" id="sOpts" hidden>
+              <label><input type="checkbox" id="sHelp" checked> Ayudas en las fichas</label>
+              <label title="Si no, lo reconocido queda en la línea para revisarlo"><input type="checkbox" id="sAutoTx"> Enviar al soltar el PTT</label>
+              <label><input type="checkbox" id="sVoice"> Voces de pilotos y APP</label>
+            </div></div>
           <span class="sim-score tabular" id="sScore">0</span>
           <button class="btn" id="sEnd">Terminar</button>
         </div>
@@ -184,7 +190,7 @@
     }
     function speak(text) {
       if (!S.voice || !root.speechSynthesis) return;
-      try { const u = new SpeechSynthesisUtterance(text); u.lang = 'es-ES'; u.rate = 1.15; root.speechSynthesis.speak(u); } catch (e) { /* sin voz */ }
+      try { const u = new SpeechSynthesisUtterance(V ? V.spoken(text) : text); u.lang = 'es-ES'; u.rate = 1.15; root.speechSynthesis.speak(u); } catch (e) { /* sin voz */ }
     }
     // respuesta de una estación con un pequeño retardo
     function reply(who, text, delay, cb) { S.pending.push({ t: S.t + (delay == null ? 1.5 + Math.random() * 1.5 : delay), who, text, cb }); }
@@ -805,8 +811,53 @@
     });
     $('sSpeed').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (!b) return; S.speed = +b.dataset.v; $('sSpeed').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); });
     $('sHelp').onchange = e => { S.help = e.target.checked; rootEl.querySelectorAll('.fstrip').forEach(x => { x.dataset.html = ''; }); };
+    // ---------- voz: pulsar para hablar (Ctrl derecho o botón) ----------
+    const autoTx = $('sAutoTx'); autoTx.checked = store.get('simAutoTx', true);
+    autoTx.onchange = () => { store.set('simAutoTx', autoTx.checked); cmd.focus(); };
+    const pttBtn = $('sPtt');
+    const voiceOpts = () => ({ callsigns: S.ac.map(o => o.cs), types: [...new Set(S.ac.map(o => o.type.t))] });
+    const known = t => voiceOpts().callsigns.filter(c => new RegExp('\\b' + c + '\\b').test(t)).length;
+    const mic = V ? V.ptt({
+      lang: 'es-ES',
+      // de las alternativas del reconocedor, la que deja más indicativos reconocibles
+      pick: alts => alts.map(a => ({ a, k: known(V.toCommand(a, voiceOpts())) })).sort((p, q) => q.k - p.k)[0].a,
+      onStart: () => { pttBtn.dataset.on = '1'; cmd.classList.add('listening'); cmd.value = ''; cmd.placeholder = 'Escuchando…'; if (root.speechSynthesis) root.speechSynthesis.cancel(); },
+      onInterim: t => { cmd.value = t.trim(); },
+      onFinal: t => {
+        pttBtn.dataset.on = ''; cmd.classList.remove('listening'); cmd.placeholder = 'IBE123 ruede a punto de espera pista ' + rwy;
+        if (S.ended || t === null) { cmd.value = ''; return; }
+        if (!t) { cmd.value = ''; log('Sistema', 'No se ha entendido nada. Mantén pulsado el PTT mientras hablas.', 'sys'); return; }
+        const txt = V.toCommand(t, voiceOpts());
+        if (autoTx.checked) { cmd.value = ''; S.hist.unshift(txt); S.hi = -1; transmit(txt); } else { cmd.value = txt + ' '; cmd.focus(); }
+      },
+      onError: code => {
+        pttBtn.dataset.on = ''; cmd.classList.remove('listening');
+        log('Sistema', ({ 'not-allowed': 'Permiso de micrófono denegado. Actívalo en el candado de la barra de direcciones (si abriste el archivo directamente, prueba a servirlo con "npx serve app").',
+          'service-not-allowed': 'El navegador no permite el reconocimiento de voz en esta página.', 'no-speech': 'No se ha oído nada.', 'audio-capture': 'No se encuentra ningún micrófono.',
+          network: 'El reconocimiento de voz de este navegador necesita conexión a internet.' })[code] || 'Error del reconocimiento de voz (' + code + ').', 'sys');
+      }
+    }) : { supported: false };
+    if (!mic.supported) { pttBtn.disabled = true; pttBtn.title = 'Tu navegador no admite reconocimiento de voz: usa Chrome, Edge o Safari'; }
+    let pttKey = false, warned = false;
+    const onKeyDown = e => {
+      if (e.code === 'ControlRight') {
+        if (e.repeat) return; e.preventDefault();
+        if (!mic.supported) { if (!warned) { warned = true; log('Sistema', pttBtn.title + '.', 'sys'); } return; }
+        pttKey = true; mic.start();
+      } else if (pttKey && mic.active) { pttKey = false; mic.abort(); } // Ctrl derecho + otra tecla = atajo, no transmisión
+    };
+    const onKeyUp = e => { if (e.code === 'ControlRight' && pttKey) { pttKey = false; mic.stop(); } };
+    document.addEventListener('keydown', onKeyDown); document.addEventListener('keyup', onKeyUp);
+    const pttUp = () => { if (mic.active) mic.stop(); };
+    pttBtn.addEventListener('pointerdown', e => { e.preventDefault(); if (mic.supported) { pttBtn.setPointerCapture(e.pointerId); mic.start(); } });
+    pttBtn.addEventListener('pointerup', pttUp); pttBtn.addEventListener('pointercancel', pttUp);
+    const cleanupVoice = () => { document.removeEventListener('keydown', onKeyDown); document.removeEventListener('keyup', onKeyUp); if (mic.active) mic.abort(); };
     $('sVoice').onchange = e => { S.voice = e.target.checked; if (!S.voice && root.speechSynthesis) root.speechSynthesis.cancel(); };
     $('sEnd').onclick = () => end();
+    const opts = $('sOpts'), optsBtn = $('sOptsBtn');
+    optsBtn.onclick = e => { e.stopPropagation(); opts.hidden = !opts.hidden; optsBtn.setAttribute('aria-expanded', !opts.hidden); };
+    opts.onclick = e => e.stopPropagation();
+    rootEl.addEventListener('click', () => { if (!opts.hidden) { opts.hidden = true; optsBtn.setAttribute('aria-expanded', false); } });
     // cronómetro en tiempo de simulación: cada clic inicia → para → pone a cero
     const chrono = { st: 'idle', t0: 0, val: 0 };
     const chronoVal = () => chrono.st === 'run' ? S.t - chrono.t0 : chrono.val;
@@ -824,6 +875,7 @@
     rootEl.querySelector('.sim-atis').onclick = e => e.currentTarget.classList.toggle('open');
 
     function end() {
+      cleanupVoice();
       if (S.ended) return; S.ended = true; if (root.speechSynthesis) root.speechSynthesis.cancel(); rootEl.ownerDocument.body.classList.remove('simmode');
       const best = store.get('simBest', {}); const rec = best[scen.id] == null || S.score > best[scen.id]; if (rec) { best[scen.id] = S.score; store.set('simBest', best); }
       const pens = Object.entries(S.penalties).sort((p, q) => p[1] - q[1]);
@@ -839,7 +891,7 @@
     let last = performance.now(), acc = 0, frame = 0;
     const simEl = rootEl.querySelector('.sim');
     function loop(now) {
-      if (S.ended || !document.body.contains(simEl)) { if (root.speechSynthesis && !S.ended) root.speechSynthesis.cancel(); if (!document.body.contains(simEl) && !rootEl.querySelector('.sim')) document.body.classList.remove('simmode'); return; }
+      if (S.ended || !document.body.contains(simEl)) { cleanupVoice(); if (root.speechSynthesis && !S.ended) root.speechSynthesis.cancel(); if (!document.body.contains(simEl) && !rootEl.querySelector('.sim')) document.body.classList.remove('simmode'); return; }
       const dt = Math.min(0.25, (now - last) / 1000); last = now;
       if (S.speed) { acc += dt * S.speed; while (acc > 0.1) { step(0.1); acc -= 0.1; if (S.ended) return; } }
       if ((frame++ & 1) === 0) { drawRadar(); drawGround(); }
