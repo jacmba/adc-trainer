@@ -105,14 +105,14 @@
     opts = opts || {};
     const store = opts.store || { get: (k, d) => d, set() {} };
     rootEl.innerHTML = ''; rootEl.ownerDocument.body.classList.remove('simmode');
-    const best = store.get('simBest', {});
+    const best = store.get('simBest', {}), plays = store.get('simPlays', {});
     rootEl.innerHTML = `<div class="view-head"><div><div class="eyebrow">Juego</div><h1>Simulador de torre</h1>
       <p>Un turno de torre continuo en tiempo real. Escribe tus transmisiones en la línea de comandos (fraseología en español o alias cortos), mueve las etiquetas del radar y ordena las fichas. Cada decisión suma o resta puntos.</p></div></div>
       <div class="grid cols-3">${SCENARIOS.map(s => `<button class="scen ${best[s.id] != null ? 'done' : ''}" data-sim="${s.id}"><span class="body">
         <span class="cs"><span>Aeródromo al azar</span><span>${'●'.repeat(s.diff)}${'○'.repeat(3 - s.diff)}</span></span>
         <span class="tt" style="display:block">${esc(s.title)}</span>
         <span class="small" style="display:block;margin:4px 0">${esc(s.desc)}</span>
-        <span class="small muted">${s.endless ? 'Sin final' : 'Termina al despachar todo el tráfico'}${best[s.id] != null ? ` · mejor ${best[s.id]} puntos` : ''}</span></span></button>`).join('')}</div>
+        <span class="small muted">${s.endless ? 'Sin final' : 'Termina al despachar todo el tráfico'}${best[s.id] != null ? ` · mejor ${best[s.id]} puntos` : ''}${plays[s.id] ? ` · ${plays[s.id].n} turno${plays[s.id].n > 1 ? 's' : ''}, último ${plays[s.id].last}` : ''}</span></span></button>`).join('')}</div>
       <details class="help" style="margin-top:16px"><summary>Comandos y puntuación</summary>${helpHtml()}</details>`;
     rootEl.querySelectorAll('[data-sim]').forEach(b => b.onclick = () => start(rootEl, SCENARIOS.find(s => s.id === b.dataset.sim), store));
   }
@@ -132,7 +132,7 @@
     const side = rng() < 0.5 ? 1 : -1; // 1: circuito por la izquierda (lado +y)
     const S = {
       t: 0, speed: 1, paused: false, scen, ctx, side, ac: [], score: 0, nGood: 0, nBad: 0, penalties: {}, lastDep: null, gaHold: false,
-      queue: scen.traffic(rng), events: scen.events.slice(), sel: null, help: true, voice: false, ended: false, nextId: 1,
+      queue: scen.traffic(rng), events: scen.events.slice(), sel: null, help: store.get('simHelp', true), voice: store.get('simVoice', false), ended: false, nextId: 1,
       pending: [], transcript: [], hist: [], hi: -1, order: { dep: [], arr: [] }, lastTip: -999, airprox: {}, ti: {}, endless: !!scen.endless, nextSpawn: 0
     };
     const clock0 = 9 * 3600 + Math.floor(rng() * 8) * 3600;
@@ -150,10 +150,10 @@
           <button class="btn sim-ptt" id="sPtt" type="button" title="Mantén pulsado (o Ctrl derecho) para hablar">🎙 PTT</button>
           <div class="sim-opts"><button class="btn" id="sOptsBtn" type="button" aria-expanded="false" title="Ajustes">⚙</button>
             <div class="sim-menu" id="sOpts" hidden>
-              <label><input type="checkbox" id="sHelp" checked> Ayudas en las fichas</label>
+              <label><input type="checkbox" id="sHelp" ${S.help ? 'checked' : ''}> Ayudas en las fichas</label>
               <label title="Si no, lo reconocido queda en la línea para revisarlo"><input type="checkbox" id="sAutoTx"> Enviar al soltar el PTT</label>
               <label><input type="checkbox" id="sRadioFx"> Sonido de radio al pulsar y soltar el PTT</label>
-              <label><input type="checkbox" id="sVoice"> Voces de pilotos y APP</label>
+              <label><input type="checkbox" id="sVoice" ${S.voice ? 'checked' : ''}> Voces de pilotos y APP</label>
             </div></div>
           <span class="sim-score tabular" id="sScore">0</span>
           <button class="btn" id="sEnd">Terminar</button>
@@ -811,7 +811,7 @@
       }
     });
     $('sSpeed').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (!b) return; S.speed = +b.dataset.v; $('sSpeed').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); });
-    $('sHelp').onchange = e => { S.help = e.target.checked; rootEl.querySelectorAll('.fstrip').forEach(x => { x.dataset.html = ''; }); };
+    $('sHelp').onchange = e => { S.help = e.target.checked; store.set('simHelp', S.help); rootEl.querySelectorAll('.fstrip').forEach(x => { x.dataset.html = ''; }); };
     // ---------- voz: pulsar para hablar (Ctrl derecho o botón) ----------
     const autoTx = $('sAutoTx'); autoTx.checked = store.get('simAutoTx', true);
     autoTx.onchange = () => { store.set('simAutoTx', autoTx.checked); cmd.focus(); };
@@ -856,7 +856,7 @@
     pttBtn.addEventListener('pointerdown', e => { e.preventDefault(); if (mic.supported) { pttBtn.setPointerCapture(e.pointerId); fx('open'); mic.start(); } });
     pttBtn.addEventListener('pointerup', pttUp); pttBtn.addEventListener('pointercancel', pttUp);
     const cleanupVoice = () => { document.removeEventListener('keydown', onKeyDown); document.removeEventListener('keyup', onKeyUp); if (mic.active) mic.abort(); };
-    $('sVoice').onchange = e => { S.voice = e.target.checked; if (!S.voice && root.speechSynthesis) root.speechSynthesis.cancel(); };
+    $('sVoice').onchange = e => { S.voice = e.target.checked; store.set('simVoice', S.voice); if (!S.voice && root.speechSynthesis) root.speechSynthesis.cancel(); };
     $('sEnd').onclick = () => end();
     const opts = $('sOpts'), optsBtn = $('sOptsBtn');
     optsBtn.onclick = e => { e.stopPropagation(); opts.hidden = !opts.hidden; optsBtn.setAttribute('aria-expanded', !opts.hidden); };
@@ -882,6 +882,8 @@
       cleanupVoice();
       if (S.ended) return; S.ended = true; if (root.speechSynthesis) root.speechSynthesis.cancel(); rootEl.ownerDocument.body.classList.remove('simmode');
       const best = store.get('simBest', {}); const rec = best[scen.id] == null || S.score > best[scen.id]; if (rec) { best[scen.id] = S.score; store.set('simBest', best); }
+      const plays = store.get('simPlays', {}); const pl = plays[scen.id] || (plays[scen.id] = { n: 0, last: null, totalTime: 0 });
+      pl.n++; pl.last = S.score; pl.totalTime += Math.round(S.t); store.set('simPlays', plays);
       const pens = Object.entries(S.penalties).sort((p, q) => p[1] - q[1]);
       rootEl.innerHTML = `<div class="view-head"><div><div class="eyebrow">Fin del turno · ${esc(ctx.apt.icao)} pista ${esc(rwy)}</div><h1>${esc(scen.title)}</h1>
         <p>${S.score} puntos${rec ? ' (nuevo récord)' : ''} en ${mmss(S.t)} de turno. ${S.nGood} aciertos y ${S.nBad} errores.</p></div>

@@ -41,6 +41,15 @@ python3 -c "import cairosvg,glob,os; [cairosvg.svg2png(url=f, write_to='build/di
 npx serve app                        # o abrir app/index.html directamente
 ```
 
+## Progreso
+
+Todo se guarda en `localStorage` (prefijo `adc.`, por navegador): aciertos por tema (`stats`), temas leídos (`read`,
+al llegar al final del tema), cajas Leitner (`boxes`), ajustes de test y flashcards (`testCfg`, `flashCfg`),
+historial de tests (`tests`, últimos 50) y mejor examen (`best`), mejores marcas de Torre en vivo (`scen`), pestaña
+(`torreTab`) y puzzle de secuencia (`seq`), y del simulador mejores puntuaciones, turnos jugados y opciones
+(`simBest`, `simPlays`, `simHelp`, `simVoice`, `simAutoTx`, `simRadioFx`). En el Temario, «Tu progreso» permite
+exportarlo a un JSON, importarlo en otro navegador o borrarlo.
+
 ## Simulador de torre
 
 Escenario continuo (salidas, tráfico mixto, circuito VFR, emergencias, "todas sujetas" y sesión libre) sobre un
