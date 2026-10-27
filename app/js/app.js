@@ -17,6 +17,27 @@
     set(k, v) { try { localStorage.setItem('adc.' + k, JSON.stringify(v)); } catch (e) { /* sin almacenamiento */ } }
   };
 
+  // ---------- progreso: exportar, importar y borrar ----------
+  // Todo el progreso vive en localStorage bajo el prefijo "adc." (por navegador): aciertos por tema, cajas de
+  // flashcards, temas leídos, historial de tests, mejores marcas de Torre en vivo y del simulador, ajustes…
+  const progress = {
+    keys() { try { return Object.keys(localStorage).filter(k => k.startsWith('adc.')); } catch (e) { return []; } },
+    dump() { const o = {}; for (const k of this.keys()) { try { o[k] = JSON.parse(localStorage.getItem(k)); } catch (e) { /* valor no JSON: se omite */ } } return o; },
+    exportFile() {
+      const blob = new Blob([JSON.stringify({ app: 'adc-trainer', version: 1, date: new Date().toISOString(), data: this.dump() }, null, 1)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `adc-trainer-progreso-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    },
+    importText(txt) {
+      const j = JSON.parse(txt); const data = j && j.app === 'adc-trainer' && j.data;
+      if (!data || typeof data !== 'object') throw new Error('No es un archivo de progreso de esta app.');
+      const keys = Object.keys(data).filter(k => k.startsWith('adc.')); if (!keys.length) throw new Error('El archivo no contiene progreso.');
+      for (const k of keys) localStorage.setItem(k, JSON.stringify(data[k]));
+      return keys.length;
+    },
+    reset() { for (const k of this.keys()) localStorage.removeItem(k); }
+  };
+
   // ---------- markdown mínimo ----------
   function inline(t) {
     t = esc(t);
@@ -74,6 +95,8 @@
 
   // ---------- estadísticas ----------
   const stats = store.get('stats', {}); // {topic: {ok, n}}
+  const readTopics = store.get('read', {}); // {topic: fecha ISO en que se llegó al final del tema}
+  function markRead(id) { if (!readTopics[id]) { readTopics[id] = new Date().toISOString(); store.set('read', readTopics); } }
   function recordAnswer(topic, ok) { const s = stats[topic] || (stats[topic] = { ok: 0, n: 0 }); s.n++; if (ok) s.ok++; store.set('stats', stats); }
 
   // ---------- navegación ----------
@@ -95,14 +118,35 @@
     const tiles = D.topics.map(t => {
       const s = stats[t.id]; const pct = s && s.n ? Math.round(100 * s.ok / s.n) : null;
       const nQ = D.questions.filter(q => q.t === t.id).length, nF = D.flashcards.filter(f => f.topic === t.id).length;
-      return `<button class="tile" data-topic="${t.id}"><span class="n">${t.num}</span><span><span class="t">${esc(t.title)}</span>
+      return `<button class="tile" data-topic="${t.id}"><span class="n">${t.num}</span><span><span class="t">${esc(t.title)}${readTopics[t.id] ? ' <span class="read" title="Leído">✓ leído</span>' : ''}</span>
         <span class="m">${nQ} preguntas · ${nF} flashcards${pct != null ? ` · aciertos ${pct}% (${s.n})` : ''}</span>
         ${pct != null ? `<span class="progress"><i style="width:${pct}%"></i></span>` : ''}</span></button>`;
     }).join('');
-    VIEW.innerHTML = `<div class="view-head"><div><div class="eyebrow">Libro ADC · 10 capítulos</div><h1>Temario</h1>
-      <p>Todo el temario teórico del ADC organizado por temas, con diagramas, tablas y los puntos clave destacados. Los aciertos del test se reflejan en cada tema.</p></div></div>
-      <div class="grid cols-3">${tiles}</div>`;
+    const nRead = D.topics.filter(t => readTopics[t.id]).length;
+    const nAns = Object.values(stats).reduce((a, x) => a + x.n, 0), nOk = Object.values(stats).reduce((a, x) => a + x.ok, 0);
+    const nBoxed = Object.values(boxes).filter(b => b >= 4).length;
+    VIEW.innerHTML = `<div class="view-head"><div><div class="eyebrow">Libro ADC · 10 capítulos${nRead ? ` · ${nRead} leído${nRead > 1 ? 's' : ''}` : ''}</div><h1>Temario</h1>
+      <p>Todo el temario teórico del ADC organizado por temas, con diagramas, tablas y los puntos clave destacados. Los aciertos del test se reflejan en cada tema; un tema cuenta como leído al llegar a su final.</p></div></div>
+      <div class="grid cols-3">${tiles}</div>
+      <section class="panel" style="padding:14px 18px;margin-top:22px" aria-labelledby="prog-h">
+        <div class="row" style="justify-content:space-between"><h2 id="prog-h" style="font-family:var(--display);text-transform:uppercase;letter-spacing:.05em;font-size:20px;margin:0">Tu progreso</h2>
+          <div class="row"><button class="btn" id="pExp">Exportar</button><button class="btn" id="pImp">Importar…</button><button class="btn ghost" id="pDel">Borrar todo</button><input type="file" id="pFile" accept="application/json,.json" hidden></div></div>
+        <p class="small muted" style="margin:6px 0 0">${nRead}/${D.topics.length} temas leídos · ${nAns} preguntas respondidas${nAns ? ` (${Math.round(100 * nOk / nAns)}% aciertos)` : ''} · ${nBoxed} flashcards en caja 4–5 · ${(n => `${n} test${n === 1 ? '' : 's'}`)(store.get('tests', []).length)} en el historial.
+          Se guarda en este navegador; exporta un archivo para llevarlo a otro equipo o como copia de seguridad.</p>
+        <p class="small" id="pMsg" role="status" style="margin:6px 0 0"></p>
+      </section>`;
     $$('.tile', VIEW).forEach(b => b.addEventListener('click', () => go('temario', { topic: b.dataset.topic })));
+    const msg = t => { $('#pMsg').textContent = t; };
+    $('#pExp').onclick = () => { progress.exportFile(); msg('Progreso exportado.'); };
+    $('#pImp').onclick = () => $('#pFile').click();
+    $('#pFile').onchange = e => {
+      const f = e.target.files[0]; if (!f) return;
+      f.text().then(txt => {
+        if (!confirm('Importar este archivo sustituye el progreso guardado en este navegador por el del archivo. ¿Continuar?')) return;
+        const n = progress.importText(txt); msg(`Importados ${n} datos. Recargando…`); setTimeout(() => location.reload(), 600);
+      }).catch(err => msg('No se pudo importar: ' + err.message));
+    };
+    $('#pDel').onclick = () => { if (confirm('¿Borrar todo el progreso guardado en este navegador? No se puede deshacer (exporta antes si quieres una copia).')) { progress.reset(); location.reload(); } };
   }
   function viewTopic(id) {
     const t = topicById[id], idx = D.topics.indexOf(t);
@@ -118,7 +162,8 @@
     $('#back').onclick = () => go('temario');
     $('#tq').onclick = () => { testCfg.topics = [id]; go('test', { autostart: true }); };
     $('#tf').onclick = () => { flashCfg.topics = [id]; go('flashcards'); };
-    $$('[data-go]', VIEW).forEach(b => b.onclick = () => go('temario', { topic: b.dataset.go }));
+    $$('[data-go]', VIEW).forEach(b => b.onclick = () => { if (D.topics.indexOf(topicById[b.dataset.go]) > idx) markRead(id); go('temario', { topic: b.dataset.go }); });
+    if ('IntersectionObserver' in window) { const io = new IntersectionObserver(es => { if (es.some(x => x.isIntersecting)) { markRead(id); io.disconnect(); } }); io.observe($('.pager', VIEW)); }
     $$('.toc a', VIEW).forEach(a => a.onclick = e => { e.preventDefault(); const el = a.dataset.anchor === 'esencial' ? $('.essential', VIEW) : document.getElementById(a.dataset.anchor); if (el) el.scrollIntoView({ behavior: 'smooth' }); });
   }
 
@@ -137,10 +182,11 @@
   }
 
   // ---------- FLASHCARDS (Leitner 1–5) ----------
-  const flashCfg = { topics: null };
+  const flashCfg = Object.assign({ topics: null }, store.get('flashCfg', {}));
   const boxes = store.get('boxes', {}); // id -> box
   const fcId = c => slug(c.topic + '-' + c.front).slice(0, 80);
   function viewFlash() {
+    store.set('flashCfg', flashCfg);
     const topics = flashCfg.topics;
     const pool = D.flashcards.filter(c => !topics || topics.includes(c.topic));
     const boxOf = c => boxes[fcId(c)] || 1;
@@ -179,7 +225,7 @@
   document.addEventListener('keydown', e => { if (keyHandler && (state.view === 'flashcards' || state.view === 'test' || state.view === 'torre')) keyHandler(e); });
 
   // ---------- TEST ----------
-  const testCfg = { topics: null, source: 'mix', count: 20, mode: 'practice' };
+  const testCfg = Object.assign({ topics: null, source: 'mix', count: 20, mode: 'practice' }, store.get('testCfg', {}));
   function buildQuestions() {
     const t = testCfg.topics;
     const fixed = D.questions.filter(q => !t || t.includes(q.t)).map(q => {
@@ -196,6 +242,7 @@
     return shuffle(fx.concat(out)).slice(0, n);
   }
   function viewTest() {
+    store.set('testCfg', testCfg);
     if (state.autostart) { state.autostart = false; return runTest(buildQuestions()); }
     const t = testCfg.topics;
     const nFixed = D.questions.filter(q => !t || t.includes(q.t)).length;
@@ -208,6 +255,8 @@
         <div class="panel stat"><b class="tabular">${Object.values(stats).reduce((a, s) => a + s.n, 0)}</b><span>respondidas en este navegador</span></div>
         <div class="panel stat"><b class="tabular">${best != null ? best + '%' : '—'}</b><span>mejor examen simulado</span></div>
       </div>
+      ${(() => { const h = store.get('tests', []).slice(0, 5); return h.length ? `<div class="panel" style="padding:10px 16px;margin-bottom:16px"><div class="eyebrow" style="margin-bottom:4px">Últimos tests</div>
+        <div class="small tabular">${h.map(x => `<div>${new Date(x.d).toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })} · ${x.mode === 'exam' ? 'examen' : 'práctica'} · ${x.ok}/${x.n} (<b style="color:var(--${x.pct >= 75 ? 'ok' : 'bad'})">${x.pct}%</b>)${x.topics ? ' · ' + x.topics.map(t => (topicById[t] || {}).num).join(', ') : ''}</div>`).join('')}</div></div>` : ''; })()}
       <div class="panel" style="padding:18px;display:grid;gap:16px">
         <div><div class="eyebrow" style="margin-bottom:6px">Temas</div><div class="row">
           <label class="chip ${!t ? 'on' : ''}"><input type="checkbox" id="t-all" ${!t ? 'checked' : ''}> Todos</label>
@@ -277,6 +326,8 @@
       const ok = qs.filter((q, i) => answers[i] && isRight(q, answers[i].sel)).length;
       const pct = Math.round(100 * ok / qs.length);
       if (exam) { const b = store.get('best', null); if (b == null || pct > b) store.set('best', pct); }
+      const hist = store.get('tests', []); hist.unshift({ d: new Date().toISOString(), mode: testCfg.mode, n: qs.length, ok, pct, topics: testCfg.topics });
+      store.set('tests', hist.slice(0, 50));
       const wrong = qs.map((q, i) => ({ q, a: answers[i] })).filter(x => !x.a || !isRight(x.q, x.a.sel));
       keyHandler = null;
       VIEW.innerHTML = `<div class="view-head"><div><div class="eyebrow">Resultado</div><h1>${ok} / ${qs.length} · ${pct}%</h1>
@@ -329,7 +380,7 @@
   let situationCounts = null; // se calcula por muestreo la primera vez que se abre la lista
   const catHead = c => `<h3 style="font-family:var(--display);text-transform:uppercase;letter-spacing:.05em;font-size:20px;margin:18px 0 8px">${esc(c)}</h3>`;
   function viewTorre() {
-    const tab = state.tab || 'esc';
+    const tab = state.tab || store.get('torreTab', 'esc'); store.set('torreTab', tab);
     VIEW.innerHTML = `<div class="view-head"><div><div class="eyebrow">Mini-juego</div><h1>Torre en vivo</h1>
       <p>Escenarios de torre paso a paso: decide qué haces y qué transmites. Cada partida saca hasta ${SC.MAX_STEPS} situaciones al azar (aeródromo, pista, viento, aeronaves y tránsitos cambian cada vez). Las decisiones que provocarían una pérdida de separación cuentan aparte, como en el examen.</p></div>
       <div class="seg"><button aria-pressed="${tab === 'esc'}" data-tab="esc">Escenarios</button><button aria-pressed="${tab === 'guia'}" data-tab="guia">Casos guiados</button><button aria-pressed="${tab === 'seq'}" data-tab="seq">Secuencia de salidas</button></div></div>
@@ -413,6 +464,7 @@
     let picked = [];
     function render(result) {
       box.innerHTML = `<div class="game"><div>
+        ${(() => { const sq = store.get('seq', null); return sq && sq.played ? `<p class="small muted" style="margin:0 0 8px">${sq.optimal}/${sq.played} secuencias óptimas · racha ${sq.streak} (mejor ${sq.bestStreak})</p>` : ''; })()}
         <div class="sit">Cuatro salidas <b>IFR</b> por la misma SID esperan en el punto de espera de cabecera. Aeródromo sin procedimiento local: tabla genérica en tiempo. Elige el orden de despegue que deje salir a las cuatro en el menor tiempo total.</div>
         <div class="seq-list">${cs.map((x, i) => { const pos = picked.indexOf(i); return `<button class="seq-item" data-i="${i}" ${result ? 'disabled' : ''}><span class="ord">${pos >= 0 ? pos + 1 : '·'}</span><span><span class="cs">${esc(x.cs)}</span> <span class="muted small">${esc(x.a.name)}</span></span>
           <span class="tags"><span class="tag">${R.WAKE_NAME[R.leadingWake(x.a)]}${x.a.heavyWhenLeading ? '*' : ''}</span><span class="tag">${R.SPEED_NAME[x.a.speed]}</span></span></button>`; }).join('')}</div>
@@ -427,6 +479,8 @@
         const all = perms(cs).map(p => ({ p, c: cost(p.map(x => x.a)) })).sort((a, b) => a.c - b.c); const best = all[0];
         const line = order => order.map((x, i) => i === 0 ? `<div>T+0 · ${esc(x.cs)} (${esc(x.a.t)})</div>` : (() => { const g = gap(order[i - 1].a, x.a); return `<div>+${String(g.min).replace('.', ',')} min · ${esc(x.cs)} (${esc(x.a.t)}) <span class="muted">— ${g.why}</span></div>`; })()).join('');
         const ok = myCost <= best.c;
+        const sq = store.get('seq', { played: 0, optimal: 0, streak: 0, bestStreak: 0 });
+        sq.played++; if (ok) { sq.optimal++; sq.streak++; sq.bestStreak = Math.max(sq.bestStreak, sq.streak); } else sq.streak = 0; store.set('seq', sq);
         render(`<div class="strip ${ok ? 'ok' : 'bad'}"><div class="body"><div class="strip-meta"><span>Tu secuencia</span><span>${String(myCost).replace('.', ',')} min</span></div><div class="timeline">${line(mine)}</div>
           <div class="feedback ${ok ? 'ok' : 'bad'}"><b>${ok ? 'Secuencia óptima.' : `Se podía hacer en ${String(best.c).replace('.', ',')} min.`}</b>${ok ? 'Has minimizado la demora sin dejar salidas sujetas innecesariamente.' : 'Regla práctica: deja salir antes a los más rápidos y a los de mayor estela, y a los lentos y ligeros al final o intercalados con cuidado.'}</div>
           ${ok ? '' : `<div class="strip-meta" style="margin-top:12px"><span>Orden óptimo</span></div><div class="timeline">${line(best.p)}</div>`}</div></div>`);
