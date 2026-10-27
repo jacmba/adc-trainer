@@ -12,12 +12,14 @@ content/                 ← fuente única de verdad (editar aquí)
   summaries.md           "Lo esencial" de cada tema (# id-del-tema)
   flashcards.json        [{topic, front, back}]
   questions.json         banco fijo [{t, q, o[], a[], m?, e}]  (a = índices correctos; m = múltiple)
-  scenarios.json         escenarios del mini-juego (setup + steps con scene, sit, q, o, a, e, sev)
+  scenarios.json         casos guiados del mini-juego (setup + steps con scene, sit, q, o, a, e, sev)
   diagrams/*.svg         diagramas propios (se usan en app y PDF)
 app/
   index.html             shell + estilos (sin dependencias, sin build)
   js/rules.js            reglas: estela, salidas sucesivas, estela en llegada, TRL, VMC/SVFR/LVP, fonética…
   js/generators.js       16 generadores paramétricos de preguntas (usan rules.js)
+  js/scenarios.js        15 escenarios generados de "torre en vivo": familias de situaciones paramétricas
+                         (aeródromo, pista, viento, aeronaves…); cada partida saca hasta 5 al azar
   js/data.js             GENERADO desde content/ (no editar)
   js/app.js              vistas: temario, resúmenes, flashcards (Leitner), test, torre en vivo, chuleta
 build/
@@ -43,7 +45,8 @@ npx serve app                        # o abrir app/index.html directamente
 
 ## Ideas para seguir en Claude Code
 
-- Más escenarios (s19+) y más generadores (p. ej. autorizaciones condicionales, prioridades de aterrizaje).
+- Más situaciones en `app/js/scenarios.js` (cada función de `sits` es un tipo de situación; `node -e` con
+  `require('./app/js/scenarios.js')` permite probarlas) y más generadores de preguntas.
 - Modo "examen cronometrado" y estadísticas por generador.
 - Guardar progreso en un backend o exportarlo.
 - Tests unitarios de `rules.js` contra las tablas de la wiki (hay un script de humo en la conversación).
