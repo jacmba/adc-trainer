@@ -169,7 +169,45 @@
     };
   }
 
-  const API = { toCommand, spoken, ptt, snap, supported: !!Rec };
+  // ---------- efectos de radio (Web Audio, sin archivos) ----------
+  // 'open': clic de pulsar el PTT + golpe corto de portadora; 'close': clic de soltar + cola del silenciador ("kssht")
+  let actx = null; const noiseBufs = new WeakMap();
+  function audio() {
+    const AC = root.AudioContext || root.webkitAudioContext; if (!AC) return null;
+    if (!actx) actx = new AC();
+    if (actx.state === 'suspended') actx.resume();
+    return actx;
+  }
+  function noiseBuf(c) {
+    if (!noiseBufs.has(c)) {
+      const b = c.createBuffer(1, Math.floor(c.sampleRate * 0.5), c.sampleRate);
+      const d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      noiseBufs.set(c, b);
+    }
+    return noiseBufs.get(c);
+  }
+  function click(c, t, freq, gain) {
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = 'square'; o.frequency.setValueAtTime(freq, t); o.frequency.exponentialRampToValueAtTime(freq * 0.4, t + 0.02);
+    g.gain.setValueAtTime(gain, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.025);
+    o.connect(g).connect(c.destination); o.start(t); o.stop(t + 0.03);
+  }
+  function noise(c, t, dur, gain, f, q, attack) {
+    const src = c.createBufferSource(), bp = c.createBiquadFilter(), hp = c.createBiquadFilter(), g = c.createGain();
+    src.buffer = noiseBuf(c); bp.type = 'bandpass'; bp.frequency.value = f; bp.Q.value = q; hp.type = 'highpass'; hp.frequency.value = 300;
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(gain, t + attack); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    src.connect(bp).connect(hp).connect(g).connect(c.destination); src.start(t); src.stop(t + dur + 0.02);
+  }
+  // ctx opcional (p. ej. un OfflineAudioContext para grabar el efecto)
+  function radioFx(kind, volume, ctx) {
+    const c = ctx || audio(); if (!c) return false;
+    const v = volume == null ? 1 : volume, t = c.currentTime + 0.005;
+    if (kind === 'open') { click(c, t, 1800, 0.25 * v); noise(c, t + 0.01, 0.07, 0.12 * v, 1800, 0.7, 0.005); }
+    else { click(c, t, 1400, 0.22 * v); noise(c, t + 0.012, 0.22, 0.32 * v, 2600, 0.6, 0.008); }
+    return true;
+  }
+
+  const API = { toCommand, spoken, ptt, snap, radioFx, supported: !!Rec };
   if (typeof module !== 'undefined' && module.exports) module.exports = API;
   else root.ADC_VOICE = API;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -119,7 +119,7 @@
   function helpHtml() {
     return `<div class="tbl"><table><thead><tr><th>Orden</th><th>Alias</th><th>Para qué</th><th>Ejemplo</th></tr></thead><tbody>${COMMANDS.map(c => `<tr><td>${esc(c.words)}</td><td><code>${esc(c.alias)}</code></td><td>${esc(c.desc)}</td><td class="mono small">${esc(c.ex)}</td></tr>`).join('')}</tbody></table></div>
       <p class="small muted">El indicativo puede ir en cualquier parte del mensaje y vale con sus últimas cifras si no hay duda. Si no escribes indicativo, la orden va a la aeronave seleccionada (clic en su ficha o etiqueta). Tab completa indicativos; ↑/↓ recorren el historial.</p>
-      <p class="small muted"><b>Voz:</b> mantén pulsado <b>Ctrl derecho</b> (o el botón 🎙) mientras hablas y suelta para transmitir. Di los indicativos con el designador telefónico y cifra a cifra ("Iberia tres siete uno dos"), las matrículas con el alfabeto ("Eco Charlie Alfa Bravo Charlie") y la pista como "pista dos siete izquierda". Funciona en Chrome, Edge y Safari (en Chrome necesita conexión). Con "Enviar al soltar el PTT" desactivado (⚙), lo reconocido queda en la línea de comandos para revisarlo.</p>
+      <p class="small muted"><b>Voz:</b> mantén pulsado <b>Ctrl derecho</b> (o el botón 🎙) mientras hablas y suelta para transmitir. Di los indicativos con el designador telefónico y cifra a cifra ("Iberia tres siete uno dos"), las matrículas con el alfabeto ("Eco Charlie Alfa Bravo Charlie") y la pista como "pista dos siete izquierda". Funciona en Chrome, Edge y Safari (en Chrome necesita conexión). El clic de radio al pulsar y la cola del silenciador al soltar se pueden quitar en ⚙. Con "Enviar al soltar el PTT" desactivado (⚙), lo reconocido queda en la línea de comandos para revisarlo.</p>
       <div class="tbl"><table><thead><tr><th>Acierto</th><th>Puntos</th><th>Error</th><th>Puntos</th></tr></thead><tbody>
       ${[['Despegue bien separado', PTS.TAKEOFF, 'Pista ocupada', PTS.RWY_OCCUPIED], ['Autorización de aterrizaje correcta', PTS.LANDING_CLR, 'Dos autorizaciones de aterrizaje', PTS.TWO_LANDING], ['Fraseología completa (pista + viento)', PTS.PHRASE, 'Estela en salida', PTS.WAKE], ['Corregir una colación errónea', PTS.READBACK_FIX, 'Salidas sucesivas', PTS.SUCCESSIVE], ['Transferencia a APP', PTS.TRANSFER, 'Despegue sin suelta', PTS.NO_RELEASE], ['Frustrada justificada', PTS.GA_JUSTIFIED, 'Prioridad de la emergencia', PTS.EMERG_PRIORITY], ['Emergencia gestionada', PTS.EMERG_OK, 'Proximidad en el aire', PTS.AIRPROX], ['Secuencia VFR ("siga a")', PTS.SEQUENCE, 'Circuito lleno', PTS.CIRCUIT_FULL], ['Información de tránsito', PTS.TRAFFIC, 'Sin información de tránsito a un VFR', PTS.TI_MISSED], ['Alineación condicional', PTS.LINEUP_COND, 'Llegada sin autorización (frustrada)', PTS.NO_LANDING_CLR]].map(r => `<tr><td>${r[0]}</td><td class="tabular">+${r[1]}</td><td>${r[2]}</td><td class="tabular">${r[3]}</td></tr>`).join('')}
       </tbody></table></div>`;
@@ -152,6 +152,7 @@
             <div class="sim-menu" id="sOpts" hidden>
               <label><input type="checkbox" id="sHelp" checked> Ayudas en las fichas</label>
               <label title="Si no, lo reconocido queda en la línea para revisarlo"><input type="checkbox" id="sAutoTx"> Enviar al soltar el PTT</label>
+              <label><input type="checkbox" id="sRadioFx"> Sonido de radio al pulsar y soltar el PTT</label>
               <label><input type="checkbox" id="sVoice"> Voces de pilotos y APP</label>
             </div></div>
           <span class="sim-score tabular" id="sScore">0</span>
@@ -815,6 +816,9 @@
     const autoTx = $('sAutoTx'); autoTx.checked = store.get('simAutoTx', true);
     autoTx.onchange = () => { store.set('simAutoTx', autoTx.checked); cmd.focus(); };
     const pttBtn = $('sPtt');
+    const radioFx = $('sRadioFx'); radioFx.checked = store.get('simRadioFx', true);
+    radioFx.onchange = () => { store.set('simRadioFx', radioFx.checked); if (radioFx.checked) V.radioFx('close'); };
+    const fx = kind => { if (radioFx.checked && V && V.radioFx) V.radioFx(kind); };
     const voiceOpts = () => ({ callsigns: S.ac.map(o => o.cs), types: [...new Set(S.ac.map(o => o.type.t))] });
     const known = t => voiceOpts().callsigns.filter(c => new RegExp('\\b' + c + '\\b').test(t)).length;
     const mic = V ? V.ptt({
@@ -843,13 +847,13 @@
       if (e.code === 'ControlRight') {
         if (e.repeat) return; e.preventDefault();
         if (!mic.supported) { if (!warned) { warned = true; log('Sistema', pttBtn.title + '.', 'sys'); } return; }
-        pttKey = true; mic.start();
-      } else if (pttKey && mic.active) { pttKey = false; mic.abort(); } // Ctrl derecho + otra tecla = atajo, no transmisión
+        pttKey = true; fx('open'); mic.start();
+      } else if (pttKey && mic.active) { pttKey = false; fx('close'); mic.abort(); } // Ctrl derecho + otra tecla = atajo, no transmisión
     };
-    const onKeyUp = e => { if (e.code === 'ControlRight' && pttKey) { pttKey = false; mic.stop(); } };
+    const onKeyUp = e => { if (e.code === 'ControlRight' && pttKey) { pttKey = false; fx('close'); mic.stop(); } };
     document.addEventListener('keydown', onKeyDown); document.addEventListener('keyup', onKeyUp);
-    const pttUp = () => { if (mic.active) mic.stop(); };
-    pttBtn.addEventListener('pointerdown', e => { e.preventDefault(); if (mic.supported) { pttBtn.setPointerCapture(e.pointerId); mic.start(); } });
+    const pttUp = () => { if (mic.active) { fx('close'); mic.stop(); } };
+    pttBtn.addEventListener('pointerdown', e => { e.preventDefault(); if (mic.supported) { pttBtn.setPointerCapture(e.pointerId); fx('open'); mic.start(); } });
     pttBtn.addEventListener('pointerup', pttUp); pttBtn.addEventListener('pointercancel', pttUp);
     const cleanupVoice = () => { document.removeEventListener('keydown', onKeyDown); document.removeEventListener('keyup', onKeyUp); if (mic.active) mic.abort(); };
     $('sVoice').onchange = e => { S.voice = e.target.checked; if (!S.voice && root.speechSynthesis) root.speechSynthesis.cancel(); };

@@ -63,6 +63,7 @@ La tabla `COMMANDS` de `sim.js` define a la vez el parser y la ayuda del juego (
   frecuencia y elige, entre las alternativas del reconocedor, la que deja indicativos conocidos. Usa la Web Speech
   API: Chrome, Edge y Safari (Chrome necesita conexión); si el micrófono no funciona abriendo el archivo
   directamente, sirve la app con `npx serve app`.
+  Al pulsar y soltar suena un clic de radio y la cola del silenciador (Web Audio, sin archivos; se quita en ⚙).
 - En escritorio la interfaz se ajusta al alto de la ventana; por debajo de 1100 px se apila. La tabla `PTS` de `sim.js` fija los puntos de
 cada acierto y error; la separación entre salidas se calcula con `rules.js`.
 
