@@ -27,11 +27,11 @@
   // ---------- Puntuación (al estilo de GAME_EVENTS de openscope) ----------
   const PTS = {
     TAXI: 2, LINEUP: 2, LINEUP_COND: 5, TAKEOFF: 10, LANDING_CLR: 10, LANDED: 5, PHRASE: 2, WAKE_CAUTION: 3,
-    TRANSFER: 5, TAXI_IN: 3, CONTINUE: 3, GA_JUSTIFIED: 10, READBACK_FIX: 10, ACK: 5, EMERG_OK: 15, JOIN: 3, SEQUENCE: 5, ORBIT_OK: 2, RELEASE_REQ: 3,
+    TRANSFER: 5, TAXI_IN: 3, CONTINUE: 3, GA_JUSTIFIED: 10, READBACK_FIX: 10, ACK: 5, EMERG_OK: 15, JOIN: 3, SEQUENCE: 5, TRAFFIC: 5, TRAFFIC_EXTRA: 2, ORBIT_OK: 2, RELEASE_REQ: 3,
     RWY_OCCUPIED: -50, TWO_LANDING: -30, LINEUP_WITH_LANDING: -30, LINEUP_CLOSE: -10, LINEUP_ROLLOUT: -15, ARR_TOO_CLOSE: -20,
     NO_RELEASE: -30, WAKE: -40, SUCCESSIVE: -25, EMERG_PRIORITY: -30, EMERG_NOACK: -10, NO_LANDING_CLR: -20, LOSS_RWY: -50,
     GA_UNJUSTIFIED: -15, LATE_TRANSFER: -10, EARLY_TRANSFER: -5, READBACK_MISSED: -15, NEEDLESS_FIX: -3, CIRCUIT_FULL: -10,
-    AIRPROX: -40, DELAY_HP: -5, DELAY_EXIT: -5, DELAY_ORBIT: -5
+    AIRPROX: -40, TI_MISSED: -10, DELAY_HP: -5, DELAY_EXIT: -5, DELAY_ORBIT: -5
   };
 
   // ---------- Aeronaves ----------
@@ -81,27 +81,30 @@
   ];
 
   // ---------- Comandos ----------
-  const HELP = [
-    ['ruede · taxi', 'IBE123 ruede a punto de espera pista 27 (salidas) / ruede a plataforma (llegadas)'],
-    ['alinee · lu', 'IBE123 alinee y mantenga pista 27 · condicional: detrás del A320 en final, entre y mantenga pista 27, detrás'],
-    ['despegue · to', 'IBE123 viento 270 grados 8 nudos, pista 27 autorizado a despegar'],
-    ['aterrizar · cl', 'IBE123 viento 270 grados 8 nudos, pista 27 autorizado a aterrizar'],
-    ['continúe · ca', 'IBE123 continúe aproximación'],
-    ['motor y al aire · ga', 'IBE123 motor y al aire'],
-    ['mantenga posición · hp', 'IBE123 mantenga posición, cancele despegue'],
-    ['contacte · app', 'IBE123 contacte con aproximación (salidas en el aire, frustradas)'],
-    ['viento en cola · dw', 'ECABC entre en viento en cola (VFR)'],
-    ['siga a · ajuste', 'ECABC número dos, siga al A320 en final (o "ajuste detrás de IBE123"): alarga el viento en cola hasta tener hueco'],
-    ['orbite · orb', 'ECABC orbite sobre su posición (VFR)'],
-    ['negativo', 'IBE123 negativo, QNH 1018 (corregir una colación)'],
-    ['recibido · ack', 'IBE123 recibido (acusar recibo de una emergencia o aviso)'],
-    ['suelta', 'suelta IBE123 (pedir la suelta de una salida a APP)']
+  // Tabla única de órdenes: el parser y la ayuda salen de aquí (el orden importa: gana la primera que encaja).
+  const COMMANDS = [
+    { id: 'release', words: 'suelta', alias: 'release', m: [/\bsuelta\b/, /\brelease\b/], ex: 'suelta IBE123', desc: 'Pide a APP la suelta de una salida IFR sujeta (tabla de sucesivas, tras una frustrada o con "todas sujetas").' },
+    { id: 'negative', words: 'negativo', alias: 'neg', m: ['negativo', /\bneg\b/], ex: 'IBE123 negativo, QNH 1018', desc: 'Corrige una colación errónea (incluye el dato correcto).' },
+    { id: 'goaround', words: 'motor y al aire', alias: 'ga', m: ['motor y al aire', /\bga\b/, 'go around'], ex: 'IBE123 motor y al aire', desc: 'Frustrada de una llegada IFR o VFR.' },
+    { id: 'hold', words: 'mantenga posición · cancele despegue · aborte', alias: 'hp', m: ['cancele', 'aborte', 'mantenga posicion', /\bhp\b/, 'hold position'], ex: 'IBE123 mantenga posición, cancele despegue', desc: 'Detiene un rodaje, cancela un despegue sin iniciar o aborta uno en carrera.' },
+    { id: 'lineup', words: 'alinee y mantenga · entre y mantenga', alias: 'lu', m: ['alinee', 'entre y mantenga', /\blu\b/, 'line up'], ex: 'IBE123 alinee y mantenga pista 27', desc: 'Alinea una salida en el punto de espera.' },
+    { id: 'lineup', words: '… detrás (condicional)', alias: 'lu … detras', m: [], ex: 'IBE123 detrás del B738 despegando, alinee y mantenga pista 27, detrás', desc: 'Alineación condicional detrás de una salida en carrera o de una llegada en final (nómbrala por indicativo o tipo).' },
+    { id: 'takeoff', words: 'autorizado a despegar', alias: 'to · cto', m: ['despeg', /\bc?to\b/, 'takeoff'], ex: 'IBE123 viento 270 grados 8 nudos, pista 27 autorizado a despegar', desc: 'Autorización de despegue (incluye pista y viento).' },
+    { id: 'land', words: 'autorizado a aterrizar', alias: 'cl · land', m: ['aterriz', /\bcl\b/, /\bland\b/], ex: 'IBE123 viento 270 grados 8 nudos, pista 27 autorizado a aterrizar', desc: 'Autorización de aterrizaje (incluye pista y viento).' },
+    { id: 'follow', words: 'siga a · ajuste detrás de · detrás del', alias: 'fl', m: ['siga a', 'siga la', 'sigue a', 'ajust', 'detras del', 'detras de', /\bfollow\b/, /\bfl\b/], ex: 'ECABC número dos, siga al A320 en final', desc: 'Secuencia un VFR detrás de un tránsito: alarga el viento en cola hasta tener hueco. Cuenta como información de tránsito.' },
+    { id: 'join', words: 'entre en viento en cola', alias: 'dw', m: ['viento en cola', /\bdw\b/, 'downwind', 'entre en'], ex: 'ECABC entre en viento en cola', desc: 'Integra en el circuito a un VFR que espera en un punto de notificación.' },
+    { id: 'orbit', words: 'orbite', alias: 'orb', m: ['orbite', /\borb\b/, 'orbit'], ex: 'ECABC orbite', desc: 'Hace orbitar a un VFR (en su punto o en el circuito).' },
+    { id: 'continue', words: 'continúe (aproximación)', alias: 'ca', m: ['contin', /\bca\b/], ex: 'IBE123 continúe aproximación', desc: 'Llegada con la pista aún no disponible; a un VFR en órbita, que siga el circuito.' },
+    { id: 'taxi', words: 'ruede', alias: 'taxi · t', m: ['ruede', 'rodar', 'rodaje', /\btaxi\b/, /\bt\b/], ex: 'IBE123 ruede a punto de espera pista 27 · ECABC ruede a plataforma', desc: 'Rodaje al punto de espera (salidas) o a plataforma (llegadas que han librado).' },
+    { id: 'transfer', words: 'contacte con aproximación', alias: 'app · ct', m: ['contacte', 'llame', 'escucha', /\bapp\b/, 'aproximacion', /\bct\b/], ex: 'IBE123 contacte con aproximación', desc: 'Transfiere a APP una salida IFR ya en el aire o una frustrada.' },
+    { id: 'traffic', words: 'tránsito · información de tránsito', alias: 'ti', m: ['transito', 'trafico', /\bti\b/], ex: 'ECABC tránsito, A320 en final 4 millas, notifique a la vista', desc: 'Información de tránsito: obligatoria a los VFR del circuito sobre el que les precede y sobre los IFR en final.' },
+    { id: 'ack', words: 'recibido', alias: 'ack', m: ['recibido', /\back\b/, 'enterado'], ex: 'IBE123 recibido', desc: 'Acusa recibo de una emergencia o de un aviso (combustible mínimo).' }
   ];
 
   function mount(rootEl, opts) {
     opts = opts || {};
     const store = opts.store || { get: (k, d) => d, set() {} };
-    rootEl.innerHTML = '';
+    rootEl.innerHTML = ''; rootEl.ownerDocument.body.classList.remove('simmode');
     const best = store.get('simBest', {});
     rootEl.innerHTML = `<div class="view-head"><div><div class="eyebrow">Juego</div><h1>Simulador de torre</h1>
       <p>Un turno de torre continuo en tiempo real. Escribe tus transmisiones en la línea de comandos (fraseología en español o alias cortos), mueve las etiquetas del radar y ordena las fichas. Cada decisión suma o resta puntos.</p></div></div>
@@ -114,10 +117,10 @@
     rootEl.querySelectorAll('[data-sim]').forEach(b => b.onclick = () => start(rootEl, SCENARIOS.find(s => s.id === b.dataset.sim), store));
   }
   function helpHtml() {
-    return `<div class="tbl"><table><thead><tr><th>Orden</th><th>Ejemplo</th></tr></thead><tbody>${HELP.map(h => `<tr><td><code>${esc(h[0])}</code></td><td>${esc(h[1])}</td></tr>`).join('')}</tbody></table></div>
+    return `<div class="tbl"><table><thead><tr><th>Orden</th><th>Alias</th><th>Para qué</th><th>Ejemplo</th></tr></thead><tbody>${COMMANDS.map(c => `<tr><td>${esc(c.words)}</td><td><code>${esc(c.alias)}</code></td><td>${esc(c.desc)}</td><td class="mono small">${esc(c.ex)}</td></tr>`).join('')}</tbody></table></div>
       <p class="small muted">El indicativo puede ir en cualquier parte del mensaje y vale con sus últimas cifras si no hay duda. Si no escribes indicativo, la orden va a la aeronave seleccionada (clic en su ficha o etiqueta). Tab completa indicativos; ↑/↓ recorren el historial.</p>
       <div class="tbl"><table><thead><tr><th>Acierto</th><th>Puntos</th><th>Error</th><th>Puntos</th></tr></thead><tbody>
-      ${[['Despegue bien separado', PTS.TAKEOFF, 'Pista ocupada', PTS.RWY_OCCUPIED], ['Autorización de aterrizaje correcta', PTS.LANDING_CLR, 'Dos autorizaciones de aterrizaje', PTS.TWO_LANDING], ['Fraseología completa (pista + viento)', PTS.PHRASE, 'Estela en salida', PTS.WAKE], ['Corregir una colación errónea', PTS.READBACK_FIX, 'Salidas sucesivas', PTS.SUCCESSIVE], ['Transferencia a APP', PTS.TRANSFER, 'Despegue sin suelta', PTS.NO_RELEASE], ['Frustrada justificada', PTS.GA_JUSTIFIED, 'Prioridad de la emergencia', PTS.EMERG_PRIORITY], ['Emergencia gestionada', PTS.EMERG_OK, 'Proximidad en el aire', PTS.AIRPROX], ['Secuencia VFR ("siga a")', PTS.SEQUENCE, 'Circuito lleno', PTS.CIRCUIT_FULL], ['Alineación condicional', PTS.LINEUP_COND, 'Llegada sin autorización (frustrada)', PTS.NO_LANDING_CLR]].map(r => `<tr><td>${r[0]}</td><td class="tabular">+${r[1]}</td><td>${r[2]}</td><td class="tabular">${r[3]}</td></tr>`).join('')}
+      ${[['Despegue bien separado', PTS.TAKEOFF, 'Pista ocupada', PTS.RWY_OCCUPIED], ['Autorización de aterrizaje correcta', PTS.LANDING_CLR, 'Dos autorizaciones de aterrizaje', PTS.TWO_LANDING], ['Fraseología completa (pista + viento)', PTS.PHRASE, 'Estela en salida', PTS.WAKE], ['Corregir una colación errónea', PTS.READBACK_FIX, 'Salidas sucesivas', PTS.SUCCESSIVE], ['Transferencia a APP', PTS.TRANSFER, 'Despegue sin suelta', PTS.NO_RELEASE], ['Frustrada justificada', PTS.GA_JUSTIFIED, 'Prioridad de la emergencia', PTS.EMERG_PRIORITY], ['Emergencia gestionada', PTS.EMERG_OK, 'Proximidad en el aire', PTS.AIRPROX], ['Secuencia VFR ("siga a")', PTS.SEQUENCE, 'Circuito lleno', PTS.CIRCUIT_FULL], ['Información de tránsito', PTS.TRAFFIC, 'Sin información de tránsito a un VFR', PTS.TI_MISSED], ['Alineación condicional', PTS.LINEUP_COND, 'Llegada sin autorización (frustrada)', PTS.NO_LANDING_CLR]].map(r => `<tr><td>${r[0]}</td><td class="tabular">+${r[1]}</td><td>${r[2]}</td><td class="tabular">${r[3]}</td></tr>`).join('')}
       </tbody></table></div>`;
   }
 
@@ -129,15 +132,19 @@
     const S = {
       t: 0, speed: 1, paused: false, scen, ctx, side, ac: [], score: 0, nGood: 0, nBad: 0, penalties: {}, lastDep: null, gaHold: false,
       queue: scen.traffic(rng), events: scen.events.slice(), sel: null, help: true, voice: false, ended: false, nextId: 1,
-      pending: [], transcript: [], hist: [], hi: -1, order: { dep: [], arr: [] }, lastTip: -999, airprox: {}, endless: !!scen.endless, nextSpawn: 0
+      pending: [], transcript: [], hist: [], hi: -1, order: { dep: [], arr: [] }, lastTip: -999, airprox: {}, ti: {}, endless: !!scen.endless, nextSpawn: 0
     };
     const clock0 = 9 * 3600 + Math.floor(rng() * 8) * 3600;
     const rwy = ctx.rwy;
+    const atis = `${ctx.metar} · Pista ${rwy} · Circuito por la ${side > 0 ? 'izquierda' : 'derecha'} · ${scen.notes}`;
+    rootEl.ownerDocument.body.classList.add('simmode');
     rootEl.innerHTML = `<div class="sim">
       <div class="sim-bar">
-        <div><b>${esc(scen.title)}</b> <span class="muted">· ${esc(ctx.apt.icao)} ${esc(ctx.apt.city)} · pista ${esc(rwy)}</span></div>
+        <div class="sim-title"><b>${esc(scen.title)}</b> <span class="muted">· ${esc(ctx.apt.icao)} ${esc(ctx.apt.city)} · pista ${esc(rwy)}</span></div>
         <div class="row">
+          <button class="btn" id="sHelpBtn" aria-expanded="false">Comandos</button>
           <span class="sim-clock tabular" id="sClock"></span>
+          <button class="btn sim-chrono tabular" id="sChrono" title="Cronómetro (tiempo del simulador): clic para iniciar, parar y poner a cero">⏱ 0:00</button>
           <div class="seg" id="sSpeed">${[0, 1, 2, 4].map(v => `<button data-v="${v}" aria-pressed="${v === 1}">${v ? v + '×' : '❚❚'}</button>`).join('')}</div>
           <label class="chip"><input type="checkbox" id="sHelp" checked> Ayudas</label>
           <label class="chip"><input type="checkbox" id="sVoice"> Voz</label>
@@ -145,22 +152,24 @@
           <button class="btn" id="sEnd">Terminar</button>
         </div>
       </div>
-      <div class="atis"><b>ATIS</b> · ${esc(ctx.metar)} · Pista ${esc(rwy)} · Circuito por la ${side > 0 ? 'izquierda' : 'derecha'} · ${esc(scen.notes)}</div>
-      <div class="sim-grid">
+      <div class="sim-atis" title="${esc(atis)}"><b>ATIS</b> ${esc(atis)}</div>
+      <div class="sim-main">
         <div class="sim-left">
           <div class="scope sim-radar"><svg id="sRadar" viewBox="-7.2 -5.6 20.4 11.2" role="img" aria-label="Radar de aproximación"></svg></div>
           <div class="scope sim-ground"><svg id="sGround" viewBox="-1.75 -0.12 2.05 0.66" role="img" aria-label="Vista del aeródromo"></svg></div>
         </div>
-        <div class="sim-strips">
-          <div class="bay"><div class="bay-h">Salidas</div><div id="bayDep" class="bay-list"></div></div>
-          <div class="bay"><div class="bay-h">Llegadas</div><div id="bayArr" class="bay-list"></div></div>
+        <div class="sim-right">
+          <div class="sim-strips">
+            <div class="bay"><div class="bay-h">Salidas</div><div id="bayDep" class="bay-list"></div></div>
+            <div class="bay"><div class="bay-h">Llegadas</div><div id="bayArr" class="bay-list"></div></div>
+          </div>
+          <div class="sim-comms">
+            <div class="sim-log" id="sLog" aria-live="polite"></div>
+            <form class="sim-input" id="sForm" autocomplete="off"><span class="mono">TWR&gt;</span><input id="sCmd" spellcheck="false" placeholder="IBE123 ruede a punto de espera pista ${esc(rwy)}"><button class="btn primary">TX</button></form>
+          </div>
         </div>
       </div>
-      <div class="sim-comms">
-        <div class="sim-log" id="sLog" aria-live="polite"></div>
-        <form class="sim-input" id="sForm" autocomplete="off"><span class="mono">TWR&gt;</span><input id="sCmd" spellcheck="false" placeholder="p. ej. IBE123 ruede a punto de espera pista ${esc(rwy)}"><button class="btn primary">Transmitir</button></form>
-      </div>
-      <details class="help"><summary>Comandos y puntuación</summary>${helpHtml()}</details>
+      <div class="sim-help" id="sHelpPanel" hidden><div class="row" style="justify-content:space-between"><b>Comandos y puntuación</b><button class="btn" id="sHelpClose">Cerrar</button></div>${helpHtml()}</div>
     </div>`;
     const $ = id => rootEl.querySelector('#' + id);
     const radar = $('sRadar'), ground = $('sGround'), logEl = $('sLog'), cmd = $('sCmd');
@@ -257,22 +266,19 @@
       return c.sort((p, q) => remToThr(p) - remToThr(q))[0] || null;
     }
     const has = (n, ...ks) => ks.some(k => k instanceof RegExp ? k.test(n) : n.includes(k));
+    const firstIntent = n => { for (const c of COMMANDS) if (c.m.length && has(n, ...c.m)) return c.id; return null; };
+    // Con "tránsito" en el mensaje, la orden se busca antes de esa palabra; después solo cuentan verbos en imperativo
+    // ("tránsito A320 aterrizando" es información, no una autorización).
+    const AFTER_TI = [['follow', ['siga a', 'siga la', 'ajust']], ['orbit', ['orbite']], ['join', ['entre en viento']], ['lineup', ['alinee', 'entre y mantenga']],
+      ['land', ['autorizado a aterrizar', 'autorizado para aterrizar']], ['takeoff', ['autorizado a despegar']], ['goaround', ['motor y al aire']],
+      ['continue', ['continue']], ['transfer', ['contacte']], ['taxi', ['ruede']]];
     function intent(n) {
-      if (has(n, /\bsuelta\b/, /\brelease\b/)) return 'release';
-      if (has(n, 'negativo', /\bneg\b/)) return 'negative';
-      if (has(n, 'motor y al aire', /\bga\b/, 'go around')) return 'goaround';
-      if (has(n, 'cancele', 'aborte', 'mantenga posicion', /\bhp\b/, 'hold position')) return 'hold';
-      if (has(n, 'alinee', 'entre y mantenga', /\blu\b/, 'line up')) return 'lineup';
-      if (has(n, 'despeg', /\bc?to\b/, 'takeoff')) return 'takeoff';
-      if (has(n, 'aterriz', /\bcl\b/, /\bland\b/)) return 'land';
-      if (has(n, 'siga a', 'siga la', 'sigue a', 'ajust', 'detras del', 'detras de', /\bfollow\b/, /\bfl\b/)) return 'follow';
-      if (has(n, 'viento en cola', /\bdw\b/, 'downwind', 'entre en')) return 'join';
-      if (has(n, 'orbite', /\borb\b/, 'orbit')) return 'orbit';
-      if (has(n, 'contin', /\bca\b/)) return 'continue';
-      if (has(n, 'ruede', 'rodar', 'rodaje', /\btaxi\b/, /\bt\b/)) return 'taxi';
-      if (has(n, 'contacte', 'llame', 'escucha', /\bapp\b/, 'aproximacion', /\bct\b/)) return 'transfer';
-      if (has(n, 'recibido', /\back\b/, 'enterado')) return 'ack';
-      return null;
+      const i = n.search(/\btransito\b|\btrafico\b|\bti\b/);
+      if (i < 0) return firstIntent(n);
+      const before = firstIntent(n.slice(0, i)); if (before) return before;
+      const after = n.slice(i);
+      for (const [id, ks] of AFTER_TI) if (has(after, ...ks)) return id;
+      return 'traffic';
     }
     const phraseOk = n => n.includes(norm(rwy)) && (n.includes('viento') || n.includes('calma'));
 
@@ -294,7 +300,9 @@
       if (!a) { log('Sistema', 'No encuentro el indicativo. Escríbelo o selecciona una aeronave.', 'sys'); return; }
       S.sel = a.id;
       if (a.flags.ackDue && it !== 'ack') { a.flags.ackDue = null; award('ACK', 'acuse de recibo implícito de la emergencia', a.cs); }
-      ({ release, negative, goaround, hold, lineup, takeoff, land, join, orbit, continue: cont, taxi, transfer, ack, follow })[it](a, n, target);
+      ({ release, negative, goaround, hold, lineup, takeoff, land, join, orbit, continue: cont, taxi, transfer, ack, follow, traffic })[it](a, n, target, text);
+      // cualquier mensaje que lleve "tránsito …" cuenta también como información de tránsito
+      if (it !== 'traffic' && has(n, 'transito', 'trafico')) trafficInfo(a, n, text, true);
     }
     const unable = (a, why) => reply(a.cs, `${why}, ${a.cs}`);
 
@@ -332,15 +340,24 @@
       if (a.state === 'taxi') { a.flags.held = true; reply(a.cs, `Mantengo posición, ${a.cs}`); return; }
       unable(a, 'Negativo, no podemos detenernos');
     }
-    function lineup(a, n) {
+    function lineup(a, n, T, text) {
       if (a.kind !== 'dep' || !(a.state === 'hp' || a.state === 'taxi')) return unable(a, a.state === 'stand' ? 'Negativo, aún en plataforma' : 'Negativo');
       if (a.state === 'taxi') return unable(a, 'Aún rodando, le llamo en el punto de espera');
       const lnd = landingCleared(a);
       if (n.includes('detras')) {
-        const f = finals().find(o => o.cl.land) || finals()[0];
-        if (!f || distThr(f) > 6) return unable(a, 'Negativo, no veo tránsito en final');
-        a.cond = f.id; award('LINEUP_COND', 'alineación condicional detrás de la llegada', a.cs);
-        reply(a.cs, `Detrás del ${f.type.t} en final, alineo y mantengo pista ${rwy}, detrás, ${a.cs}`); a.state = 'hpcond'; return;
+        // detrás de una salida en carrera (o ya autorizada) o de una llegada en final; vale nombrarla por indicativo o tipo
+        const deps = S.ac.filter(o => o !== a && o.kind === 'dep' && (o.state === 'roll' || (['lineup', 'lined'].includes(o.state) && o.cl.to)));
+        const arrs = finals().filter(o => distThr(o) <= 6);
+        const named = namedAmong(text || '', S.ac.filter(o => o !== a && (o.kind === 'dep' ? ['roll', 'lineup', 'lined', 'hp'].includes(o.state) : arrs.includes(o))));
+        let f = named.find(o => deps.includes(o) || arrs.includes(o));
+        const namedDep = named.find(o => o.kind === 'dep' && !deps.includes(o));
+        if (!f && namedDep) return unable(a, `Negativo, el ${namedDep.type.t} no ha iniciado la carrera`);
+        if (!f) f = has(n, 'despeg', 'carrera', 'saliendo') ? deps[0] : has(n, 'final', 'aterriz') ? arrs[0] : (deps[0] || arrs[0]);
+        if (!f) return unable(a, 'Negativo, no vemos tránsito despegando ni en final');
+        a.cond = f.id;
+        const dep = f.kind === 'dep';
+        award('LINEUP_COND', `alineación condicional detrás de ${dep ? 'la salida' : 'la llegada'} ${f.cs}`, a.cs);
+        reply(a.cs, `Detrás del ${f.type.t} ${dep ? 'despegando' : 'en final'}, alineo y mantengo pista ${rwy}, detrás, ${a.cs}`); a.state = 'hpcond'; return;
       }
       if (lnd.length) award('LINEUP_WITH_LANDING', `alineado con ${lnd[0].cs} autorizado a aterrizar`, a.cs);
       else if (occupants(a).some(o => o.state === 'landroll')) award('LINEUP_ROLLOUT', 'alineado con una llegada aún rodando en pista (usa la condicional)', a.cs);
@@ -387,6 +404,58 @@
       a.state = 'circuit'; a.path = circuitPath(false); a.leg = 0;
       reply(a.cs, `Entro en viento en cola ${side > 0 ? 'izquierda' : 'derecha'} pista ${rwy}, ${a.cs}`);
     }
+    // ---------- información de tránsito ----------
+    // tránsitos sobre los que hay que informar a un VFR del circuito: el que le precede y los IFR en final
+    const eta = o => remToThr(o) / Math.max(1, o.spd) * 3600;
+    function relevantTraffic(a) {
+      const out = [];
+      const prec = S.ac.filter(o => o !== a && o.kind === 'arr' && ['final', 'circuit'].includes(o.state) && eta(o) < eta(a)).sort((p, q) => eta(q) - eta(p))[0];
+      if (prec) out.push(prec);
+      for (const o of S.ac) if (o !== a && o.state === 'final' && o.rules === 'IFR' && o.x < 9 && !out.includes(o)) out.push(o);
+      return out;
+    }
+    function mentionedTraffic(text, a) {
+      const n = norm(text); const words = n.split(/[^a-z0-9]+/).filter(w => w.length >= 3);
+      const out = mentioned(text).filter(o => o !== a);
+      for (const o of S.ac) if (o !== a && !out.includes(o) && ['final', 'circuit', 'climb', 'ga', 'hold', 'orbit'].includes(o.state) &&
+        words.some(w => norm(o.type.t) === w || norm(o.type.name).split(/[^a-z0-9]+/).includes(w))) out.push(o);
+      return out;
+    }
+    // aeronaves de una lista nombradas en el texto por indicativo o por tipo
+    function namedAmong(text, list) {
+      const up = text.toUpperCase().replace(/-/g, ''); const words = norm(text).split(/[^a-z0-9]+/).filter(w => w.length >= 3);
+      return list.filter(o => new RegExp('\\b' + o.cs + '\\b').test(up) || words.some(w => norm(o.type.t) === w || norm(o.type.name).split(/[^a-z0-9]+/).includes(w)));
+    }
+    function markInformed(a, t) { const k = a.id + '>' + t.id; const was = S.ti[k]; S.ti[k] = { done: true }; return was && !was.done; }
+    function trafficInfo(a, n, text, side) {
+      const list = mentionedTraffic(text, a);
+      if (!list.length) { if (!side) unable(a, '¿Qué tránsito?'); return; }
+      for (const t of list) {
+        const k = a.id + '>' + t.id; const was = S.ti[k];
+        if (was && was.done) continue;
+        if (markInformed(a, t)) award('TRAFFIC', `información de tránsito sobre ${t.cs} (${t.type.t})`, a.cs);
+        else if (Math.hypot(a.x - t.x, a.y - t.y) < 5) award('TRAFFIC_EXTRA', `información de tránsito sobre ${t.cs}`, a.cs);
+      }
+      if (n.includes('trafico')) tip('En la información se dice "tránsito", no "tráfico".');
+      else if (!has(n, 'final', 'base', 'viento en cola', 'a sus', 'milla', 'circuito', 'despeg', 'pista')) tip('Información de tránsito completa: tipo, posición (tramo, posición horaria), distancia y altura relativa.');
+      if (!side) reply(a.cs, Math.random() < 0.85 ? `Tránsito a la vista, ${a.cs}` : `Buscando el tránsito, ${a.cs}`);
+    }
+    function traffic(a, n, T, text) { trafficInfo(a, n, text, false); }
+    // genera y vence las obligaciones de informar
+    function trafficDuties() {
+      for (const a of S.ac) {
+        if (!(a.rules === 'VFR' && a.kind === 'arr' && a.state === 'circuit')) continue;
+        for (const t of relevantTraffic(a)) { const k = a.id + '>' + t.id; if (!S.ti[k]) S.ti[k] = { due: S.t + 75, a: a.id, t: t.id }; }
+      }
+      for (const [k, e] of Object.entries(S.ti)) {
+        if (e.done) continue;
+        const a = S.ac.find(o => o.id === e.a), t = S.ac.find(o => o.id === e.t);
+        if (!a || !t || a.state !== 'circuit' || !['final', 'circuit'].includes(t.state)) { e.done = true; continue; }
+        if (S.t > e.due) { e.done = true; award('TI_MISSED', `sin información de tránsito sobre ${t.cs} (${t.type.t})`, a.cs); }
+      }
+    }
+    const tiPending = a => Object.values(S.ti).some(e => !e.done && e.a === a.id);
+
     function follow(a, n, T) {
       if (!(a.rules === 'VFR' && a.kind === 'arr' && ['hold', 'orbit', 'circuit'].includes(a.state))) return unable(a, a.rules === 'IFR' ? 'Negativo, estamos en aproximación instrumental' : 'Negativo');
       if (!T) return unable(a, 'No identificamos el tránsito, ¿a quién seguimos?');
@@ -402,7 +471,7 @@
       else award('SEQUENCE', `secuencia: detrás de ${T.cs}`, a.cs);
       if (R.WAKE_RANK[R.leadingWake(T.type)] > R.WAKE_RANK[a.type.wake] && n.includes('estela')) award('WAKE_CAUTION', `"precaución estela turbulenta" detrás del ${T.type.t}`, a.cs);
       if (joining) { if (a.state === 'orbit' && a.resume) { a.path = a.resume; a.leg = a.resumeLeg; } else { a.path = circuitPath(false); a.leg = 0; } a.state = 'circuit'; }
-      a.follow = T.id;
+      a.follow = T.id; markInformed(a, T); // "siga al A320 en final" incluye la información del tránsito
       reply(a.cs, `${num ? 'Número ' + num + ', ' : ''}tránsito a la vista, sigo al ${T.type.t}${joining ? `, entro en viento en cola ${side > 0 ? 'izquierda' : 'derecha'}` : ''}, ${a.cs}`);
     }
     function orbit(a) {
@@ -509,7 +578,12 @@
         const v = a.spd / 3600 * dt;
         switch (a.state) {
           case 'taxi': if (!a.flags.held && moveAlong(a, a.spd * dt)) { a.state = 'hp'; a.tHP = S.t; reply(a.cs, `${a.cs}, en punto de espera pista ${rwy}, listo para salir`, 0.5); } break;
-          case 'hpcond': { const f = S.ac.find(o => o.id === a.cond); if (!f || (f.state === 'landroll' && f.x < -0.3) || f.state === 'exit' || f.state === 'taxiin' || f.state === 'ga') { a.state = 'lineup'; a.tL = S.t; } break; }
+          case 'hpcond': {
+            const f = S.ac.find(o => o.id === a.cond);
+            const passed = !f || (f.kind === 'dep' ? f.state === 'climb' || (f.state === 'roll' && f.x < -0.25) || f.state === 'abort' : (f.state === 'landroll' && f.x < -0.3) || ['exit', 'taxiin', 'ga'].includes(f.state));
+            if (passed) { a.state = 'lineup'; a.tL = S.t; }
+            break;
+          }
           case 'lineup': { if (a.lx == null) { a.lx = a.x; a.ly = a.y; } const k = clamp((S.t - a.tL) / 15, 0, 1); a.x = a.lx * (1 - k); a.y = a.ly * (1 - k); if (k >= 1) { a.state = 'lined'; if (a.cl.to) startRoll(a); } break; }
           case 'lined': if (a.cl.to) startRoll(a); break;
           case 'roll': { const T = rollTime(a.type), k = (S.t - a.tR) / T; a.x = -RWY_LEN * k * k; a.y = 0; if (k >= 1) { a.state = 'climb'; a.x = -RWY_LEN; a.alt = 50; a.spd = climbSpeed(a.type); a.hdg = Math.PI; } break; }
@@ -577,6 +651,7 @@
         if (a.flags.rbErr && S.t - a.flags.rbErr.t > 30) { a.flags.rbErr = null; award('READBACK_MISSED', 'colación errónea del QNH sin corregir', a.cs); }
         if (a.flags.ackDue && S.t > a.flags.ackDue) { a.flags.ackDue = null; award('EMERG_NOACK', 'aviso del piloto sin acuse de recibo', a.cs); }
       }
+      trafficDuties();
       // cola en el punto de espera: la primera en la barra, las demás detrás por la calle de rodaje
       S.ac.filter(o => o.state === 'hp' || o.state === 'hpcond').sort((p, q) => p.tHP - q.tHP).forEach((o, k) => {
         if (k === 0) o.tFirst = o.tFirst || S.t;
@@ -681,7 +756,7 @@
           }
           if (S.help && a.kind === 'arr' && a.state === 'final' && !a.cl.land && (occupants(a).length || landingCleared(a).length)) help = '<span class="fl warn">pista no disponible</span>';
           const flags = [a.cl.land ? '<span class="fl">ATE</span>' : '', a.cl.to ? '<span class="fl">DES</span>' : '', a.released ? '<span class="fl ok">SUELTA</span>' : '',
-            a.emer === 'MAYDAY' ? '<span class="fl bad">MAYDAY</span>' : a.emer === 'FUEL' ? '<span class="fl warn">MIN FUEL</span>' : '', a.flags.xfer ? '<span class="fl">APP</span>' : '', a.follow && S.ac.find(o => o.id === a.follow) ? `<span class="fl">sigue a ${esc(S.ac.find(o => o.id === a.follow).cs)}</span>` : ''].join('');
+            a.emer === 'MAYDAY' ? '<span class="fl bad">MAYDAY</span>' : a.emer === 'FUEL' ? '<span class="fl warn">MIN FUEL</span>' : '', a.flags.xfer ? '<span class="fl">APP</span>' : '', S.help && tiPending(a) ? '<span class="fl warn">TI pendiente</span>' : '', a.follow && S.ac.find(o => o.id === a.follow) ? `<span class="fl">sigue a ${esc(S.ac.find(o => o.id === a.follow).cs)}</span>` : ''].join('');
           const html = `<div class="c1"><b>${esc(a.cs)}</b><span>${esc(a.type.t)}/${wakeCat(a.type)}</span></div>
             <div class="c2"><span>${a.rules}${a.kind === 'dep' ? (a.rules === 'IFR' ? ' · SID ' + a.sid.sid : ' · local') : (a.rules === 'IFR' ? ' · ILS ' + esc(rwy) : ' · ' + (a.pt || ''))}</span><span>${esc(R.SPEED_NAME[a.type.speed])}</span></div>
             <div class="c3">${esc(stateTxt(a))} ${flags}${help}</div>`;
@@ -732,9 +807,24 @@
     $('sHelp').onchange = e => { S.help = e.target.checked; rootEl.querySelectorAll('.fstrip').forEach(x => { x.dataset.html = ''; }); };
     $('sVoice').onchange = e => { S.voice = e.target.checked; if (!S.voice && root.speechSynthesis) root.speechSynthesis.cancel(); };
     $('sEnd').onclick = () => end();
+    // cronómetro en tiempo de simulación: cada clic inicia → para → pone a cero
+    const chrono = { st: 'idle', t0: 0, val: 0 };
+    const chronoVal = () => chrono.st === 'run' ? S.t - chrono.t0 : chrono.val;
+    $('sChrono').onclick = () => {
+      if (chrono.st === 'idle') { chrono.st = 'run'; chrono.t0 = S.t; }
+      else if (chrono.st === 'run') { chrono.st = 'stop'; chrono.val = S.t - chrono.t0; }
+      else { chrono.st = 'idle'; chrono.val = 0; }
+      $('sChrono').dataset.st = chrono.st; drawChrono(); cmd.focus();
+    };
+    const drawChrono = () => { $('sChrono').textContent = '⏱ ' + mmss(Math.floor(chronoVal() + 1e-6)); };
+    S._chrono = chrono;
+    const helpPanel = $('sHelpPanel');
+    const toggleHelp = open => { helpPanel.hidden = !open; $('sHelpBtn').setAttribute('aria-expanded', open); if (!open) cmd.focus(); };
+    $('sHelpBtn').onclick = () => toggleHelp(helpPanel.hidden); $('sHelpClose').onclick = () => toggleHelp(false);
+    rootEl.querySelector('.sim-atis').onclick = e => e.currentTarget.classList.toggle('open');
 
     function end() {
-      if (S.ended) return; S.ended = true; if (root.speechSynthesis) root.speechSynthesis.cancel();
+      if (S.ended) return; S.ended = true; if (root.speechSynthesis) root.speechSynthesis.cancel(); rootEl.ownerDocument.body.classList.remove('simmode');
       const best = store.get('simBest', {}); const rec = best[scen.id] == null || S.score > best[scen.id]; if (rec) { best[scen.id] = S.score; store.set('simBest', best); }
       const pens = Object.entries(S.penalties).sort((p, q) => p[1] - q[1]);
       rootEl.innerHTML = `<div class="view-head"><div><div class="eyebrow">Fin del turno · ${esc(ctx.apt.icao)} pista ${esc(rwy)}</div><h1>${esc(scen.title)}</h1>
@@ -749,12 +839,12 @@
     let last = performance.now(), acc = 0, frame = 0;
     const simEl = rootEl.querySelector('.sim');
     function loop(now) {
-      if (S.ended || !document.body.contains(simEl)) { if (root.speechSynthesis && !S.ended) root.speechSynthesis.cancel(); return; }
+      if (S.ended || !document.body.contains(simEl)) { if (root.speechSynthesis && !S.ended) root.speechSynthesis.cancel(); if (!document.body.contains(simEl) && !rootEl.querySelector('.sim')) document.body.classList.remove('simmode'); return; }
       const dt = Math.min(0.25, (now - last) / 1000); last = now;
       if (S.speed) { acc += dt * S.speed; while (acc > 0.1) { step(0.1); acc -= 0.1; if (S.ended) return; } }
       if ((frame++ & 1) === 0) { drawRadar(); drawGround(); }
       if (frame % 10 === 0) drawStrips();
-      $('sClock').textContent = clockStr();
+      $('sClock').textContent = clockStr(); drawChrono();
       requestAnimationFrame(loop);
     }
     log('Sistema', `Turno en ${ctx.apt.city} (${ctx.apt.icao}), pista ${rwy}, QNH ${ctx.qnh}. ${scen.notes} Escribe tus transmisiones abajo; clic en una ficha o etiqueta para seleccionar.`, 'sys');

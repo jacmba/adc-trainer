@@ -46,7 +46,16 @@ aeródromo al azar. Se transmite escribiendo: el parser busca el indicativo (com
 la intención por palabras clave (`ruede`, `alinee`, `autorizado a despegar`, `aterrizar`, `continúe`, `motor y al
 aire`, `contacte`, `viento en cola`, `siga a` / `ajuste detrás de`, `orbite`, `negativo`, `recibido`, `suelta`) o alias
 cortos al estilo openscope (`taxi`, `lu`, `to`, `cl`, `ca`, `ga`, `hp`, `dw`, `fl`, `orb`, `ack`). Con "siga a" (indicativo o
-tipo: "siga al A320") el VFR alarga el viento en cola hasta tener hueco detrás del tránsito. La tabla `PTS` de `sim.js` fija los puntos de
+tipo: "siga al A320") el VFR alarga el viento en cola hasta tener hueco detrás del tránsito.
+
+La tabla `COMMANDS` de `sim.js` define a la vez el parser y la ayuda del juego (botón «Comandos»). Además:
+- **Información de tránsito** (`tránsito …`, alias `ti`): a cada VFR del circuito hay que informarle del tránsito
+  que le precede y de los IFR en final (75 s de margen; «siga a» cuenta como información). Si el mensaje lleva otra
+  orden antes de «tránsito», se ejecuta y la información se cuenta igualmente.
+- **Alineación condicional** detrás de una salida en carrera o de una llegada en final: `IBE123 detrás del B738
+  despegando, alinee y mantenga pista 27, detrás`.
+- **Cronómetro** en la barra (tiempo del simulador, respeta pausa y velocidad): cada clic inicia, para y pone a cero.
+- En escritorio la interfaz se ajusta al alto de la ventana; por debajo de 1100 px se apila. La tabla `PTS` de `sim.js` fija los puntos de
 cada acierto y error; la separación entre salidas se calcula con `rules.js`.
 
 ## Extensiones de markdown
