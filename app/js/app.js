@@ -83,6 +83,7 @@
     $$('#nav button').forEach(b => b.setAttribute('aria-current', b.dataset.view === view ? 'page' : 'false'));
     store.set('view', view);
     VIEW.classList.toggle('wide', view === 'simulador');
+    document.body.classList.remove('simmode');
     ({ temario: viewTemario, resumenes: viewResumenes, flashcards: viewFlash, test: viewTest, torre: viewTorre, simulador: viewSim, chuleta: viewChuleta })[view]();
     window.scrollTo(0, 0);
   }
