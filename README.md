@@ -54,6 +54,7 @@ La tabla `COMMANDS` de `sim.js` define a la vez el parser y la ayuda del juego (
   orden antes de «tránsito», se ejecuta y la información se cuenta igualmente.
 - **Alineación condicional** detrás de una salida en carrera o de una llegada en final: `IBE123 detrás del B738
   despegando, alinee y mantenga pista 27, detrás`.
+- **Cronómetro** en la barra (tiempo del simulador, respeta pausa y velocidad): cada clic inicia, para y pone a cero.
 - En escritorio la interfaz se ajusta al alto de la ventana; por debajo de 1100 px se apila. La tabla `PTS` de `sim.js` fija los puntos de
 cada acierto y error; la separación entre salidas se calcula con `rules.js`.
 

@@ -144,6 +144,7 @@
         <div class="row">
           <button class="btn" id="sHelpBtn" aria-expanded="false">Comandos</button>
           <span class="sim-clock tabular" id="sClock"></span>
+          <button class="btn sim-chrono tabular" id="sChrono" title="Cronómetro (tiempo del simulador): clic para iniciar, parar y poner a cero">⏱ 0:00</button>
           <div class="seg" id="sSpeed">${[0, 1, 2, 4].map(v => `<button data-v="${v}" aria-pressed="${v === 1}">${v ? v + '×' : '❚❚'}</button>`).join('')}</div>
           <label class="chip"><input type="checkbox" id="sHelp" checked> Ayudas</label>
           <label class="chip"><input type="checkbox" id="sVoice"> Voz</label>
@@ -806,6 +807,17 @@
     $('sHelp').onchange = e => { S.help = e.target.checked; rootEl.querySelectorAll('.fstrip').forEach(x => { x.dataset.html = ''; }); };
     $('sVoice').onchange = e => { S.voice = e.target.checked; if (!S.voice && root.speechSynthesis) root.speechSynthesis.cancel(); };
     $('sEnd').onclick = () => end();
+    // cronómetro en tiempo de simulación: cada clic inicia → para → pone a cero
+    const chrono = { st: 'idle', t0: 0, val: 0 };
+    const chronoVal = () => chrono.st === 'run' ? S.t - chrono.t0 : chrono.val;
+    $('sChrono').onclick = () => {
+      if (chrono.st === 'idle') { chrono.st = 'run'; chrono.t0 = S.t; }
+      else if (chrono.st === 'run') { chrono.st = 'stop'; chrono.val = S.t - chrono.t0; }
+      else { chrono.st = 'idle'; chrono.val = 0; }
+      $('sChrono').dataset.st = chrono.st; drawChrono(); cmd.focus();
+    };
+    const drawChrono = () => { $('sChrono').textContent = '⏱ ' + mmss(Math.floor(chronoVal() + 1e-6)); };
+    S._chrono = chrono;
     const helpPanel = $('sHelpPanel');
     const toggleHelp = open => { helpPanel.hidden = !open; $('sHelpBtn').setAttribute('aria-expanded', open); if (!open) cmd.focus(); };
     $('sHelpBtn').onclick = () => toggleHelp(helpPanel.hidden); $('sHelpClose').onclick = () => toggleHelp(false);
@@ -832,7 +844,7 @@
       if (S.speed) { acc += dt * S.speed; while (acc > 0.1) { step(0.1); acc -= 0.1; if (S.ended) return; } }
       if ((frame++ & 1) === 0) { drawRadar(); drawGround(); }
       if (frame % 10 === 0) drawStrips();
-      $('sClock').textContent = clockStr();
+      $('sClock').textContent = clockStr(); drawChrono();
       requestAnimationFrame(loop);
     }
     log('Sistema', `Turno en ${ctx.apt.city} (${ctx.apt.icao}), pista ${rwy}, QNH ${ctx.qnh}. ${scen.notes} Escribe tus transmisiones abajo; clic en una ficha o etiqueta para seleccionar.`, 'sys');
