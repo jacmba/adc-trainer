@@ -44,8 +44,9 @@ npx serve app                        # o abrir app/index.html directamente
 Escenario continuo (salidas, tráfico mixto, circuito VFR, emergencias, "todas sujetas" y sesión libre) sobre un
 aeródromo al azar. Se transmite escribiendo: el parser busca el indicativo (completo, o abreviado al principio) y
 la intención por palabras clave (`ruede`, `alinee`, `autorizado a despegar`, `aterrizar`, `continúe`, `motor y al
-aire`, `contacte`, `viento en cola`, `orbite`, `negativo`, `recibido`, `suelta`) o alias cortos al estilo openscope
-(`taxi`, `lu`, `to`, `cl`, `ca`, `ga`, `hp`, `dw`, `orb`, `ack`). La tabla `PTS` de `sim.js` fija los puntos de
+aire`, `contacte`, `viento en cola`, `siga a` / `ajuste detrás de`, `orbite`, `negativo`, `recibido`, `suelta`) o alias
+cortos al estilo openscope (`taxi`, `lu`, `to`, `cl`, `ca`, `ga`, `hp`, `dw`, `fl`, `orb`, `ack`). Con "siga a" (indicativo o
+tipo: "siga al A320") el VFR alarga el viento en cola hasta tener hueco detrás del tránsito. La tabla `PTS` de `sim.js` fija los puntos de
 cada acierto y error; la separación entre salidas se calcula con `rules.js`.
 
 ## Extensiones de markdown

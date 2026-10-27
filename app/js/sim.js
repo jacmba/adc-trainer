@@ -27,7 +27,7 @@
   // ---------- Puntuación (al estilo de GAME_EVENTS de openscope) ----------
   const PTS = {
     TAXI: 2, LINEUP: 2, LINEUP_COND: 5, TAKEOFF: 10, LANDING_CLR: 10, LANDED: 5, PHRASE: 2, WAKE_CAUTION: 3,
-    TRANSFER: 5, TAXI_IN: 3, CONTINUE: 3, GA_JUSTIFIED: 10, READBACK_FIX: 10, ACK: 5, EMERG_OK: 15, JOIN: 3, ORBIT_OK: 2, RELEASE_REQ: 3,
+    TRANSFER: 5, TAXI_IN: 3, CONTINUE: 3, GA_JUSTIFIED: 10, READBACK_FIX: 10, ACK: 5, EMERG_OK: 15, JOIN: 3, SEQUENCE: 5, ORBIT_OK: 2, RELEASE_REQ: 3,
     RWY_OCCUPIED: -50, TWO_LANDING: -30, LINEUP_WITH_LANDING: -30, LINEUP_CLOSE: -10, LINEUP_ROLLOUT: -15, ARR_TOO_CLOSE: -20,
     NO_RELEASE: -30, WAKE: -40, SUCCESSIVE: -25, EMERG_PRIORITY: -30, EMERG_NOACK: -10, NO_LANDING_CLR: -20, LOSS_RWY: -50,
     GA_UNJUSTIFIED: -15, LATE_TRANSFER: -10, EARLY_TRANSFER: -5, READBACK_MISSED: -15, NEEDLESS_FIX: -3, CIRCUIT_FULL: -10,
@@ -91,6 +91,7 @@
     ['mantenga posición · hp', 'IBE123 mantenga posición, cancele despegue'],
     ['contacte · app', 'IBE123 contacte con aproximación (salidas en el aire, frustradas)'],
     ['viento en cola · dw', 'ECABC entre en viento en cola (VFR)'],
+    ['siga a · ajuste', 'ECABC número dos, siga al A320 en final (o "ajuste detrás de IBE123"): alarga el viento en cola hasta tener hueco'],
     ['orbite · orb', 'ECABC orbite sobre su posición (VFR)'],
     ['negativo', 'IBE123 negativo, QNH 1018 (corregir una colación)'],
     ['recibido · ack', 'IBE123 recibido (acusar recibo de una emergencia o aviso)'],
@@ -116,7 +117,7 @@
     return `<div class="tbl"><table><thead><tr><th>Orden</th><th>Ejemplo</th></tr></thead><tbody>${HELP.map(h => `<tr><td><code>${esc(h[0])}</code></td><td>${esc(h[1])}</td></tr>`).join('')}</tbody></table></div>
       <p class="small muted">El indicativo puede ir en cualquier parte del mensaje y vale con sus últimas cifras si no hay duda. Si no escribes indicativo, la orden va a la aeronave seleccionada (clic en su ficha o etiqueta). Tab completa indicativos; ↑/↓ recorren el historial.</p>
       <div class="tbl"><table><thead><tr><th>Acierto</th><th>Puntos</th><th>Error</th><th>Puntos</th></tr></thead><tbody>
-      ${[['Despegue bien separado', PTS.TAKEOFF, 'Pista ocupada', PTS.RWY_OCCUPIED], ['Autorización de aterrizaje correcta', PTS.LANDING_CLR, 'Dos autorizaciones de aterrizaje', PTS.TWO_LANDING], ['Fraseología completa (pista + viento)', PTS.PHRASE, 'Estela en salida', PTS.WAKE], ['Corregir una colación errónea', PTS.READBACK_FIX, 'Salidas sucesivas', PTS.SUCCESSIVE], ['Transferencia a APP', PTS.TRANSFER, 'Despegue sin suelta', PTS.NO_RELEASE], ['Frustrada justificada', PTS.GA_JUSTIFIED, 'Prioridad de la emergencia', PTS.EMERG_PRIORITY], ['Emergencia gestionada', PTS.EMERG_OK, 'Proximidad en el aire', PTS.AIRPROX], ['Alineación condicional', PTS.LINEUP_COND, 'Llegada sin autorización (frustrada)', PTS.NO_LANDING_CLR]].map(r => `<tr><td>${r[0]}</td><td class="tabular">+${r[1]}</td><td>${r[2]}</td><td class="tabular">${r[3]}</td></tr>`).join('')}
+      ${[['Despegue bien separado', PTS.TAKEOFF, 'Pista ocupada', PTS.RWY_OCCUPIED], ['Autorización de aterrizaje correcta', PTS.LANDING_CLR, 'Dos autorizaciones de aterrizaje', PTS.TWO_LANDING], ['Fraseología completa (pista + viento)', PTS.PHRASE, 'Estela en salida', PTS.WAKE], ['Corregir una colación errónea', PTS.READBACK_FIX, 'Salidas sucesivas', PTS.SUCCESSIVE], ['Transferencia a APP', PTS.TRANSFER, 'Despegue sin suelta', PTS.NO_RELEASE], ['Frustrada justificada', PTS.GA_JUSTIFIED, 'Prioridad de la emergencia', PTS.EMERG_PRIORITY], ['Emergencia gestionada', PTS.EMERG_OK, 'Proximidad en el aire', PTS.AIRPROX], ['Secuencia VFR ("siga a")', PTS.SEQUENCE, 'Circuito lleno', PTS.CIRCUIT_FULL], ['Alineación condicional', PTS.LINEUP_COND, 'Llegada sin autorización (frustrada)', PTS.NO_LANDING_CLR]].map(r => `<tr><td>${r[0]}</td><td class="tabular">+${r[1]}</td><td>${r[2]}</td><td class="tabular">${r[3]}</td></tr>`).join('')}
       </tbody></table></div>`;
   }
 
@@ -243,6 +244,18 @@
       const m = S.ac.filter(o => o.cs.endsWith(t));
       return m.length === 1 ? m[0] : null;
     }
+    function mentioned(text) {
+      const toks = text.toUpperCase().replace(/-/g, '').split(/[^A-Z0-9]+/).filter(Boolean); const out = [];
+      toks.forEach((t, i) => { let o = S.ac.find(x => x.cs === t); if (!o && i === 0 && t.length >= 2) { const m = S.ac.filter(x => x.cs.endsWith(t)); if (m.length === 1) o = m[0]; } if (o && !out.includes(o)) out.push(o); });
+      return out;
+    }
+    // tránsito nombrado por su tipo ("siga al A320", "siga a la Cessna"): el más próximo al umbral
+    function byType(text, a) {
+      const n = norm(text); const words = n.split(/[^a-z0-9]+/).filter(w => w.length >= 3);
+      const c = S.ac.filter(o => o !== a && o.kind === 'arr' && ['final', 'circuit'].includes(o.state) &&
+        words.some(w => norm(o.type.t) === w || norm(o.type.name).split(/[^a-z0-9]+/).includes(w)));
+      return c.sort((p, q) => remToThr(p) - remToThr(q))[0] || null;
+    }
     const has = (n, ...ks) => ks.some(k => k instanceof RegExp ? k.test(n) : n.includes(k));
     function intent(n) {
       if (has(n, /\bsuelta\b/, /\brelease\b/)) return 'release';
@@ -252,6 +265,7 @@
       if (has(n, 'alinee', 'entre y mantenga', /\blu\b/, 'line up')) return 'lineup';
       if (has(n, 'despeg', /\bc?to\b/, 'takeoff')) return 'takeoff';
       if (has(n, 'aterriz', /\bcl\b/, /\bland\b/)) return 'land';
+      if (has(n, 'siga a', 'siga la', 'sigue a', 'ajust', 'detras del', 'detras de', /\bfollow\b/, /\bfl\b/)) return 'follow';
       if (has(n, 'viento en cola', /\bdw\b/, 'downwind', 'entre en')) return 'join';
       if (has(n, 'orbite', /\borb\b/, 'orbit')) return 'orbit';
       if (has(n, 'contin', /\bca\b/)) return 'continue';
@@ -267,11 +281,20 @@
       log('TWR', text, 'atc');
       const n = norm(text); const it = intent(n);
       let a = findAc(text); if (!a && S.sel) a = S.ac.find(o => o.id === S.sel);
+      let target = null;
+      if (it === 'follow') {
+        // "ECABC siga al IBE123": el primero es quien sigue; "siga al IBE123" va a la aeronave seleccionada
+        const m = mentioned(text); const sel = S.ac.find(o => o.id === S.sel);
+        const first = text.toUpperCase().replace(/-/g, '').split(/[^A-Z0-9]+/).filter(Boolean)[0] || '';
+        const startsWithCs = m.length && (m[0].cs === first || (first.length >= 2 && m[0].cs.endsWith(first)));
+        if (startsWithCs) { a = m[0]; target = m[1] || null; } else { a = sel || null; target = m.find(o => o !== a) || null; }
+        if (a && !target) target = byType(text, a);
+      }
       if (!it) { log('Sistema', 'No reconozco la orden. Abre "Comandos y puntuación" para ver ejemplos.', 'sys'); return; }
       if (!a) { log('Sistema', 'No encuentro el indicativo. Escríbelo o selecciona una aeronave.', 'sys'); return; }
       S.sel = a.id;
       if (a.flags.ackDue && it !== 'ack') { a.flags.ackDue = null; award('ACK', 'acuse de recibo implícito de la emergencia', a.cs); }
-      ({ release, negative, goaround, hold, lineup, takeoff, land, join, orbit, continue: cont, taxi, transfer, ack })[it](a, n);
+      ({ release, negative, goaround, hold, lineup, takeoff, land, join, orbit, continue: cont, taxi, transfer, ack, follow })[it](a, n, target);
     }
     const unable = (a, why) => reply(a.cs, `${why}, ${a.cs}`);
 
@@ -363,6 +386,24 @@
       if (inCircuit() >= 4) award('CIRCUIT_FULL', 'circuito lleno (4 aeronaves): debía orbitar', a.cs); else award('JOIN', 'integración en el circuito', a.cs);
       a.state = 'circuit'; a.path = circuitPath(false); a.leg = 0;
       reply(a.cs, `Entro en viento en cola ${side > 0 ? 'izquierda' : 'derecha'} pista ${rwy}, ${a.cs}`);
+    }
+    function follow(a, n, T) {
+      if (!(a.rules === 'VFR' && a.kind === 'arr' && ['hold', 'orbit', 'circuit'].includes(a.state))) return unable(a, a.rules === 'IFR' ? 'Negativo, estamos en aproximación instrumental' : 'Negativo');
+      if (!T) return unable(a, 'No identificamos el tránsito, ¿a quién seguimos?');
+      if (!['final', 'circuit'].includes(T.state) || T.kind !== 'arr') return unable(a, `Negativo, no tenemos al ${T.type.t} en el circuito ni en final`);
+      for (let o = T, k = 0; o && k < 10; o = S.ac.find(x => x.id === o.follow), k++) if (o === a) return unable(a, `Negativo, el ${T.type.t} nos sigue a nosotros`);
+      // se compara el tiempo hasta el umbral: un IFR más lejano pero más rápido puede llegar antes
+      const eta = o => remToThr(o) / o.spd * 3600;
+      if (a.state === 'circuit' && a.leg >= 2 && eta(T) > eta(a) + 30) return unable(a, `Negativo, el ${T.type.t} va detrás de nosotros`);
+      if (!a.flags.looked && Math.random() < 0.15) { a.flags.looked = true; return reply(a.cs, `Contacto negativo con el ${T.type.t}, ${a.cs}`); }
+      const num = (n.match(/numero (\d|uno|dos|tres|cuatro|cinco)/) || [])[1];
+      const joining = a.state === 'hold' || a.state === 'orbit';
+      if (joining && inCircuit() >= 4) award('CIRCUIT_FULL', 'circuito lleno (4 aeronaves): debía orbitar', a.cs);
+      else award('SEQUENCE', `secuencia: detrás de ${T.cs}`, a.cs);
+      if (R.WAKE_RANK[R.leadingWake(T.type)] > R.WAKE_RANK[a.type.wake] && n.includes('estela')) award('WAKE_CAUTION', `"precaución estela turbulenta" detrás del ${T.type.t}`, a.cs);
+      if (joining) { if (a.state === 'orbit' && a.resume) { a.path = a.resume; a.leg = a.resumeLeg; } else { a.path = circuitPath(false); a.leg = 0; } a.state = 'circuit'; }
+      a.follow = T.id;
+      reply(a.cs, `${num ? 'Número ' + num + ', ' : ''}tránsito a la vista, sigo al ${T.type.t}${joining ? `, entro en viento en cola ${side > 0 ? 'izquierda' : 'derecha'}` : ''}, ${a.cs}`);
     }
     function orbit(a) {
       if (!(a.rules === 'VFR' && a.kind === 'arr' && ['hold', 'circuit'].includes(a.state))) return unable(a, 'Negativo');
@@ -489,12 +530,19 @@
             break;
           }
           case 'circuit': {
-            const tgtAlt = a.leg >= 3 ? Math.max(0, distThr(a) * 318) : a.leg >= 1 ? CIRCUIT_ALT : Math.max(CIRCUIT_ALT, a.alt - 400 / 60 * dt);
+            const tgtAlt = a.leg >= 3 ? Math.min(CIRCUIT_ALT, distThr(a) * 318) : a.leg >= 1 ? CIRCUIT_ALT : Math.max(CIRCUIT_ALT, a.alt - 400 / 60 * dt);
             a.alt += clamp(tgtAlt - a.alt, -600 / 60 * dt * 3, 600 / 60 * dt * 3);
             if (a.leg >= 3 && distThr(a) < 0.5 && !a.cl.land) { award('NO_LANDING_CLR', 'VFR en final sin autorización de aterrizaje: motor y al aire', a.cs); doGoAround(a, true); reply(a.cs, `Motor y al aire, ${a.cs}`, 0.3); break; }
             if (a.leg >= 3 && distThr(a) < 0.3 && occupants(a).length) { award('LOSS_RWY', `pista ocupada con ${a.cs} en corta final`, a.cs); doGoAround(a, true); reply(a.cs, `Motor y al aire, ${a.cs}, pista ocupada`, 0.3); break; }
-            // los VFR se separan entre sí: si alcanzan al de delante en el circuito, reducen
-            const rem = remaining(a); const ahead = S.ac.some(o => o !== a && o.rules === 'VFR' && o.state === 'circuit' && remaining(o) < rem && rem - remaining(o) < 1.3);
+            // "siga a": en viento en cola alarga hasta que, girando a base, quede el hueco suficiente detrás del tránsito
+            const T = a.follow && S.ac.find(o => o.id === a.follow);
+            if (a.follow && (!T || !['final', 'circuit'].includes(T.state))) a.follow = null;
+            if (T && a.follow && a.leg === 1 && a.path.length === 3 && a.x >= a.path[0].x - 0.15) {
+              const gap = T.rules === 'IFR' ? 2.2 : 1.3;
+              if (Math.abs(a.y) + Math.max(0, a.x) - remToThr(T) < gap && a.x < 7) { const nx = a.x + 0.3; a.path[0].x = nx; a.path[1].x = nx; }
+            }
+            // los VFR se separan entre sí: si alcanzan al de delante, reducen
+            const rem = remaining(a); const ahead = S.ac.some(o => o !== a && (o.rules === 'VFR' && o.state === 'circuit' || o.id === a.follow) && remToThr(o) < rem && rem - remToThr(o) < 1.3);
             if (moveAlong(a, ahead ? v * 0.35 : v)) touchdown(a);
             break;
           }
@@ -545,6 +593,7 @@
       // fin del escenario
       if (!S.endless && !S.queue.length && !S.ac.length && S.t > 30 && !S.pending.length) end();
     }
+    const remToThr = o => o.state === 'final' ? o.x : o.state === 'circuit' ? remaining(o) : 99;
     function remaining(a) { let d = 0, x = a.x, y = a.y; for (const w of a.path || []) { d += Math.hypot(w.x - x, w.y - y); x = w.x; y = w.y; } return d; }
     function startRoll(a) { a.lx = a.ly = null; a.state = 'roll'; a.tR = S.t; S.lastDep = { cs: a.cs, type: a.type, rules: a.rules, t: S.t }; if (a.rules === 'IFR') S.gaHold = false; a.stand = null; }
     function touchdown(a) {
@@ -632,7 +681,7 @@
           }
           if (S.help && a.kind === 'arr' && a.state === 'final' && !a.cl.land && (occupants(a).length || landingCleared(a).length)) help = '<span class="fl warn">pista no disponible</span>';
           const flags = [a.cl.land ? '<span class="fl">ATE</span>' : '', a.cl.to ? '<span class="fl">DES</span>' : '', a.released ? '<span class="fl ok">SUELTA</span>' : '',
-            a.emer === 'MAYDAY' ? '<span class="fl bad">MAYDAY</span>' : a.emer === 'FUEL' ? '<span class="fl warn">MIN FUEL</span>' : '', a.flags.xfer ? '<span class="fl">APP</span>' : ''].join('');
+            a.emer === 'MAYDAY' ? '<span class="fl bad">MAYDAY</span>' : a.emer === 'FUEL' ? '<span class="fl warn">MIN FUEL</span>' : '', a.flags.xfer ? '<span class="fl">APP</span>' : '', a.follow && S.ac.find(o => o.id === a.follow) ? `<span class="fl">sigue a ${esc(S.ac.find(o => o.id === a.follow).cs)}</span>` : ''].join('');
           const html = `<div class="c1"><b>${esc(a.cs)}</b><span>${esc(a.type.t)}/${wakeCat(a.type)}</span></div>
             <div class="c2"><span>${a.rules}${a.kind === 'dep' ? (a.rules === 'IFR' ? ' · SID ' + a.sid.sid : ' · local') : (a.rules === 'IFR' ? ' · ILS ' + esc(rwy) : ' · ' + (a.pt || ''))}</span><span>${esc(R.SPEED_NAME[a.type.speed])}</span></div>
             <div class="c3">${esc(stateTxt(a))} ${flags}${help}</div>`;
