@@ -1,7 +1,7 @@
 /* Torre ADC — app de estudio. Vanilla JS, sin dependencias. */
 (function () {
   'use strict';
-  const D = window.ADC_DATA, R = window.ADC_RULES, G = window.ADC_GEN;
+  const D = window.ADC_DATA, R = window.ADC_RULES, G = window.ADC_GEN, SC = window.ADC_SCEN;
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -324,26 +324,42 @@
       <div class="hud"><span>${esc(setup.apt)}</span><span>RWY ${esc(setup.rwy)}</span></div></div>`;
   }
   const done = store.get('scen', {});
+  let situationCounts = null; // se calcula por muestreo la primera vez que se abre la lista
+  const catHead = c => `<h3 style="font-family:var(--display);text-transform:uppercase;letter-spacing:.05em;font-size:20px;margin:18px 0 8px">${esc(c)}</h3>`;
   function viewTorre() {
     const tab = state.tab || 'esc';
-    const cats = [...new Set(D.scenarios.map(s => s.cat))];
     VIEW.innerHTML = `<div class="view-head"><div><div class="eyebrow">Mini-juego</div><h1>Torre en vivo</h1>
-      <p>Escenarios de torre paso a paso: decide qué haces y qué transmites. Las decisiones que provocarían una pérdida de separación cuentan aparte, como en el examen.</p></div>
-      <div class="seg"><button aria-pressed="${tab === 'esc'}" data-tab="esc">Escenarios</button><button aria-pressed="${tab === 'seq'}" data-tab="seq">Secuencia de salidas</button></div></div>
+      <p>Escenarios de torre paso a paso: decide qué haces y qué transmites. Cada partida saca hasta ${SC.MAX_STEPS} situaciones al azar (aeródromo, pista, viento, aeronaves y tránsitos cambian cada vez). Las decisiones que provocarían una pérdida de separación cuentan aparte, como en el examen.</p></div>
+      <div class="seg"><button aria-pressed="${tab === 'esc'}" data-tab="esc">Escenarios</button><button aria-pressed="${tab === 'guia'}" data-tab="guia">Casos guiados</button><button aria-pressed="${tab === 'seq'}" data-tab="seq">Secuencia de salidas</button></div></div>
       <div id="torre"></div>`;
     $$('[data-tab]', VIEW).forEach(b => b.onclick = () => go('torre', { tab: b.dataset.tab }));
     const box = $('#torre');
     if (tab === 'seq') return seqGame(box);
-    box.innerHTML = cats.map(c => `<h3 style="font-family:var(--display);text-transform:uppercase;letter-spacing:.05em;font-size:20px;margin:18px 0 8px">${esc(c)}</h3>
-      <div class="grid cols-3">${D.scenarios.filter(s => s.cat === c).map(s => `<button class="scen ${done[s.id] ? 'done' : ''}" data-s="${s.id}"><span class="body">
+    if (tab === 'guia') {
+      const cats = [...new Set(D.scenarios.map(s => s.cat))];
+      box.innerHTML = `<p class="small muted">Casos fijos con una historia continua de principio a fin.</p>` + cats.map(c => catHead(c) +
+        `<div class="grid cols-3">${D.scenarios.filter(s => s.cat === c).map(s => `<button class="scen ${done[s.id] ? 'done' : ''}" data-s="${s.id}"><span class="body">
         <span class="cs"><span>${esc(s.setup.apt)}</span><span>RWY ${esc(s.setup.rwy)}</span><span>${'●'.repeat(s.diff)}${'○'.repeat(3 - s.diff)}</span></span>
         <span class="tt" style="display:block">${esc(s.title)}</span>
         <span class="small muted">${s.steps.length} decisiones${done[s.id] ? ` · mejor ${done[s.id]}%` : ''}</span></span></button>`).join('')}</div>`).join('');
-    $$('[data-s]', box).forEach(b => b.onclick = () => playScenario(D.scenarios.find(s => s.id === b.dataset.s)));
+      $$('[data-s]', box).forEach(b => b.onclick = () => playScenario(D.scenarios.find(s => s.id === b.dataset.s)));
+      return;
+    }
+    if (!situationCounts) situationCounts = Object.fromEntries(SC.FAMILIES.map(f => [f.id, SC.countSituations(f, 2000)]));
+    const cats = [...new Set(SC.FAMILIES.map(f => f.cat))];
+    box.innerHTML = cats.map(c => catHead(c) +
+      `<div class="grid cols-3">${SC.FAMILIES.filter(f => f.cat === c).map(f => `<button class="scen ${done[f.id] ? 'done' : ''}" data-f="${f.id}"><span class="body">
+        <span class="cs"><span>Aeródromo al azar</span><span>${Object.keys(f.sits).length} tipos de situación</span><span>${'●'.repeat(f.diff)}${'○'.repeat(3 - f.diff)}</span></span>
+        <span class="tt" style="display:block">${esc(f.title)}</span>
+        <span class="small" style="display:block;margin:4px 0">${esc(f.desc)}</span>
+        <span class="small muted">${Math.min(SC.MAX_STEPS, Object.keys(f.sits).length)} decisiones · más de ${(Math.floor(situationCounts[f.id] / 100) * 100 || situationCounts[f.id]).toLocaleString('es-ES')} situaciones${done[f.id] ? ` · mejor ${done[f.id]}%` : ''}</span></span></button>`).join('')}</div>`).join('');
+    $$('[data-f]', box).forEach(b => b.onclick = () => playFamily(SC.FAMILIES.find(f => f.id === b.dataset.f)));
   }
-  function playScenario(sc) {
+  // Escenario generado: cada partida (y cada "nueva ronda") es una tirada distinta
+  function playFamily(f) { playScenario(SC.build(f), () => playFamily(f)); }
+  function playScenario(sc, again) {
     let step = 0, points = 0, losses = 0; const log = [];
-    const steps = sc.steps.map(st => { const order = shuffle(st.o.map((_, i) => i)); return Object.assign({}, st, { o: order.map(i => st.o[i]), a: st.a.map(i => order.indexOf(i)) }); });
+    const steps = sc.steps.slice(0, SC.MAX_STEPS).map(st => { const order = shuffle(st.o.map((_, i) => i)); return Object.assign({}, st, { o: order.map(i => st.o[i]), a: st.a.map(i => order.indexOf(i)) }); });
     function render(sel, shown) {
       const st = steps[step]; sel = sel || [];
       const multi = st.m || st.a.length > 1;
@@ -351,7 +367,7 @@
       VIEW.innerHTML = `<div class="view-head"><div><div class="eyebrow">${esc(sc.cat)} · decisión ${step + 1} de ${steps.length}</div><h1>${esc(sc.title)}</h1></div>
         <button class="btn ghost" id="exit">← Escenarios</button></div>
         <div class="scorebar"><div class="panel"><b class="tabular">${points}</b><span>puntos</span></div><div class="panel"><b class="tabular">${step}/${steps.length}</b><span>decisiones</span></div><div class="panel"><b class="tabular" style="color:${losses ? 'var(--bad)' : 'inherit'}">${losses}</b><span>pérdidas de separación</span></div></div>
-        <div class="game"><div>${scope(st.scene, sc.setup)}<div class="atis"><b>ATIS</b> · ${esc(sc.setup.metar)}${sc.setup.notes ? '<br>' + esc(sc.setup.notes) : ''}</div></div>
+        <div class="game"><div>${scope(st.scene, sc.setup)}<div class="atis"><b>ATIS</b> · ${esc(st.metar || sc.setup.metar)}${sc.setup.notes ? '<br>' + esc(sc.setup.notes) : ''}</div></div>
         <div><div class="sit">${esc(st.sit)}</div>
           <div class="strip arr ${shown ? (right ? 'ok' : 'bad') : ''}"><div class="body"><div class="strip-meta"><span>${multi ? 'Marca todas las correctas' : 'Elige una'}</span>${st.sev === 'loss' ? '<span style="color:var(--bad)">Crítica para la separación</span>' : ''}</div>
           <p class="qtext" style="font-size:16px">${esc(st.q)}</p>
@@ -359,7 +375,7 @@
           ${shown ? `<div class="feedback ${right ? 'ok' : 'bad'}"><b>${right ? 'Bien gestionado.' : (st.sev === 'loss' ? 'Esto habría sido una pérdida de separación (suspenso en examen).' : 'No es lo correcto.')}</b>${esc(st.e)}</div>` : ''}
           <div class="qbar"><span></span>${shown ? `<button class="btn primary" id="nx">${step === steps.length - 1 ? 'Terminar' : 'Siguiente situación →'}</button>` : `<button class="btn primary" id="ck" ${sel.length ? '' : 'disabled'}>Transmitir</button>`}</div>
           </div></div></div></div>`;
-      $('#exit').onclick = () => go('torre');
+      $('#exit').onclick = () => go('torre', { tab: sc.gen ? 'esc' : 'guia' });
       $$('.opt', VIEW).forEach(b => b.onclick = () => { const i = +b.dataset.i; const s = multi ? (sel.includes(i) ? sel.filter(x => x !== i) : sel.concat(i)) : [i]; render(s, false); });
       if ($('#ck')) $('#ck').onclick = () => { const ok = sel.length === st.a.length && sel.every(x => st.a.includes(x)); if (ok) points += st.sev === 'loss' ? 20 : 10; else if (st.sev === 'loss') losses++; log.push(ok); render(sel, true); };
       if ($('#nx')) $('#nx').onclick = () => { if (step < steps.length - 1) { step++; render(); } else finish(); };
@@ -370,11 +386,11 @@
       if (!done[sc.id] || pct > done[sc.id]) { done[sc.id] = pct; store.set('scen', done); }
       keyHandler = null;
       VIEW.innerHTML = `<div class="view-head"><div><div class="eyebrow">Fin del escenario</div><h1>${esc(sc.title)}</h1>
-        <p>${points} de ${max} puntos (${pct}%). ${losses ? `${losses} decisión${losses > 1 ? 'es' : ''} habría${losses > 1 ? 'n' : ''} supuesto pérdida de separación.` : 'Sin pérdidas de separación.'}</p></div>
-        <div class="row"><button class="btn primary" id="rep">Repetir</button><button class="btn" id="lst">Otros escenarios</button></div></div>
+        <p>${points} de ${max} puntos (${pct}%). ${losses ? `${losses} ${losses > 1 ? 'decisiones habrían' : 'decisión habría'} supuesto pérdida de separación.` : 'Sin pérdidas de separación.'}</p></div>
+        <div class="row"><button class="btn primary" id="rep">${again ? 'Nueva ronda' : 'Repetir'}</button><button class="btn" id="lst">Otros escenarios</button></div></div>
         <div class="grid">${steps.map((s, i) => `<div class="strip ${log[i] ? 'ok' : 'bad'}"><div class="body"><div class="strip-meta"><span>Decisión ${i + 1}</span><span>${log[i] ? 'Correcta' : 'Fallada'}</span></div>
           <div class="small"><b>${esc(s.q)}</b><br>${s.a.map(k => esc(s.o[k])).join(' · ')}</div><div class="small muted" style="margin-top:4px">${esc(s.e)}</div></div></div>`).join('')}</div>`;
-      $('#rep').onclick = () => playScenario(sc); $('#lst').onclick = () => go('torre');
+      $('#rep').onclick = () => again ? again() : playScenario(sc); $('#lst').onclick = () => go('torre', { tab: sc.gen ? 'esc' : 'guia' });
     }
     render();
   }
