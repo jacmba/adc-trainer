@@ -20,6 +20,8 @@ app/
   js/generators.js       16 generadores paramétricos de preguntas (usan rules.js)
   js/scenarios.js        15 escenarios generados de "torre en vivo": familias de situaciones paramétricas
                          (aeródromo, pista, viento, aeronaves…); cada partida saca hasta 5 al azar
+  js/voice.js            voz: transcripción → orden (alfabeto, números, designadores telefónicos), PTT con la
+                         Web Speech API y pronunciación de indicativos para la síntesis
   js/sim.js              simulador de torre en tiempo real: radar + vista de plataforma, etiquetas
                          arrastrables, fichas de progresión, línea de comandos con fraseología y puntuación
   js/data.js             GENERADO desde content/ (no editar)
@@ -55,6 +57,13 @@ La tabla `COMMANDS` de `sim.js` define a la vez el parser y la ayuda del juego (
 - **Alineación condicional** detrás de una salida en carrera o de una llegada en final: `IBE123 detrás del B738
   despegando, alinee y mantenga pista 27, detrás`.
 - **Cronómetro** en la barra (tiempo del simulador, respeta pausa y velocidad): cada clic inicia, para y pone a cero.
+- **Voz (PTT)**: mantener pulsado **Ctrl derecho** (o el botón 🎙) para hablar; al soltar se transmite (o queda en la
+  línea para revisarlo, según ⚙). `voice.js` convierte «Iberia tres siete uno dos ruede a punto de espera pista dos
+  siete» en `IBE3712 ruede a punto de espera pista 27`, ajusta indicativos mal reconocidos al más parecido en
+  frecuencia y elige, entre las alternativas del reconocedor, la que deja indicativos conocidos. Usa la Web Speech
+  API: Chrome, Edge y Safari (Chrome necesita conexión); si el micrófono no funciona abriendo el archivo
+  directamente, sirve la app con `npx serve app`.
+  Al pulsar y soltar suena un clic de radio y la cola del silenciador (Web Audio, sin archivos; se quita en ⚙).
 - En escritorio la interfaz se ajusta al alto de la ventana; por debajo de 1100 px se apila. La tabla `PTS` de `sim.js` fija los puntos de
 cada acierto y error; la separación entre salidas se calcula con `rules.js`.
 

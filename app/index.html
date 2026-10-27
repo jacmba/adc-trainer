@@ -239,7 +239,10 @@ body.simmode { margin: 0; }
 body.simmode .main { padding: 8px 12px; }
 .sim { display: grid; gap: 6px; position: relative; }
 .sim-bar { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; justify-content: space-between; }
-.sim-title { font-size: 14px; min-width: 0; }
+.sim-title { font-size: 14px; min-width: 0; flex: 1 1 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sim-bar { flex-wrap: nowrap; }
+.sim-bar .row { flex-wrap: nowrap; flex-shrink: 0; }
+@media (max-width: 1100px) { .sim-bar, .sim-bar .row { flex-wrap: wrap; flex-shrink: 1; } }
 .sim-bar .row { gap: 6px; }
 .sim-bar .btn { padding: 4px 10px; font-size: 13px; }
 .sim-bar .chip { padding: 2px 8px; font-size: 12.5px; }
@@ -247,6 +250,13 @@ body.simmode .main { padding: 8px 12px; }
 .sim-bar .sim-chrono { font-family: var(--mono); font-weight: 600; min-width: 74px; }
 .sim-chrono[data-st="run"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
 .sim-chrono[data-st="stop"] { border-color: var(--accent); color: var(--accent); }
+.sim-opts { position: relative; }
+.sim-menu { position: absolute; right: 0; top: calc(100% + 4px); z-index: 5; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 8px 24px rgba(0,0,0,.18); padding: 8px 10px; display: grid; gap: 6px; white-space: nowrap; font-size: 13px; }
+.sim-menu[hidden], .sim-help[hidden] { display: none; }
+.sim-menu label { display: flex; gap: 8px; align-items: center; cursor: pointer; }
+.sim-menu input { accent-color: var(--accent); }
+.sim-ptt[data-on="1"] { background: var(--bad); border-color: var(--bad); color: #fff; }
+.sim-input input.listening { outline: 2px solid var(--bad); outline-offset: 0; }
 .sim-score { font-family: var(--display); font-size: 26px; font-weight: 700; min-width: 54px; text-align: right; color: var(--ok); line-height: 1; }
 .sim-score.neg { color: var(--bad); }
 .sim .seg button { padding: 3px 9px; font-size: 12.5px; }
@@ -330,6 +340,7 @@ body.simmode .main { padding: 8px 12px; }
 <script src="js/rules.js"></script>
 <script src="js/generators.js"></script>
 <script src="js/scenarios.js"></script>
+<script src="js/voice.js"></script>
 <script src="js/sim.js"></script>
 <script src="js/data.js"></script>
 <script src="js/app.js"></script>
