@@ -82,7 +82,8 @@
     state = Object.assign({ view }, extra || {});
     $$('#nav button').forEach(b => b.setAttribute('aria-current', b.dataset.view === view ? 'page' : 'false'));
     store.set('view', view);
-    ({ temario: viewTemario, resumenes: viewResumenes, flashcards: viewFlash, test: viewTest, torre: viewTorre, chuleta: viewChuleta })[view]();
+    VIEW.classList.toggle('wide', view === 'simulador');
+    ({ temario: viewTemario, resumenes: viewResumenes, flashcards: viewFlash, test: viewTest, torre: viewTorre, simulador: viewSim, chuleta: viewChuleta })[view]();
     window.scrollTo(0, 0);
   }
   $$('#nav button').forEach(b => b.addEventListener('click', () => go(b.dataset.view)));
@@ -433,6 +434,9 @@
     render();
   }
 
+  // ---------- SIMULADOR ----------
+  function viewSim() { window.ADC_SIM.mount(VIEW, { store }); }
+
   // ---------- CHULETA ----------
   function viewChuleta() {
     VIEW.innerHTML = `<div class="view-head"><div><div class="eyebrow">Tablas de bolsillo</div><h1>Chuleta</h1>
@@ -440,7 +444,7 @@
   }
 
   // ---------- arranque ----------
-  const tokens = ['temario', 'resumenes', 'flashcards', 'test', 'torre', 'chuleta'];
+  const tokens = ['temario', 'resumenes', 'flashcards', 'test', 'torre', 'simulador', 'chuleta'];
   const h = (location.hash || '').slice(1);
   if (tokens.includes(h)) go(h);
   else if (h.startsWith('t-') && topicById[h.slice(2)]) go('temario', { topic: h.slice(2) });
