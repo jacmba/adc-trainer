@@ -1082,7 +1082,22 @@
   }
   const G = { mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; } };
 
-  const API = { FAMILIES: F, MAX_STEPS, build, countSituations, makeCtx, depGap, APTS, mulberry32: G.mulberry32 };
+  // Una situación suelta convertida en pregunta de test (tema según la categoría del escenario)
+  const CAT_TOPIC = { Separaciones: 'separaciones', 'Sujeta/suelta': 'separaciones', Emergencias: 'emergencias', VFR: 'gestion-transito', 'Meteorología': 'meteorologia', 'Altimetría': 'altimetria', 'Gestión': 'gestion-transito', IVAO: 'introduccion' };
+  function question(rng, topics) {
+    const fams = F.filter(f => !topics || topics.includes(CAT_TOPIC[f.cat]));
+    if (!fams.length) return null;
+    for (let k = 0; k < 10; k++) {
+      const f = pick(rng, fams); const c = makeCtx(rng); const setup = f.setup(c) || {};
+      const st = f.sits[pick(rng, Object.keys(f.sits))](c); if (!st) continue;
+      const order = shuffle(rng, st.o.map((_, i) => i));
+      const ctxTxt = `${c.apt.icao} (${c.apt.city}), pista ${c.rwy}${setup.notes ? '. ' + setup.notes : ''}`;
+      return { t: CAT_TOPIC[f.cat], q: `${ctxTxt}\n${st.sit}${st.metar ? '\nMETAR: ' + st.metar : ''}\n${st.q}`, o: order.map(i => st.o[i]), a: st.a.map(i => order.indexOf(i)), m: !!st.m, e: st.e, g: 'Torre: ' + f.title, gen: true };
+    }
+    return null;
+  }
+
+  const API = { FAMILIES: F, MAX_STEPS, build, countSituations, makeCtx, depGap, APTS, question, CAT_TOPIC, mulberry32: G.mulberry32 };
   if (typeof module !== 'undefined' && module.exports) module.exports = API;
   else root.ADC_SCEN = API;
 })(typeof window !== 'undefined' ? window : globalThis);

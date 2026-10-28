@@ -238,7 +238,9 @@ details.help summary { cursor: pointer; color: var(--muted); font-size: 13.5px; 
 /* ---------- simulador ---------- */
 .wrap.wide { max-width: none; }
 body.simmode { margin: 0; }
-body.simmode .main { padding: 8px 12px; }
+body.simmode .main { padding: 8px 12px calc(8px + var(--sim-bottom)); }
+/* reserva abajo para insignias fijas del alojamiento (p. ej. «Powered by Netlify») que tapaban la línea de comandos */
+:root { --sim-bottom: 56px; }
 .sim { display: grid; gap: 6px; position: relative; }
 .sim-bar { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; justify-content: space-between; }
 .sim-title { font-size: 14px; min-width: 0; flex: 1 1 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -306,7 +308,7 @@ body.simmode .main { padding: 8px 12px; }
 .sim-help .tbl table { font-size: 12.5px; }
 /* escritorio: todo cabe en el alto de la ventana */
 @media (min-width: 861px) {
-  body.simmode .sim { height: calc(100dvh - 16px); grid-template-rows: auto auto minmax(0, 1fr); }
+  body.simmode .sim { height: calc(100dvh - 16px - var(--sim-bottom)); grid-template-rows: auto auto minmax(0, 1fr); }
 }
 /* pantallas estrechas: apilado con alturas fijas */
 @media (max-width: 1100px) {
@@ -341,6 +343,7 @@ body.simmode .main { padding: 8px 12px; }
 
 <script src="js/rules.js"></script>
 <script src="js/generators.js"></script>
+<script src="js/flashgen.js"></script>
 <script src="js/scenarios.js"></script>
 <script src="js/voice.js"></script>
 <script src="js/sim.js"></script>
