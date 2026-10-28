@@ -286,6 +286,133 @@
     return single(rng, 'comunicaciones', c[0], c[1], c[2], c[3], { g: 'Indicativos' });
   };
 
+  // ---------- generadores añadidos ----------
+  const pad = (n, w) => String(n).padStart(w, '0');
+  const RWYS = ['03', '06', '09', '12', '13', '17', '20', '21', '24', '25', '27', '30', '31', '35', '36', '03L', '21R', '06R', '24L', '32R', '36L', '18R', '14L'];
+  const rwyHdg = r => (+r.replace(/[LCR]/, '')) * 10;
+  const windOf = (rng, hdg, spread) => { let d = Math.round((hdg + randint(rng, -spread, spread)) / 10) * 10; d = ((d % 360) + 360) % 360 || 360; return d; };
+  const windStr = (d, s, g) => s < 3 ? 'viento calma' : `viento ${pad(d, 3)} grados ${s} nudos${g ? ' rachas ' + g : ''}`;
+  const TEL = { IBE: 'Iberia', VLG: 'Vueling', AEA: 'Europa', RYR: 'Ryanair', BAW: 'Speedbird', DLH: 'Lufthansa', AFR: 'Airfrans', IBS: 'Iberexpress', ANE: 'Air Nostrum', EZY: 'Easy', SWR: 'Swiss', KLM: 'KLM' };
+  const PHON = { A: 'Alfa', B: 'Bravo', C: 'Charlie', D: 'Delta', E: 'Eco', F: 'Foxtrot', G: 'Golf', H: 'Hotel', I: 'India', J: 'Juliett', K: 'Kilo', L: 'Lima', M: 'Mike', N: 'November', O: 'Oscar', P: 'Papa', Q: 'Quebec', R: 'Romeo', S: 'Sierra', T: 'Tango', U: 'Uniform', V: 'Victor', W: 'Whiskey', X: 'X-ray', Y: 'Yankee', Z: 'Zulu' };
+  const spellCs = s => s.split('').map(ch => /\d/.test(ch) ? R.digits(ch) : PHON[ch]).join(' ');
+
+  // 17. Componentes de viento y criterio de ruido
+  G.wind = function (rng) {
+    let r, d, s, gst, head, cross, tail;
+    do {
+      r = pick(rng, RWYS); const h = rwyHdg(r); d = windOf(rng, h, 180); s = randint(rng, 3, 22); gst = rng() < 0.35 ? s + randint(rng, 6, 12) : null;
+      const sp = gst || s, ang = (d - h) * Math.PI / 180; head = Math.round(sp * Math.cos(ang)); cross = Math.round(Math.abs(sp * Math.sin(ang))); tail = Math.max(0, -head);
+    } while ([5, 6].includes(tail) || [15, 16].includes(cross));
+    const no = tail > 5 || cross > 15;
+    const q = `Pista ${r} (rumbo ${pad(rwyHdg(r), 3)}). Viento ${pad(d, 3)}/${s}${gst ? 'G' + gst : ''} kt. Con las rachas, eso son unos ${tail ? tail + ' kt de cola' : (head > 0 ? head + ' kt de cara' : 'nada de cara')} y ${cross} kt de cruzado. ¿Puede el criterio de ruido decidir que se use esta pista?`;
+    return single(rng, 'gestion-transito', q, no ? `No: ${tail > 5 ? 'cola > 5 kt' : 'cruzado > 15 kt'}` : 'Sí: ni la cola supera 5 kt ni el cruzado 15 kt',
+      ['Sí: ni la cola supera 5 kt ni el cruzado 15 kt', 'No: cola > 5 kt', 'No: cruzado > 15 kt', 'Sí: el ruido decide siempre'], 'El ruido no decide la pista con viento cruzado > 15 kt o de cola > 5 kt (rachas incluidas).', { g: 'Viento y ruido' });
+  };
+  // 18. Tiempo y distancia (como la línea QDM del radar)
+  G.timeDistance = function (rng) {
+    const kt = pick(rng, [60, 80, 90, 100, 120, 140, 150, 160, 180, 200, 240]); const nm = pick(rng, [2, 3, 4, 5, 6, 8, 10, 12, 15]);
+    const sec = Math.round(nm / kt * 3600); const mm = s => Math.floor(s / 60) + ':' + pad(s % 60, 2);
+    const q = `Una aeronave vuela a ${kt} kt respecto al suelo y está a ${nm} NM del umbral. ¿Cuánto tarda, aproximadamente, en llegar?`;
+    return single(rng, 'separaciones', q, mm(sec) + ' min', shuffle(rng, [mm(Math.round(sec * 0.5)), mm(Math.round(sec * 1.5)), mm(Math.round(sec * 2)), mm(Math.round(nm / kt * 60) * 10)].map(x => x + ' min')),
+      `Tiempo = distancia / velocidad: ${nm} / ${kt} h = ${(nm / kt * 60).toFixed(1).replace('.', ',')} min. Atajo: a ${kt} kt se recorren ${(kt / 60).toFixed(1).replace('.', ',')} NM por minuto.`, { g: 'Tiempo y distancia' });
+  };
+  // 19. Autorizaciones de pista con viento
+  G.rwyPhrase = function (rng) {
+    const r = pick(rng, RWYS); const d = windOf(rng, rwyHdg(r), 40), s = randint(rng, 2, 18), gst = s >= 8 && rng() < 0.3 ? s + randint(rng, 8, 12) : null;
+    const cs = callsign(rng); const what = pick(rng, [['despegar', 'despegue'], ['aterrizar', 'aterrizaje'], ['toma y despegue', 'toma y despegue'], ['pasada baja', 'pasada baja']]);
+    const verb = what[0] === 'despegar' || what[0] === 'aterrizar' ? `autorizado a ${what[0]}` : `autorizado ${what[0]}`;
+    const ok = `${cs}, ${windStr(d, s, gst)}, pista ${r} ${verb}`;
+    return single(rng, 'comunicaciones', `Vas a autorizar ${what[1] === 'despegue' ? 'el despegue' : what[1] === 'aterrizaje' ? 'el aterrizaje' : 'una ' + what[1]} de ${cs} en la pista ${r} con viento ${pad(d, 3)}/${s}${gst ? 'G' + gst : ''} kt. ¿Qué transmites?`, ok,
+      [`${cs}, pista ${r} ${verb}`, `${cs}, ${verb}, ${windStr(d, s, gst)}`, `${cs}, ${windStr(d, s, gst)}, pista ${r}, ${what[1]} aprobado`, `${cs}, ${windStr(d, s, gst)}, ${what[1]} a discreción`],
+      'Autorizaciones de pista: viento en superficie (con rachas) + designador de pista + "autorizado". Nunca "aprobado" ni "a discreción".', { g: 'Autorizaciones de pista' });
+  };
+  // 20. Alineación condicional
+  G.conditional = function (rng) {
+    const cs = callsign(rng), r = pick(rng, RWYS), ty = pick(rng, R.AIRCRAFT.filter(a => a.speed !== 'muyrapida' && a.kind !== 'helicóptero')).t; const where = pick(rng, [['en final', 'aterrizando'], ['despegando', 'despegando']]);
+    const ok = `${cs}, detrás del ${ty} ${where[0]}, alinee y mantenga pista ${r}, detrás`;
+    return single(rng, 'comunicaciones', `Quieres alinear a ${cs} en la pista ${r} detrás de un ${ty} ${where[1] === 'aterrizando' ? 'que está en final' : 'que está en carrera de despegue'}. ¿Cuál es la autorización condicional correcta?`, ok,
+      [`${cs}, alinee y mantenga pista ${r} detrás del ${ty}`, `${cs}, detrás del ${ty} ${where[0]}, autorizado a despegar, detrás`, `${cs}, cuando pase el ${ty}, alinee`, `${cs}, alinee pista ${r}, el ${ty} está ${where[0]}`],
+      'Condicional = condición + instrucción + reiteración de la condición ("detrás"). El piloto debe tener a la vista el tránsito. Nunca se condiciona un despegue.', { g: 'Autorizaciones condicionales' });
+  };
+  // 21. Códigos de transpondedor especiales
+  G.squawkCodes = function (rng) {
+    const C = [['7500', 'Interferencia ilícita'], ['7600', 'Fallo de comunicaciones'], ['7700', 'Emergencia'], ['7000', 'VFR en espacio no controlado (conspicuidad)'], ['2000', 'Aeronave que entra en el área sin código asignado (IFR)']];
+    const c = pick(rng, C); const inv = rng() < 0.4;
+    return inv ? single(rng, 'emergencias', `¿Qué código selecciona una aeronave en situación de «${c[1].toLowerCase()}»?`, c[0], shuffle(rng, C.map(x => x[0])), '7500 interferencia ilícita, 7600 fallo de comunicaciones, 7700 emergencia; 7000 VFR no controlado.', { g: 'Códigos especiales' })
+      : single(rng, 'emergencias', `Una aeronave aparece con código ${c[0]}. ¿Qué indica?`, c[1], shuffle(rng, C.map(x => x[1])), '7500 interferencia ilícita, 7600 fallo de comunicaciones, 7700 emergencia; 7000 VFR no controlado.', { g: 'Códigos especiales' });
+  };
+  // 22. Integración VFR en el circuito
+  G.vfrJoin = function (rng) {
+    const n = randint(rng, 0, 5); const ang = pick(rng, [5, 10, 20, 25, 40, 60, 90, 120, 150, 170]); const nearBase = rng() < 0.5;
+    const cs = 'EC' + String.fromCharCode(65 + randint(rng, 0, 25), 65 + randint(rng, 0, 25), 65 + randint(rng, 0, 25));
+    const ask = pick(rng, ['defecto', 'directa', 'lleno']);
+    if (ask === 'lleno' || n >= 4) return single(rng, 'gestion-transito', `${cs} llama para aterrizar y en el circuito hay ${n >= 4 ? n : 4} aeronaves. ¿Qué haces?`, 'Le hago orbitar sobre un punto VFR e informo de que el circuito está completo',
+      ['Lo integro en viento en cola detrás del último', 'Le doy aproximación directa para no molestar', 'Le pido que se quede fuera del CTR sin más'], 'Con 4 aeronaves el circuito está lleno y las que ya están tienen prioridad: órbita sobre un punto VFR.', { g: 'Integración VFR' });
+    if (ask === 'directa') {
+      const ok = ang <= 30;
+      return single(rng, 'gestion-transito', `${cs} llega con una derrota que forma ${ang}° con el eje de la pista en uso y el circuito tiene ${n} aeronaves. ¿Le puedes dar aproximación directa a final?`,
+        ok ? 'Sí: viene dentro de ±30° del eje (es la última opción, si no molesta al circuito)' : 'No: solo si viene dentro de ±30° del eje', ['Sí: viene dentro de ±30° del eje (es la última opción, si no molesta al circuito)', 'No: solo si viene dentro de ±30° del eje', 'Sí, siempre que la pida', 'No, a los VFR nunca'],
+        'Integración VFR: por defecto viento en cola; alternativa, base (semidirecta) si acorta; última, directa a final si viene dentro de ±30° del eje.', { g: 'Integración VFR' });
+    }
+    return single(rng, 'gestion-transito', `${cs} llega ${nearBase ? 'por el lado de la final, cerca del punto donde empezaría la base' : 'por el lado contrario a la final'}; circuito con ${n} aeronaves. ¿Qué integración es la más adecuada?`,
+      nearBase ? 'Semidirecta a base (acorta y no interfiere)' : 'Viento en cola (la opción por defecto)', ['Semidirecta a base (acorta y no interfiere)', 'Viento en cola (la opción por defecto)', 'Directa a final', 'Barlovento sobre la pista en uso'],
+      'Por defecto, al principio o a mitad del viento en cola; en base si acorta; directa a final solo dentro de ±30° del eje. La entrada por barlovento cruza el campo y se usa cuando conviene incorporarse por el tramo opuesto.', { g: 'Integración VFR' });
+  };
+  // 23. Prioridad para aterrizar
+  const PRIO = [['un MAYDAY por fallo de motor', 1], ['una urgencia (PAN PAN) por pasajero indispuesto', 1], ['un MAYDAY FUEL', 1], ['un vuelo hospital (STS/HOSP)', 2], ['un vuelo de búsqueda y salvamento', 3], ['un avión de extinción de incendios', 4], ['un vuelo de policía en misión', 4], ['un vuelo regular sin incidencias', 5], ['un VFR privado', 5], ['una aeronave con combustible mínimo (MINIMUM FUEL)', 5]];
+  G.priority = function (rng) {
+    let a, b; do { a = pick(rng, PRIO); b = pick(rng, PRIO); } while (a[1] === b[1]);
+    const first = a[1] < b[1] ? a : b;
+    return single(rng, 'emergencias', `Dos aeronaves quieren aterrizar a la vez: ${a[0]} y ${b[0]}. ¿Cuál tiene prioridad?`, first[0][0].toUpperCase() + first[0].slice(1), [a[0], b[0]].map(x => x[0].toUpperCase() + x.slice(1)).concat(['La que llamó antes']),
+      'Orden: 1) seguridad (emergencias, urgencias, MAYDAY FUEL); 2) hospital; 3) SAR; 4) otras misiones operacionales; 5) resto. MINIMUM FUEL no da prioridad.', { g: 'Prioridades' });
+  };
+  // 24. Pronunciación de indicativos
+  G.sayCallsign = function (rng) {
+    if (rng() < 0.5) {
+      const al = pick(rng, Object.keys(TEL)); const id = String(randint(rng, 1, 9899)); const cs = al + id;
+      return single(rng, 'comunicaciones', `¿Cómo se pronuncia el indicativo ${cs}?`, `${TEL[al]} ${R.digits(id)}`, shuffle(rng, [`${spellCs(al)} ${R.digits(id)}`, `${TEL[al]} ${(+id).toLocaleString('es-ES')}`, `${TEL[al]} ${R.digits(id).split(' ').reverse().join(' ')}`]),
+        'Designador telefónico del operador + identificación del vuelo cifra a cifra.', { g: 'Indicativos' });
+    }
+    const reg = 'EC' + String.fromCharCode(65 + randint(rng, 0, 25), 65 + randint(rng, 0, 25), 65 + randint(rng, 0, 25));
+    return single(rng, 'comunicaciones', `¿Cómo se pronuncia la matrícula ${reg}?`, spellCs(reg), [spellCs(reg).split(' ').reverse().join(' '), reg.split('').join(' '), spellCs(reg.slice(0, 2)) + ' ' + reg.slice(2)], 'Las matrículas se deletrean con el alfabeto fonético OACI.', { g: 'Indicativos' });
+  };
+  // 25. Corregir colaciones
+  G.readback = function (rng) {
+    const cs = callsign(rng); const k = pick(rng, ['qnh', 'sq', 'rwy']);
+    let given, heard, label;
+    if (k === 'qnh') { const q = randint(rng, 995, 1035); given = 'QNH ' + q; heard = 'QNH ' + (q + pick(rng, [-10, 10, 1, -1])); label = 'el QNH'; }
+    else if (k === 'sq') { const c = pad(randint(rng, 1, 7), 1) + pad(randint(rng, 0, 7), 1) + pad(randint(rng, 0, 7), 1) + pad(randint(rng, 1, 7), 1); given = 'responda ' + c; heard = 'responda ' + c.slice(0, 2) + c[3] + c[2]; label = 'el código'; if (heard === given) heard = 'responda ' + c.slice(0, 3) + ((+c[3] % 7) + 1); }
+    else { const r = pick(rng, ['24L', '06R', '18R', '36L', '03L', '21R']); given = 'pista ' + r; heard = 'pista ' + r.replace(/[LR]/, m => m === 'L' ? 'R' : 'L'); label = 'la pista'; }
+    return single(rng, 'comunicaciones', `Has transmitido ${given} a ${cs} y colaciona "${heard}". ¿Qué respondes?`, `${cs}, negativo, repito ${given}`, [`${cs}, colación correcta`, `${cs}, recibido`, `${cs}, corrección, ${heard}`],
+      `Una colación incorrecta se corrige en el acto con NEGATIVO, REPITO y ${label} correcto${label === 'la pista' ? 'a' : ''}.`, { g: 'Colaciones' });
+  };
+  // 26. Tiempo presente en METAR
+  const WX = [['BR', 'Neblina'], ['FG', 'Niebla'], ['HZ', 'Calima'], ['FU', 'Humo'], ['RA', 'Lluvia'], ['-RA', 'Lluvia débil'], ['+RA', 'Lluvia fuerte'], ['DZ', 'Llovizna'], ['SHRA', 'Chubascos de lluvia'], ['TSRA', 'Tormenta con lluvia'], ['TS', 'Tormenta'], ['SN', 'Nieve'], ['GR', 'Granizo'], ['FZFG', 'Niebla engelante'], ['BCFG', 'Bancos de niebla'], ['VCSH', 'Chubascos en las proximidades'], ['DU', 'Polvo'], ['SA', 'Arena']];
+  G.metarWx = function (rng) {
+    const w = pick(rng, WX); const inv = rng() < 0.3;
+    const others = shuffle(rng, WX.filter(x => x !== w)).slice(0, 3);
+    return inv ? single(rng, 'meteorologia', `¿Qué grupo de tiempo presente del METAR corresponde a «${w[1].toLowerCase()}»?`, w[0], others.map(x => x[0]), 'Intensidad (- débil, + fuerte), descriptor (SH chubasco, TS tormenta, FZ engelante, BC bancos, VC proximidades) y fenómeno.', { g: 'Tiempo presente' })
+      : single(rng, 'meteorologia', `En un METAR aparece «${w[0]}». ¿Qué significa?`, w[1], others.map(x => x[1]), 'Intensidad (- débil, + fuerte), descriptor (SH chubasco, TS tormenta, FZ engelante, BC bancos, VC proximidades) y fenómeno.', { g: 'Tiempo presente' });
+  };
+  // 27. Separación reducida en la misma pista
+  G.reducedSep = function (rng) {
+    const C = { 1: 'cat. 1 (monomotor de hélice ≤ 2 000 kg)', 2: 'cat. 2 (monomotor 2 000–7 000 kg o bimotor de hélice < 7 000 kg)', 3: 'cat. 3 (resto)' };
+    const a = randint(rng, 1, 3), b = a === 3 ? randint(rng, 1, 3) : randint(rng, 1, 2); const d = a === 3 ? '2 400 m' : b === 1 ? '600 m' : '1 500 m';
+    return single(rng, 'gestion-transito', `Separación reducida publicada y con todas sus condiciones cumplidas. Precedente ${C[a]}, siguiente ${C[b]}. ¿Distancia mínima recorrida por el precedente?`, d, ['600 m', '1 500 m', '2 400 m', '3 000 m'],
+      'Cat. 1 o 2 → siguiente cat. 1: 600 m; → cat. 2: 1 500 m. Precedente cat. 3: 2 400 m. Nunca entre una salida y una llegada.', { g: 'Separación reducida' });
+  };
+  // 28. Transferencias y tramos
+  G.transfers = function (rng) {
+    const c = pick(rng, [
+      ['¿Cuándo pasa GND una salida a TWR?', 'Al acercarse al punto de espera', ['Al poner en marcha', 'Ya alineada en pista', 'Tras el despegue']],
+      ['¿Cuándo pasa TWR una llegada a GND?', 'Cuando ha abandonado la pista (o se prevé que lo hará sin bloquearla)', ['Al tomar tierra', 'Cuando se detiene en plataforma', 'A 4 NM en final']],
+      ['¿Con cuánta antelación transfiere el adyacente un VFR a TWR?', '2 minutos antes de entrar en la zona', ['30 segundos antes', '10 minutos antes', 'Al cruzar el límite del CTR']],
+      ['Un VFR sale a espacio no controlado. ¿Qué código y frecuencia le das?', '7000 y UNICOM 122.800', ['7600 y UNICOM 122.800', '2000 y APP', '7000 y la frecuencia de TWR']],
+      ['¿Cuándo pone el piloto el transpondedor en TX en IVAO?', 'Al entrar en la pista activa (tolerado en el punto de espera)', ['En plataforma', 'Al pasar 1 000 ft', 'Al recibir la autorización IFR']]
+    ]);
+    return single(rng, 'gestion-transito', c[0], c[1], c[2], 'Transferencias: salidas a TWR cerca del punto de espera; llegadas a GND al librar; VFR 2 min antes; a espacio no controlado 7000 y UNICOM.', { g: 'Transferencias' });
+  };
+
   G.list = Object.keys(G).filter(k => typeof G[k] === 'function' && k !== 'list');
   // estimación conservadora de combinaciones distintas de cada generador
   G.combos = function () {
@@ -293,7 +420,9 @@
     return {
       depWake: n * n * 2, successive: n * n * 2, combinedDeparture: (n - 2) * (n - 2), arrWake: (n - 2) * (n - 2) * 2,
       trl: R.TA_PLACES.length * 76, vmc: 11 * 11 * 2, lvp: 8 * 7 * 6, numbers: 20 + 13 + 10 + 10 + 10 + 13, airspace: 19,
-      alert: R.ALERT_CASES.length, metar: 100000, runway: RWY_CASES.length, qnh: 11 * 56, fpl: 300, setting: 2000, callsign: 17600
+      alert: R.ALERT_CASES.length, metar: 100000, runway: RWY_CASES.length, qnh: 11 * 56, fpl: 300, setting: 2000, callsign: 17600,
+      wind: 23 * 36 * 20 * 2, timeDistance: 11 * 9, rwyPhrase: 23 * 9 * 17 * 4 * 2, conditional: (n - 2) * 23 * 2, squawkCodes: 10, vfrJoin: 6 * 10 * 3,
+      priority: 80, sayCallsign: 12 * 9899 + 17576, readback: 3000, metarWx: WX.length * 2, reducedSep: 7, transfers: 5
     };
   };
   G.generate = function (rng, name) { return G[name || pick(rng, G.list)](rng); };

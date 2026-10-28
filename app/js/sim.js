@@ -20,17 +20,17 @@
   const TWY_Y = 0.15, APRON_Y = 0.42;
   const EXITS = [-0.6, -1.1, -1.35];   // calles de salida (x)
   const STANDS = [-1.35, -1.2, -1.05, -0.9, -0.75, -0.6, -0.45, -0.3];
-  const VFR_PTS = { N: { x: -0.8, y: -4.6 }, S: { x: -0.8, y: 4.6 }, W: { x: -6, y: -1.6 }, E: { x: 5.5, y: -3.4 } };
+  const VFR_PTS = { N: { x: -0.8, y: -4.6 }, S: { x: -0.8, y: 4.6 }, W: { x: -6, y: -1.6 }, E: { x: 6.2, y: -1.4 } }; // E queda a ~25° de la final: desde ahí cabe la directa
   const DEP_EXIT = [{ x: -8, y: -4, sid: 'N' }, { x: -9, y: 0, sid: 'W' }, { x: -8, y: 4, sid: 'S' }];
   const CIRCUIT_ALT = 1000;
 
   // ---------- Puntuación (al estilo de GAME_EVENTS de openscope) ----------
   const PTS = {
     TAXI: 2, LINEUP: 2, LINEUP_COND: 5, TAKEOFF: 10, LANDING_CLR: 10, LANDED: 5, PHRASE: 2, WAKE_CAUTION: 3,
-    TRANSFER: 5, TAXI_IN: 3, CONTINUE: 3, GA_JUSTIFIED: 10, READBACK_FIX: 10, ACK: 5, EMERG_OK: 15, JOIN: 3, SEQUENCE: 5, TRAFFIC: 5, TRAFFIC_EXTRA: 2, ORBIT_OK: 2, RELEASE_REQ: 3,
+    TRANSFER: 5, TAXI_IN: 3, CONTINUE: 3, GA_JUSTIFIED: 10, READBACK_FIX: 10, ACK: 5, EMERG_OK: 15, JOIN: 3, JOIN_ALT: 3, SEQUENCE: 5, TRAFFIC: 5, TRAFFIC_EXTRA: 2, ORBIT_OK: 2, RELEASE_REQ: 3,
     RWY_OCCUPIED: -50, TWO_LANDING: -30, LINEUP_WITH_LANDING: -30, LINEUP_CLOSE: -10, LINEUP_ROLLOUT: -15, ARR_TOO_CLOSE: -20,
     NO_RELEASE: -30, WAKE: -40, SUCCESSIVE: -25, EMERG_PRIORITY: -30, EMERG_NOACK: -10, NO_LANDING_CLR: -20, LOSS_RWY: -50,
-    GA_UNJUSTIFIED: -15, LATE_TRANSFER: -10, EARLY_TRANSFER: -5, READBACK_MISSED: -15, NEEDLESS_FIX: -3, CIRCUIT_FULL: -10,
+    GA_UNJUSTIFIED: -15, LATE_TRANSFER: -10, EARLY_TRANSFER: -5, READBACK_MISSED: -15, NEEDLESS_FIX: -3, CIRCUIT_FULL: -10, BAD_JOIN: -5,
     AIRPROX: -40, TI_MISSED: -10, DELAY_HP: -5, DELAY_EXIT: -5, DELAY_ORBIT: -5
   };
 
@@ -83,7 +83,7 @@
   // ---------- Comandos ----------
   // Tabla única de órdenes: el parser y la ayuda salen de aquí (el orden importa: gana la primera que encaja).
   const COMMANDS = [
-    { id: 'release', words: 'suelta', alias: 'release', m: [/\bsuelta\b/, /\brelease\b/], ex: 'suelta IBE123', desc: 'Pide a APP la suelta de una salida IFR sujeta (tabla de sucesivas, tras una frustrada o con "todas sujetas").' },
+    { id: 'release', words: '<indicativo> listo (a APP)', alias: 'suelta · release', m: [/(?<!notifique )\blisto\b/, /\bsuelta\b/, /\brelease\b/], ex: 'IBE123 listo', desc: 'Coordinación con APP: avisa de que la salida está lista y pide su suelta (tabla de sucesivas, tras una frustrada o con "todas sujetas").' },
     { id: 'negative', words: 'negativo', alias: 'neg', m: ['negativo', /\bneg\b/], ex: 'IBE123 negativo, QNH 1018', desc: 'Corrige una colación errónea (incluye el dato correcto).' },
     { id: 'goaround', words: 'motor y al aire', alias: 'ga', m: ['motor y al aire', /\bga\b/, 'go around'], ex: 'IBE123 motor y al aire', desc: 'Frustrada de una llegada IFR o VFR.' },
     { id: 'hold', words: 'mantenga posición · cancele despegue · aborte', alias: 'hp', m: ['cancele', 'aborte', 'mantenga posicion', /\bhp\b/, 'hold position'], ex: 'IBE123 mantenga posición, cancele despegue', desc: 'Detiene un rodaje, cancela un despegue sin iniciar o aborta uno en carrera.' },
@@ -92,6 +92,9 @@
     { id: 'takeoff', words: 'autorizado a despegar', alias: 'to · cto', m: ['despeg', /\bc?to\b/, 'takeoff'], ex: 'IBE123 viento 270 grados 8 nudos, pista 27 autorizado a despegar', desc: 'Autorización de despegue (incluye pista y viento).' },
     { id: 'land', words: 'autorizado a aterrizar', alias: 'cl · land', m: ['aterriz', /\bcl\b/, /\bland\b/], ex: 'IBE123 viento 270 grados 8 nudos, pista 27 autorizado a aterrizar', desc: 'Autorización de aterrizaje (incluye pista y viento).' },
     { id: 'follow', words: 'siga a · ajuste detrás de · detrás del', alias: 'fl', m: ['siga a', 'siga la', 'sigue a', 'ajust', 'detras del', 'detras de', /\bfollow\b/, /\bfl\b/], ex: 'ECABC número dos, siga al A320 en final', desc: 'Secuencia un VFR detrás de un tránsito: alarga el viento en cola hasta tener hueco. Cuenta como información de tránsito.' },
+    { id: 'joinBase', words: 'entre en base · semidirecta a base', alias: 'bs', m: ['entre en base', 'semidirecta', 'directo a base', 'directa a base', /\bbs\b/], ex: 'ECABC entre en base derecha pista 27', desc: 'Integración semidirecta a base: la alternativa cuando acorta (llegando por el lado de la final).' },
+    { id: 'joinDirect', words: 'aproximación directa', alias: 'dir', m: ['aproximacion directa', 'directa a final', 'directo a final', 'final directa', /\bdirecta\b/, 'straight', /\bdir\b/], ex: 'ECABC efectúe aproximación directa pista 27', desc: 'Directa a final: la última opción, solo si el VFR llega dentro de ±30° del eje (desde E).' },
+    { id: 'joinUpwind', words: 'entre en barlovento', alias: 'uw', m: ['barlovento', 'upwind', /\buw\b/], ex: 'ECABC entre en barlovento pista 27', desc: 'Incorporación por barlovento (tramo de despegue), luego viento cruzado y viento en cola.' },
     { id: 'join', words: 'entre en viento en cola', alias: 'dw', m: ['viento en cola', /\bdw\b/, 'downwind', 'entre en'], ex: 'ECABC entre en viento en cola', desc: 'Integra en el circuito a un VFR que espera en un punto de notificación.' },
     { id: 'orbit', words: 'orbite', alias: 'orb', m: ['orbite', /\borb\b/, 'orbit'], ex: 'ECABC orbite', desc: 'Hace orbitar a un VFR (en su punto o en el circuito).' },
     { id: 'continue', words: 'continúe (aproximación)', alias: 'ca', m: ['contin', /\bca\b/], ex: 'IBE123 continúe aproximación', desc: 'Llegada con la pista aún no disponible; a un VFR en órbita, que siga el circuito.' },
@@ -119,6 +122,7 @@
   function helpHtml() {
     return `<div class="tbl"><table><thead><tr><th>Orden</th><th>Alias</th><th>Para qué</th><th>Ejemplo</th></tr></thead><tbody>${COMMANDS.map(c => `<tr><td>${esc(c.words)}</td><td><code>${esc(c.alias)}</code></td><td>${esc(c.desc)}</td><td class="mono small">${esc(c.ex)}</td></tr>`).join('')}</tbody></table></div>
       <p class="small muted">El indicativo puede ir en cualquier parte del mensaje y vale con sus últimas cifras si no hay duda. Si no escribes indicativo, la orden va a la aeronave seleccionada (clic en su ficha o etiqueta). Tab completa indicativos; ↑/↓ recorren el historial.</p>
+      <p class="small muted"><b>Línea QDM:</b> con un tráfico seleccionado, mantén pulsado <b>Ctrl izquierdo</b> con el ratón sobre el radar: verás rumbo, distancia y tiempo estimado (a la velocidad actual del tráfico) hasta el cursor.</p>
       <p class="small muted"><b>Voz:</b> mantén pulsado <b>Ctrl derecho</b> (o el botón 🎙) mientras hablas y suelta para transmitir. Di los indicativos con el designador telefónico y cifra a cifra ("Iberia tres siete uno dos"), las matrículas con el alfabeto ("Eco Charlie Alfa Bravo Charlie") y la pista como "pista dos siete izquierda". Funciona en Chrome, Edge y Safari (en Chrome necesita conexión). El clic de radio al pulsar y la cola del silenciador al soltar se pueden quitar en ⚙. Con "Enviar al soltar el PTT" desactivado (⚙), lo reconocido queda en la línea de comandos para revisarlo.</p>
       <div class="tbl"><table><thead><tr><th>Acierto</th><th>Puntos</th><th>Error</th><th>Puntos</th></tr></thead><tbody>
       ${[['Despegue bien separado', PTS.TAKEOFF, 'Pista ocupada', PTS.RWY_OCCUPIED], ['Autorización de aterrizaje correcta', PTS.LANDING_CLR, 'Dos autorizaciones de aterrizaje', PTS.TWO_LANDING], ['Fraseología completa (pista + viento)', PTS.PHRASE, 'Estela en salida', PTS.WAKE], ['Corregir una colación errónea', PTS.READBACK_FIX, 'Salidas sucesivas', PTS.SUCCESSIVE], ['Transferencia a APP', PTS.TRANSFER, 'Despegue sin suelta', PTS.NO_RELEASE], ['Frustrada justificada', PTS.GA_JUSTIFIED, 'Prioridad de la emergencia', PTS.EMERG_PRIORITY], ['Emergencia gestionada', PTS.EMERG_OK, 'Proximidad en el aire', PTS.AIRPROX], ['Secuencia VFR ("siga a")', PTS.SEQUENCE, 'Circuito lleno', PTS.CIRCUIT_FULL], ['Información de tránsito', PTS.TRAFFIC, 'Sin información de tránsito a un VFR', PTS.TI_MISSED], ['Alineación condicional', PTS.LINEUP_COND, 'Llegada sin autorización (frustrada)', PTS.NO_LANDING_CLR]].map(r => `<tr><td>${r[0]}</td><td class="tabular">+${r[1]}</td><td>${r[2]}</td><td class="tabular">${r[3]}</td></tr>`).join('')}
@@ -231,13 +235,18 @@
     const distThr = o => Math.hypot(o.x, o.y);
     const emergencyActive = ex => S.ac.find(o => o !== ex && o.emer === 'MAYDAY' && (o.state === 'final' || o.state === 'circuit' || o.state === 'landroll'));
     function inCircuit() { return S.ac.filter(o => o.rules === 'VFR' && o.kind === 'arr' && o.state === 'circuit').length; }
-    function circuitPath(fromGa) {
-      const s = side, yd = s * 1.3;
-      // leg = tramo que empieza al alcanzar el punto: 1 viento en cola, 2 base, 3 final
-      const p = fromGa ? [{ x: -1.9, y: 0 }, { x: -1.9, y: yd, leg: 1 }] : [{ x: -1.2, y: yd, leg: 1 }];
-      return p.concat([{ x: 1.9, y: yd, leg: 2 }, { x: 1.9, y: 0, leg: 3 }, { x: 0, y: 0 }]);
+    // leg = tramo que empieza al alcanzar el punto: 1 viento en cola, 2 base, 3 final; nm = nombre de tramos intermedios
+    const FINAL_GATE = { x: 3, y: 0 };
+    function circuitPath(kind) {
+      const s = side, yd = s * 1.3, tail = [{ x: 1.9, y: yd, leg: 2 }, { x: 1.9, y: 0, leg: 3 }, { x: 0, y: 0 }];
+      if (kind === 'base') return tail.slice();
+      if (kind === 'direct') return [{ x: FINAL_GATE.x, y: 0, leg: 3 }, { x: 0, y: 0 }];
+      if (kind === 'upwind') return [{ x: 0.4, y: s * 0.3, nm: 'barlovento' }, { x: -1.9, y: s * 0.3, nm: 'viento cruzado' }, { x: -1.9, y: yd, leg: 1 }].concat(tail);
+      if (kind === true || kind === 'ga') return [{ x: -1.9, y: 0, nm: 'viento cruzado' }, { x: -1.9, y: yd, leg: 1 }].concat(tail);
+      return [{ x: -1.2, y: yd, leg: 1 }].concat(tail);
     }
-    const legName = a => a.state === 'hold' ? `orbitando ${a.pt || ''}` : a.state === 'orbit' ? 'orbitando' : (['entrando', 'viento en cola', 'base', 'final'][a.leg || 0]);
+    const pathLen = (x, y, path) => { let d = 0; for (const w of path) { d += Math.hypot(w.x - x, w.y - y); x = w.x; y = w.y; } return d; };
+    const legName = a => a.state === 'hold' ? `orbitando ${a.pt || ''}` : a.state === 'orbit' ? 'orbitando' : (a.lname || ['entrando', 'viento en cola', 'base', 'final'][a.leg || 0]);
 
     // separación requerida respecto a la salida anterior (para ayudas y para puntuar)
     function depCheck(a) {
@@ -276,7 +285,7 @@
     const firstIntent = n => { for (const c of COMMANDS) if (c.m.length && has(n, ...c.m)) return c.id; return null; };
     // Con "tránsito" en el mensaje, la orden se busca antes de esa palabra; después solo cuentan verbos en imperativo
     // ("tránsito A320 aterrizando" es información, no una autorización).
-    const AFTER_TI = [['follow', ['siga a', 'siga la', 'ajust']], ['orbit', ['orbite']], ['join', ['entre en viento']], ['lineup', ['alinee', 'entre y mantenga']],
+    const AFTER_TI = [['follow', ['siga a', 'siga la', 'ajust']], ['joinBase', ['entre en base', 'semidirecta']], ['joinDirect', ['aproximacion directa', 'directa a final']], ['joinUpwind', ['entre en barlovento']], ['orbit', ['orbite']], ['join', ['entre en viento']], ['lineup', ['alinee', 'entre y mantenga']],
       ['land', ['autorizado a aterrizar', 'autorizado para aterrizar']], ['takeoff', ['autorizado a despegar']], ['goaround', ['motor y al aire']],
       ['continue', ['continue']], ['transfer', ['contacte']], ['taxi', ['ruede']]];
     function intent(n) {
@@ -307,13 +316,14 @@
       if (!a) { log('Sistema', 'No encuentro el indicativo. Escríbelo o selecciona una aeronave.', 'sys'); return; }
       S.sel = a.id;
       if (a.flags.ackDue && it !== 'ack') { a.flags.ackDue = null; award('ACK', 'acuse de recibo implícito de la emergencia', a.cs); }
-      ({ release, negative, goaround, hold, lineup, takeoff, land, join, orbit, continue: cont, taxi, transfer, ack, follow, traffic })[it](a, n, target, text);
+      ({ release, negative, goaround, hold, lineup, takeoff, land, join, joinBase: a => join(a, 'base'), joinDirect: a => join(a, 'direct'), joinUpwind: a => join(a, 'upwind'), orbit, continue: cont, taxi, transfer, ack, follow, traffic })[it](a, n, target, text);
       // cualquier mensaje que lleve "tránsito …" cuenta también como información de tránsito
       if (it !== 'traffic' && has(n, 'transito', 'trafico')) trafficInfo(a, n, text, true);
     }
     const unable = (a, why) => reply(a.cs, `${why}, ${a.cs}`);
 
-    function release(a) {
+    function release(a, n) {
+      if (n && /\bsuelta\b/.test(n) && !/\blisto\b/.test(n)) tip('Con APP la coordinación es "IBE123 listo"; APP contesta "IBE123 suelto".');
       if (a.kind !== 'dep' || a.rules !== 'IFR' || !['stand', 'taxi', 'hp', 'lined', 'lineup'].includes(a.state)) { log('APP', `${a.cs} no es una salida IFR pendiente.`, 'sys'); return; }
       if (a.released) { reply('APP', `${a.cs} ya está suelto`, 2); return; }
       const need = depCheck(a).sujeta; if (need) award('RELEASE_REQ', 'suelta solicitada a APP', a.cs);
@@ -338,7 +348,7 @@
     }
     function doGoAround(a, pilot) {
       a.cl.land = false;
-      if (a.rules === 'VFR') { a.state = 'circuit'; a.path = circuitPath(true); a.leg = 0; return; }
+      if (a.rules === 'VFR') { a.state = 'circuit'; a.path = circuitPath('ga'); a.leg = 0; a.lname = 'motor y al aire'; return; }
       a.state = 'ga'; a.flags.gaT = S.t; S.gaHold = true;
     }
     function hold(a) {
@@ -405,11 +415,25 @@
       if (a.rules === 'VFR' && prevHeavy && n.includes('estela')) award('WAKE_CAUTION', '"precaución estela turbulenta" tras una aeronave mayor', a.cs);
       a.cl.land = true; reply(a.cs, `Autorizado a aterrizar pista ${rwy}, ${a.cs}`);
     }
-    function join(a) {
+    // incorporación al circuito: viento en cola (por defecto), semidirecta a base, directa a final o barlovento
+    function join(a, kind) {
+      kind = kind || 'dw';
       if (!(a.rules === 'VFR' && a.kind === 'arr' && (a.state === 'hold' || a.state === 'orbit'))) return unable(a, 'Negativo');
-      if (inCircuit() >= 4) award('CIRCUIT_FULL', 'circuito lleno (4 aeronaves): debía orbitar', a.cs); else award('JOIN', 'integración en el circuito', a.cs);
-      a.state = 'circuit'; a.path = circuitPath(false); a.leg = 0;
-      reply(a.cs, `Entro en viento en cola ${side > 0 ? 'izquierda' : 'derecha'} pista ${rwy}, ${a.cs}`);
+      const lado = side > 0 ? 'izquierda' : 'derecha';
+      if (inCircuit() >= 4) award('CIRCUIT_FULL', 'circuito lleno (4 aeronaves): debía orbitar', a.cs);
+      else if (kind === 'dw') award('JOIN', 'integración en viento en cola', a.cs);
+      else if (kind === 'upwind') award('JOIN_ALT', 'incorporación por barlovento', a.cs);
+      else if (kind === 'base') {
+        // la semidirecta es la alternativa cuando acorta respecto a entrar en viento en cola
+        const viaBase = pathLen(a.x, a.y, circuitPath('base')), viaDw = pathLen(a.x, a.y, circuitPath('dw'));
+        if (viaBase < viaDw - 0.5) award('JOIN_ALT', 'semidirecta a base: acorta', a.cs); else award('BAD_JOIN', 'semidirecta a base que no acorta (llega por el lado contrario)', a.cs);
+      } else {
+        // directa: solo si la derrota hasta la final forma ≤ 30° con el rumbo de aproximación
+        const ang = Math.abs(Math.atan2(FINAL_GATE.y - a.y, FINAL_GATE.x - a.x) * 180 / Math.PI); const off = Math.round(180 - ang);
+        if (off <= 30) award('JOIN_ALT', `aproximación directa alineada (${off}° del eje)`, a.cs); else award('BAD_JOIN', `directa a final con ${off}° respecto al eje (solo dentro de ±30°)`, a.cs);
+      }
+      a.state = 'circuit'; a.path = circuitPath(kind); a.leg = 0; a.lname = null;
+      reply(a.cs, ({ dw: `Entro en viento en cola ${lado} pista ${rwy}`, base: `Entro en base ${lado} pista ${rwy}`, direct: `Directa a final pista ${rwy}`, upwind: `Entro en barlovento pista ${rwy}` })[kind] + `, ${a.cs}`);
     }
     // ---------- información de tránsito ----------
     // tránsitos sobre los que hay que informar a un VFR del circuito: el que le precede y los IFR en final
@@ -549,7 +573,7 @@
     function moveAlong(a, dist) {
       while (dist > 0 && a.path && a.path.length) {
         const w = a.path[0]; const dx = w.x - a.x, dy = w.y - a.y, d = Math.hypot(dx, dy);
-        if (d <= dist) { a.x = w.x; a.y = w.y; dist -= d; if (w.leg != null) a.leg = w.leg; a.path.shift(); }
+        if (d <= dist) { a.x = w.x; a.y = w.y; dist -= d; if (w.leg != null) { a.leg = w.leg; a.lname = null; } if (w.nm) a.lname = w.nm; a.path.shift(); }
         else { a.x += dx / d * dist; a.y += dy / d * dist; a.hdg = Math.atan2(dy, dx); dist = 0; }
       }
       return !a.path || !a.path.length;
@@ -699,6 +723,8 @@
       const fl = [a.cl.land ? 'ATE' : '', a.cl.to ? 'DES' : '', a.emer === 'MAYDAY' ? 'MAYDAY' : a.emer === 'FUEL' ? 'MINFUEL' : '', a.released ? 'SUELTA' : ''].filter(Boolean).join(' ');
       return [a.cs + (fl ? ' ' + fl : ''), l2];
     }
+    // rumbo (respecto al norte) de un vector de la pantalla: la pista en uso apunta a -x con rumbo ctx.hdg
+    const screenHdg = (dx, dy) => { let h = Math.round(ctx.hdg + Math.atan2(dy, dx) * 180 / Math.PI - 180); h = ((h % 360) + 360) % 360; return h || 360; };
     function drawRadar() {
       const s = side; const out = [];
       out.push(`<rect x="-7.2" y="-5.6" width="20.4" height="11.2" fill="var(--radar-bg)"/>`);
@@ -719,6 +745,18 @@
           <line x1="${a.x}" y1="${a.y}" x2="${tx - 0.05}" y2="${ty + 0.05}" stroke="${col}" stroke-width="0.02" opacity=".7"/>
           <g class="tag" data-tag="${a.id}" data-k="tag" transform="translate(${tx} ${ty})"><rect x="-0.06" y="-0.34" width="${Math.max(L[0].length, L[1].length) * 0.2 + 0.1}" height="0.76" fill="${sel ? 'rgba(255,255,255,.12)' : 'rgba(0,0,0,.001)'}" rx="0.05"/>
           <text font-family="var(--mono)" font-size="0.3" fill="${col}"><tspan x="0" y="0">${esc(L[0])}</tspan><tspan x="0" y="0.34" fill="var(--radar-rwy)">${esc(L[1])}</tspan></text></g></g>`);
+      }
+      // línea QDM: con Ctrl izquierdo pulsado, del tráfico seleccionado al cursor (rumbo, distancia y tiempo a su velocidad)
+      const qa = S.qdm && S.mouse && S.ac.find(o => o.id === S.sel);
+      if (qa) {
+        const m = S.mouse, dx = m.x - qa.x, dy = m.y - qa.y, d = Math.hypot(dx, dy);
+        const t = qa.spd > 20 ? d / qa.spd * 3600 : null;
+        const txt = `${pad(screenHdg(dx, dy), 3)}° · ${d.toFixed(1).replace('.', ',')} NM${t != null ? ' · ' + mmss(t) : ''}`;
+        const lx = m.x + 0.15, ly = m.y - 0.15;
+        out.push(`<g class="qdm" pointer-events="none"><line x1="${qa.x}" y1="${qa.y}" x2="${m.x}" y2="${m.y}" stroke="#ffd166" stroke-width="0.035" stroke-dasharray="0.18 0.1"/>
+          <circle cx="${m.x}" cy="${m.y}" r="0.07" fill="none" stroke="#ffd166" stroke-width="0.03"/>
+          <rect x="${lx - 0.06}" y="${ly - 0.3}" width="${txt.length * 0.19 + 0.12}" height="0.42" rx="0.05" fill="rgba(0,0,0,.75)"/>
+          <text x="${lx}" y="${ly}" font-family="var(--mono)" font-size="0.3" fill="#ffd166">${esc(txt)}</text></g>`);
       }
       radar.innerHTML = out.join('');
     }
@@ -789,6 +827,8 @@
       svg.addEventListener('pointerup', () => { if (drag && !drag.moved) select(drag.a.id); drag = null; });
     }
     dragTags(radar); dragTags(ground);
+    radar.addEventListener('pointermove', e => { S.mouse = svgPoint(radar, e); });
+    radar.addEventListener('pointerleave', () => { S.mouse = null; });
     for (const bayId of ['bayDep', 'bayArr']) {
       const bay = $(bayId); let dragId = null;
       bay.addEventListener('click', e => { const el = e.target.closest('.fstrip'); if (el) select(+el.dataset.id); });
@@ -844,18 +884,20 @@
     if (!mic.supported) { pttBtn.disabled = true; pttBtn.title = 'Tu navegador no admite reconocimiento de voz: usa Chrome, Edge o Safari'; }
     let pttKey = false, warned = false;
     const onKeyDown = e => {
+      if (e.code === 'ControlLeft') { if (!e.repeat) S.qdm = true; return; }
       if (e.code === 'ControlRight') {
         if (e.repeat) return; e.preventDefault();
         if (!mic.supported) { if (!warned) { warned = true; log('Sistema', pttBtn.title + '.', 'sys'); } return; }
         pttKey = true; fx('open'); mic.start();
       } else if (pttKey && mic.active) { pttKey = false; fx('close'); mic.abort(); } // Ctrl derecho + otra tecla = atajo, no transmisión
     };
-    const onKeyUp = e => { if (e.code === 'ControlRight' && pttKey) { pttKey = false; fx('close'); mic.stop(); } };
+    const onKeyUp = e => { if (e.code === 'ControlLeft') S.qdm = false; if (e.code === 'ControlRight' && pttKey) { pttKey = false; fx('close'); mic.stop(); } };
     document.addEventListener('keydown', onKeyDown); document.addEventListener('keyup', onKeyUp);
+    const onBlur = () => { S.qdm = false; }; root.addEventListener('blur', onBlur);
     const pttUp = () => { if (mic.active) { fx('close'); mic.stop(); } };
     pttBtn.addEventListener('pointerdown', e => { e.preventDefault(); if (mic.supported) { pttBtn.setPointerCapture(e.pointerId); fx('open'); mic.start(); } });
     pttBtn.addEventListener('pointerup', pttUp); pttBtn.addEventListener('pointercancel', pttUp);
-    const cleanupVoice = () => { document.removeEventListener('keydown', onKeyDown); document.removeEventListener('keyup', onKeyUp); if (mic.active) mic.abort(); };
+    const cleanupVoice = () => { document.removeEventListener('keydown', onKeyDown); document.removeEventListener('keyup', onKeyUp); root.removeEventListener('blur', onBlur); if (mic.active) mic.abort(); };
     $('sVoice').onchange = e => { S.voice = e.target.checked; store.set('simVoice', S.voice); if (!S.voice && root.speechSynthesis) root.speechSynthesis.cancel(); };
     $('sEnd').onclick = () => end();
     const opts = $('sOpts'), optsBtn = $('sOptsBtn');

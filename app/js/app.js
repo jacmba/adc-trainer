@@ -1,7 +1,7 @@
 /* Torre ADC — app de estudio. Vanilla JS, sin dependencias. */
 (function () {
   'use strict';
-  const D = window.ADC_DATA, R = window.ADC_RULES, G = window.ADC_GEN, SC = window.ADC_SCEN;
+  const D = window.ADC_DATA, R = window.ADC_RULES, G = window.ADC_GEN, SC = window.ADC_SCEN, FG = window.ADC_FLASH;
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -182,11 +182,13 @@
   }
 
   // ---------- FLASHCARDS (Leitner 1–5) ----------
-  const flashCfg = Object.assign({ topics: null }, store.get('flashCfg', {}));
+  const flashCfg = Object.assign({ topics: null, mode: 'deck' }, store.get('flashCfg', {}));
+  const fcGen = store.get('fcGen', {}); // aciertos por tipo de tarjeta generada {g: {ok, n}}
   const boxes = store.get('boxes', {}); // id -> box
   const fcId = c => slug(c.topic + '-' + c.front).slice(0, 80);
   function viewFlash() {
     store.set('flashCfg', flashCfg);
+    if (flashCfg.mode === 'gen') return viewFlashGen();
     const topics = flashCfg.topics;
     const pool = D.flashcards.filter(c => !topics || topics.includes(c.topic));
     const boxOf = c => boxes[fcId(c)] || 1;
@@ -196,9 +198,8 @@
     function render() {
       const c = queue[cur]; const n = counts();
       VIEW.innerHTML = `<div class="view-head"><div><div class="eyebrow">Repetición espaciada · ${pool.length} tarjetas</div><h1>Flashcards</h1>
-        <p>Toca la tarjeta (o pulsa espacio) para darle la vuelta. Las que no sabes vuelven a la caja 1 y salen antes; las que sabes suben de caja.</p></div></div>
-        <div class="row" style="margin-bottom:12px"><span class="chip ${!topics ? 'on' : ''}"><button style="all:unset;cursor:pointer" data-t="all">Todos</button></span>
-        ${D.topics.map(t => `<span class="chip ${topics && topics.includes(t.id) ? 'on' : ''}"><button style="all:unset;cursor:pointer" data-t="${t.id}">${esc(t.title)}</button></span>`).join('')}</div>
+        <p>Toca la tarjeta (o pulsa espacio) para darle la vuelta. Las que no sabes vuelven a la caja 1 y salen antes; las que sabes suben de caja.</p></div>${flashModeSeg()}</div>
+        ${flashTopicChips(topics)}
         <div class="box-row" style="margin-bottom:14px">${n.map((x, i) => `<div><b class="tabular">${x}</b><span>Caja ${i + 1}</span></div>`).join('')}</div>
         ${c ? `<div class="card-stage"><div class="fcard ${flipped ? 'flip' : ''}" id="fc" role="button" tabindex="0" aria-label="Dar la vuelta a la tarjeta">
           <div class="fface"><span class="lab">${esc(topicName(c.topic))} · caja ${boxOf(c)}</span><div class="txt">${esc(c.front)}</div><span class="lab">toca para ver la respuesta</span></div>
@@ -206,16 +207,51 @@
           <div class="qbar"><span class="muted small tabular">Tarjeta ${cur + 1} de ${queue.length} · sesión: ${known}/${seen} sabidas</span>
           <div class="row"><button class="btn" id="no" ${flipped ? '' : 'disabled'}>No la sabía (1)</button><button class="btn primary" id="yes" ${flipped ? '' : 'disabled'}>La sabía (2)</button></div></div>`
           : `<div class="panel empty">Sesión terminada: ${known} de ${seen} sabidas. <button class="btn primary" id="again">Otra ronda</button></div>`}`;
-      $$('[data-t]', VIEW).forEach(b => b.onclick = () => {
-        const t = b.dataset.t;
-        if (t === 'all') flashCfg.topics = null;
-        else { const s = new Set(flashCfg.topics || []); s.has(t) ? s.delete(t) : s.add(t); flashCfg.topics = s.size ? [...s] : null; }
-        viewFlash();
-      });
+      bindFlashChrome();
       if (!c) { $('#again').onclick = viewFlash; return; }
       const flip = () => { flipped = !flipped; $('#fc').classList.toggle('flip', flipped); $('#no').disabled = $('#yes').disabled = !flipped; };
       $('#fc').onclick = flip;
       const answer = ok => { const id = fcId(c); boxes[id] = ok ? Math.min(5, boxOf(c) + 1) : 1; store.set('boxes', boxes); seen++; if (ok) known++; cur++; flipped = false; render(); };
+      $('#no').onclick = () => answer(false); $('#yes').onclick = () => answer(true);
+      keyHandler = e => { if (e.target.closest('input,textarea')) return; if (e.key === ' ') { e.preventDefault(); flip(); } else if (flipped && e.key === '1') answer(false); else if (flipped && e.key === '2') answer(true); };
+    }
+    render();
+  }
+  // controles comunes de los dos modos de flashcards
+  const flashModeSeg = () => `<div class="seg" id="fcMode"><button aria-pressed="${flashCfg.mode !== 'gen'}" data-m="deck">Mazo (cajas)</button><button aria-pressed="${flashCfg.mode === 'gen'}" data-m="gen">Generadas</button></div>`;
+  const flashTopicChips = topics => `<div class="row" style="margin-bottom:12px"><span class="chip ${!topics ? 'on' : ''}"><button style="all:unset;cursor:pointer" data-t="all">Todos</button></span>
+        ${D.topics.map(t => `<span class="chip ${topics && topics.includes(t.id) ? 'on' : ''}"><button style="all:unset;cursor:pointer" data-t="${t.id}">${esc(t.title)}</button></span>`).join('')}</div>`;
+  function bindFlashChrome() {
+    $$('[data-t]', VIEW).forEach(b => b.onclick = () => {
+      const t = b.dataset.t;
+      if (t === 'all') flashCfg.topics = null;
+      else { const s = new Set(flashCfg.topics || []); s.has(t) ? s.delete(t) : s.add(t); flashCfg.topics = s.size ? [...s] : null; }
+      viewFlash();
+    });
+    $$('#fcMode [data-m]', VIEW).forEach(b => b.onclick = () => { flashCfg.mode = b.dataset.m; viewFlash(); });
+  }
+  // Modo "Generadas": tarjetas nuevas sin fin a partir de las reglas; se registran aciertos por tipo de tarjeta
+  function viewFlashGen() {
+    const topics = flashCfg.topics;
+    const total = Object.values(FG.combos).reduce((a, b) => a + b, 0);
+    let c = FG.generate(Math.random, topics), flipped = false, seen = 0, known = 0;
+    function render() {
+      const st = c && fcGen[c.g]; const pct = st && st.n ? Math.round(100 * st.ok / st.n) : null;
+      VIEW.innerHTML = `<div class="view-head"><div><div class="eyebrow">Generadas · más de ${(Math.floor(total / 1000) * 1000).toLocaleString('es-ES')} combinaciones</div><h1>Flashcards</h1>
+        <p>Tarjetas nuevas cada vez, creadas a partir de las reglas del temario: estela, salidas sucesivas, niveles de transición, mínimos VMC/SVFR/LVP, METAR, fraseología en español e inglés, números, alfabeto, códigos, aeródromos… No usan las cajas: se cuentan aciertos por tipo.</p></div>${flashModeSeg()}</div>
+        ${flashTopicChips(topics)}
+        ${c ? `<div class="card-stage"><div class="fcard ${flipped ? 'flip' : ''}" id="fc" role="button" tabindex="0" aria-label="Dar la vuelta a la tarjeta">
+          <div class="fface"><span class="lab">${esc(topicName(c.topic))} · ${esc(c.g)}${pct != null ? ` · ${pct}% (${st.n})` : ''}</span><div class="txt" style="white-space:pre-line">${esc(c.front)}</div><span class="lab">toca para ver la respuesta</span></div>
+          <div class="fface back"><span class="lab">Respuesta</span><div class="txt">${esc(c.back)}</div></div></div></div>
+          <div class="qbar"><span class="muted small tabular">Sesión: ${known}/${seen} sabidas</span>
+          <div class="row"><button class="btn" id="no" ${flipped ? '' : 'disabled'}>No la sabía (1)</button><button class="btn primary" id="yes" ${flipped ? '' : 'disabled'}>La sabía (2)</button></div></div>`
+          : '<div class="panel empty">No hay tarjetas generadas para los temas elegidos.</div>'}
+        ${Object.keys(fcGen).length ? `<details class="help" style="margin-top:14px"><summary>Aciertos por tipo de tarjeta</summary><div class="small tabular" style="columns:2;margin-top:6px">${Object.entries(fcGen).sort((a, b) => a[1].ok / a[1].n - b[1].ok / b[1].n).map(([g, x]) => `<div>${esc(g)}: ${Math.round(100 * x.ok / x.n)}% (${x.n})</div>`).join('')}</div></details>` : ''}`;
+      bindFlashChrome();
+      if (!c) return;
+      const flip = () => { flipped = !flipped; $('#fc').classList.toggle('flip', flipped); $('#no').disabled = $('#yes').disabled = !flipped; };
+      $('#fc').onclick = flip;
+      const answer = ok => { const x = fcGen[c.g] || (fcGen[c.g] = { ok: 0, n: 0 }); x.n++; if (ok) x.ok++; store.set('fcGen', fcGen); seen++; if (ok) known++; c = FG.generate(Math.random, topics); flipped = false; render(); };
       $('#no').onclick = () => answer(false); $('#yes').onclick = () => answer(true);
       keyHandler = e => { if (e.target.closest('input,textarea')) return; if (e.key === ' ') { e.preventDefault(); flip(); } else if (flipped && e.key === '1') answer(false); else if (flipped && e.key === '2') answer(true); };
     }
@@ -237,8 +273,15 @@
     const n = testCfg.count;
     let nGen = testCfg.source === 'fixed' ? 0 : testCfg.source === 'gen' ? n : Math.round(n * 0.4);
     if (!gens.length) nGen = 0;
+    const hasScen = !!SC.question(Math.random, t);
+    if (!gens.length && !hasScen) nGen = 0;
     const fx = shuffle(fixed).slice(0, n - nGen);
-    for (let k = 0; k < n - fx.length && gens.length; k++) out.push(G[gens[k % gens.length]](Math.random));
+    // generadas: mitad de los generadores de preguntas, mitad situaciones de Torre en vivo
+    const order = shuffle(gens);
+    for (let k = 0; k < n - fx.length; k++) {
+      const q = order.length && (k % 2 || !hasScen) ? G[order[k % order.length]](Math.random) : SC.question(Math.random, t);
+      if (q) out.push(q);
+    }
     return shuffle(fx.concat(out)).slice(0, n);
   }
   function viewTest() {
@@ -246,10 +289,11 @@
     if (state.autostart) { state.autostart = false; return runTest(buildQuestions()); }
     const t = testCfg.topics;
     const nFixed = D.questions.filter(q => !t || t.includes(q.t)).length;
-    const total = Object.values(G.combos()).reduce((a, b) => a + b, 0);
+    if (situationCounts == null) situationCounts = Object.fromEntries(SC.FAMILIES.map(f => [f.id, SC.countSituations(f, 2000)]));
+    const total = Object.values(G.combos()).reduce((a, b) => a + b, 0) + Object.values(situationCounts).reduce((a, b) => a + b, 0);
     const best = store.get('best', null);
     VIEW.innerHTML = `<div class="view-head"><div><div class="eyebrow">${D.questions.length} preguntas fijas + ${G.list.length} generadores</div><h1>Test</h1>
-      <p>Preguntas de respuesta única y múltiple. Los generadores crean casos nuevos cada vez (estela, salidas sucesivas, nivel de transición, METAR, VMC/SVFR, LVP, fraseología numérica…): más de ${Math.floor(total / 1000) * 1000} combinaciones.</p></div></div>
+      <p>Preguntas de respuesta única y múltiple. Los generadores crean casos nuevos cada vez (estela, salidas sucesivas, nivel de transición, METAR, VMC/SVFR, LVP, fraseología, viento y ruido, prioridades, integración VFR…) y se mezclan con las situaciones de Torre en vivo: más de ${(Math.floor(total / 1000) * 1000).toLocaleString('es-ES')} combinaciones.</p></div></div>
       <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin-bottom:16px">
         <div class="panel stat"><b class="tabular">${nFixed}</b><span>preguntas fijas en la selección</span></div>
         <div class="panel stat"><b class="tabular">${Object.values(stats).reduce((a, s) => a + s.n, 0)}</b><span>respondidas en este navegador</span></div>

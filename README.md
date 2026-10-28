@@ -17,7 +17,9 @@ content/                 ← fuente única de verdad (editar aquí)
 app/
   index.html             shell + estilos (sin dependencias, sin build)
   js/rules.js            reglas: estela, salidas sucesivas, estela en llegada, TRL, VMC/SVFR/LVP, fonética…
-  js/generators.js       16 generadores paramétricos de preguntas (usan rules.js)
+  js/generators.js       28 generadores paramétricos de preguntas (usan rules.js); el test los mezcla con las
+                         situaciones de Torre en vivo (scenarios.js → question()): más de 300 000 combinaciones
+  js/flashgen.js         flashcards generadas desde las reglas (modo «Generadas»): más de 30 000 combinaciones
   js/scenarios.js        15 escenarios generados de "torre en vivo": familias de situaciones paramétricas
                          (aeródromo, pista, viento, aeronaves…); cada partida saca hasta 5 al azar
   js/voice.js            voz: transcripción → orden (alfabeto, números, designadores telefónicos), PTT con la
@@ -65,6 +67,12 @@ La tabla `COMMANDS` de `sim.js` define a la vez el parser y la ayuda del juego (
   orden antes de «tránsito», se ejecuta y la información se cuenta igualmente.
 - **Alineación condicional** detrás de una salida en carrera o de una llegada en final: `IBE123 detrás del B738
   despegando, alinee y mantenga pista 27, detrás`.
+- **Línea QDM**: con un tráfico seleccionado y **Ctrl izquierdo** pulsado sobre el radar, línea al cursor con rumbo,
+  distancia y tiempo estimado a la velocidad del tráfico (como la regla de medir de openscope).
+- **Incorporaciones VFR**: viento en cola (`dw`), semidirecta a base (`bs`, puntúa si acorta), aproximación directa
+  (`dir`, solo dentro de ±30° del eje: desde E) y barlovento (`uw`).
+- **Suelta**: coordinación con APP con «IBE123 listo» (también se acepta «suelta IBE123»).
+- Abajo se reserva `--sim-bottom` (56 px) para insignias fijas del alojamiento, como «Powered by Netlify».
 - **Cronómetro** en la barra (tiempo del simulador, respeta pausa y velocidad): cada clic inicia, para y pone a cero.
 - **Voz (PTT)**: mantener pulsado **Ctrl derecho** (o el botón 🎙) para hablar; al soltar se transmite (o queda en la
   línea para revisarlo, según ⚙). `voice.js` convierte «Iberia tres siete uno dos ruede a punto de espera pista dos
